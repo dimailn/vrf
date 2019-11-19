@@ -1,0 +1,14 @@
+<template>
+<input
+  type="text"
+  v-model="value"
+  :disabled="$disabled"
+  :name="name"
+  @input="onInput"
+  @blur="onBlur"
+  :placeholder="placeholder"
+  @keyup.enter="submit"
+/>
+</template>
+
+<script lang="coffee" src="../../descriptors/input" />
