@@ -2,7 +2,7 @@ import base from './base'
 import checkbox from './checkbox'
 import datepicker from './datepicker'
 import input from './input'
-import selectId from './select-id'
+import select from './select-id'
 import textarea from './textarea'
 import resource from './resource'
 import submit from './submit'
@@ -16,7 +16,7 @@ export default {
   checkbox
   datepicker
   input
-  selectId
+  select
   textarea
   resource
   submit

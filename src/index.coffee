@@ -1,7 +1,7 @@
 import RfCheckbox from './components/templates/checkbox'
 import RfInput from './components/templates/input'
 import RfTextarea from './components/templates/textarea'
-import RfSelectId from './components/templates/select-id'
+import RfSelect from './components/templates/select-id'
 import RfDatepicker from './components/templates/datepicker'
 import RfResource from './components/templates/resource'
 import RfForm from './components/templates/form'
@@ -24,7 +24,7 @@ components = {
   RfCheckbox
   RfInput
   RfTextarea
-  RfSelectId
+  RfSelect
   RfDatepicker
   RfResource
   RfForm
@@ -38,7 +38,7 @@ export {
   RfCheckbox
   RfInput
   RfTextarea
-  RfSelectId
+  RfSelect
   RfDatepicker
   RfResource
   RfForm

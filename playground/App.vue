@@ -4,14 +4,19 @@
 
     VRF playfround
 
-    <rf-form :resource="todo">
-      <rf-input name="title" />
-      <rf-checkbox name="status" />
-    </rf-form>
-
-    {{
-      todo
-    }}
+    <div style="display: flex">
+      <rf-form :resource="todo" class="form">
+        <rf-input name="title" />
+        <rf-checkbox name="status" />
+        <rf-datepicker name="finishTill" />
+        <rf-select name="importance" :options="importanceOptions" />
+        <rf-textarea name="description" />
+        <rf-span name="owner" />
+      </rf-form>
+      <div style="flex: 1">
+        {{todo}}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,6 +27,20 @@ export default {
     todo:
       title: ''
       status: false
+      finishTill: null
+      importance: null
+      description: ''
+      owner: 'User #1'
+  computed:
+    importanceOptions: ->
+      [
+        {
+          id: 1, title: 'Low'
+        }
+        {
+          id: 2, title: 'High'
+        }
+      ]
 }
 </script>
 
@@ -33,5 +52,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.form{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 </style>
