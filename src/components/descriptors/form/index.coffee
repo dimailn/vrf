@@ -1,5 +1,4 @@
 import VueProvideObservable from 'vue-provide-observable'
-import Vue from 'vue'
 import {capitalize} from 'lodash'
 
 provideProps = -> {

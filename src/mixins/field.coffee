@@ -1,11 +1,5 @@
 import {decamelize} from 'humps'
 
-# Функция для переводов должна устанавливаться глобально
-t = (property, rfName) ->
-  rfName = rfName.split("::")[0] if rfName
-  scope = "activerecord.attributes.#{decamelize(rfName)}" if rfName
-  I18n.t(decamelize(property), scope: scope, defaultValue: I18n.t "attributes.#{decamelize property}")
-
 import FieldProps from '../components/prop_types/field'
 
 export default {
@@ -15,7 +9,9 @@ export default {
 
   methods:
     t: (property) ->
-      t(property, @rfName)
+      vue = Object.getPrototypeOf(@$root).constructor
+
+      vue::VueResourceForm.translate(property, @rfName)
 
   computed:
     humanName: ->

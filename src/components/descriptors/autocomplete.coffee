@@ -1,7 +1,6 @@
 import Base from './base'
 import props from '../prop_types/autocomplete'
 import {pick} from 'lodash'
-import Vue from 'vue'
 import {debounce} from 'lodash'
 
 export default {
@@ -64,7 +63,9 @@ export default {
 
   computed:
     providerInstance: ->
-      provider = Vue::VueResourceForm.autocompletes[@type]
+      vue = Object.getPrototypeOf(@$root).constructor
+
+      provider = vue::VueResourceForm.autocompletes[@type]
 
       throw "[vue-resource-form] Autocomplete provider for #{@type} not found" unless provider
 
