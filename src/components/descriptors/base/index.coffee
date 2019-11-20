@@ -24,6 +24,7 @@ export default {
     value:
       get: ->
         get(@resource, @name)
+
       set: (value) ->
         if @vuex
           store = @VueResourceForm.store

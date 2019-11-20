@@ -2,8 +2,9 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
 
-    VRF playfround
+    VRF playground
 
+    <h1> Simple form </h1>
     <div style="display: flex">
       <rf-form :resource="todo" class="form">
         <rf-input name="title" />
@@ -12,9 +13,31 @@
         <rf-select name="importance" :options="importanceOptions" />
         <rf-textarea name="description" />
         <rf-span name="owner" />
+        <button @click="add">Add</button>
       </rf-form>
       <div style="flex: 1">
         {{todo}}
+      </div>
+    </div>
+
+    <h1> Nested form </h1>
+    <div style="display: flex">
+      <rf-form :resource="user" class="form">
+        <rf-nested name="todos">
+          <template slot-scope="props">
+            <div class="form">
+              <rf-input name="title" />
+              <rf-checkbox name="status" />
+              <rf-datepicker name="finishTill" />
+              <rf-select name="importance" :options="importanceOptions" />
+              <rf-textarea name="description" />
+              <rf-span name="owner" />
+            </div>
+          </template>
+        </rf-nested>
+      </rf-form>
+      <div style="flex: 1">
+        {{user}}
       </div>
     </div>
   </div>
@@ -22,15 +45,48 @@
 
 <script lang="coffee">
 export default {
-  name: 'App'
   data: ->
-    todo:
+    todo: null
+    user:
+      todos: [
+        {
+          title: 'First'
+          status: false
+          finishTill: null
+          importance: null
+          description: ''
+          owner: 'User #1'
+        }
+        {
+          title: 'Second'
+          status: false
+          finishTill: null
+          importance: null
+          description: ''
+          owner: 'User #1'
+        }
+      ]
+
+
+  created: ->
+    @todo = @blank()
+
+  methods:
+    add: ->
+      @user.todos.push(@todo)
+
+      @todo = @blank()
+
+      # @user.todos.push(@blank())
+
+    blank: ->
       title: ''
       status: false
       finishTill: null
       importance: null
       description: ''
       owner: 'User #1'
+
   computed:
     importanceOptions: ->
       [

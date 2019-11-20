@@ -1,4 +1,5 @@
 <template>
+
 <input
   type="text"
   v-model="value"
@@ -9,6 +10,7 @@
   :placeholder="placeholder"
   @keyup.enter="submit"
 />
+
 </template>
 
 <script lang="coffee" src="../../descriptors/input" />

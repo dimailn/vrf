@@ -40,8 +40,10 @@ class PathService
     else
       @root[name] = {}
 
+
+
 export default {
-  mixins: [VueProvideObservable('vueResourceForm', provideProps, nameMapper)]
+  mixins: [VueProvideObservable(Vue, 'vueResourceForm', provideProps, nameMapper)]
   provide: ->
     vueResourceFormPath: @path
     vueResourceFormPathService: @$pathService
@@ -83,7 +85,7 @@ export default {
   watch:
     rfId: ->
       @forceReload()
-    resource: (old, current) ->
+    resource: (current, old) ->
       return if old == current
 
       @innerResource = null
