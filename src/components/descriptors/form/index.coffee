@@ -43,7 +43,7 @@ class PathService
 
 
 export default {
-  mixins: [VueProvideObservable(Vue, 'vueResourceForm', provideProps, nameMapper)]
+  mixins: [VueProvideObservable('vueResourceForm', provideProps, nameMapper)]
   provide: ->
     vueResourceFormPath: @path
     vueResourceFormPathService: @$pathService

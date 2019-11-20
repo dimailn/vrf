@@ -14,7 +14,7 @@ module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './playground/index.coffee',
-    // lib: './src/main.js'
+    lib: './src/index.coffee'
   },
   output: {
     path: config.build.assetsRoot,
