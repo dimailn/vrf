@@ -1,9 +1,8 @@
 {
   "name": "vrf",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "author": "Dmitry Sadovsky <dimailn9@gmail.com>",
-  "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
@@ -15,11 +14,11 @@
   "dependencies": {
     "humps": "^2.0.1",
     "moment": "^2.24.0",
-    "vue": "^2.5.13",
-    "vue-provide-observable": "0.0.3",
-    "vue-router": "^3.0.1"
+    "vue-provide-observable": "0.0.3"
   },
   "devDependencies": {
+    "vue": "^2.5.13",
+    "vue-router": "^3.0.1",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
