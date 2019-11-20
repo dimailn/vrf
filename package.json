@@ -9,8 +9,10 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "pub": "npm run build && npm publish"
   },
+  "main": "dist/static/lib.js",
   "dependencies": {
     "humps": "^2.0.1",
     "moment": "^2.24.0",
