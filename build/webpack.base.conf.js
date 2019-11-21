@@ -1,4 +1,5 @@
 'use strict'
+
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
@@ -8,6 +9,12 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
+const babelLoader = {
+  loader: 'babel-loader',
+  options: {
+    presets: ['es2015']
+  }
+}
 
 
 module.exports = {
@@ -39,11 +46,11 @@ module.exports = {
       },
       {
         test: /\.coffee$/,
-        loader: 'coffee-loader'
+        use: [babelLoader, 'coffee-loader']
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        use: babelLoader,
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {

@@ -6,13 +6,21 @@ const sourceMapEnabled = isProduction
   ? config.build.productionSourceMap
   : config.dev.cssSourceMap
 
+const babelLoader = {
+  loader: 'babel-loader',
+  options: {
+    presets: ['es2015']
+  }
+}
+
 module.exports = {
   loaders: {
     ...utils.cssLoaders({
           sourceMap: sourceMapEnabled,
           extract: isProduction
         }),
-    coffee: 'coffee-loader'
+    coffee: 'babel-loader?presets[]=es2015!coffee-loader',
+    js: babelLoader
   },
   cssSourceMap: sourceMapEnabled,
   cacheBusting: config.dev.cacheBusting,
