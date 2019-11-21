@@ -19,6 +19,11 @@ export default {
       else
         @[name]
 
+    t: (property) ->
+      vue = Object.getPrototypeOf(@$root).constructor
+
+      vue::VueResourceForm.translate(property, @$rfName)
+
   computed:
     # $value!!!
     value:
@@ -37,7 +42,12 @@ export default {
 
       @_evalBoolProp('disabled')
 
-
     $formDisabled: ->
       @_evalBoolProp('formDisabled')
+
+    humanName: ->
+      if @noLabel
+        ''
+      else
+        @label || @t(@name)
 }

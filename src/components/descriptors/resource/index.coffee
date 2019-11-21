@@ -1,11 +1,7 @@
-import Resource from '../../../mixins/resource'
-import Field from '../../../mixins/field'
+import Base from '../base'
 
 export default {
-  mixins: [
-    Resource
-    Field
-  ]
+  extends: Base
 
 
   render: ->

@@ -11,4 +11,5 @@ export default {
     type: String
   noLabel: Boolean
   label: String
+  required: Boolean
 }

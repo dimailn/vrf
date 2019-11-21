@@ -1,9 +1,9 @@
-import FieldMixin from '../../mixins/field'
+# import FieldMixin from '../../mixins/field'
 import checkbox from '../../components/descriptors/checkbox'
 
 export default {
   extends: checkbox
-  mixins: [FieldMixin]
+  # mixins: [FieldMixin]
 
   computed:
     humanName: ->
