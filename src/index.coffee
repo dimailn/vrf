@@ -53,6 +53,7 @@ export {
 
   AutocompleteProvider
   Resource
+  installer
 }
 
 export default installer(components)
