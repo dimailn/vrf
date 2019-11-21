@@ -34,6 +34,8 @@ components = {
   RfSpan
 }
 
+export default installer(components)
+
 export {
   RfCheckbox
   RfInput
@@ -56,5 +58,4 @@ export {
   installer
 }
 
-export default installer(components)
 
