@@ -1,6 +1,5 @@
-# import Base from '../base'
-import Resource from '../../../mixins/resource'
+import Base from '../base'
 
 export default {
-  mixins: [Resource]
+  extends: Base
 }

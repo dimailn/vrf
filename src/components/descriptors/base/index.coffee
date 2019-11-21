@@ -1,10 +1,8 @@
 import Resource from '../../../mixins/resource'
-import props from '../../prop_types/base'
 import {get, set} from 'lodash'
 
 export default {
   mixins: [Resource]
-  props,
 
   methods:
     onInput: (e) ->

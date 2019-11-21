@@ -1,10 +1,14 @@
 import Base from '../base'
+import baseProps from '../../prop_types/base'
 import props from '../../prop_types/checkbox'
 
 export default {
   extends: Base
 
-  props
+  props: {
+    ...baseProps
+    ...props
+  }
 
   computed:
     checkboxValue:
