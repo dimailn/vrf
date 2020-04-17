@@ -4,7 +4,6 @@ import baseProps from '../../prop_types/base'
 export default {
   extends: Base
   render: ->
-    console.log @$scopedSlots
     props = {
       resource: @resource
       resources: @resources
