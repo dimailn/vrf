@@ -84,7 +84,7 @@ export default {
   watch:
     rfId: ->
       @forceReload()
-    resource: (current, old) ->
+    resource: (old, current) ->
       return if old == current
 
       @innerResource = null
@@ -135,6 +135,7 @@ export default {
         @setSyncProp 'fetching', true
         [resource, resources] = await @networkLayer.load()
       finally
+        @setSyncProp 'errors', {}
         @setSyncProp 'fetching', false
 
       @innerResource = resource

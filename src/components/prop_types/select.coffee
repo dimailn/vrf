@@ -5,4 +5,7 @@ export default {
   multiple:
     type: Boolean
     default: false
+  clearable:
+    type: Boolean
+    default: false
 }

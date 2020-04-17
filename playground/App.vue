@@ -32,15 +32,17 @@
               <rf-select name="importance" :options="importanceOptions" />
               <rf-textarea name="description" />
               <rf-span name="owner" />
+
+              <h2> rf-resource example </h2>
+              <rf-resource>
+                <template slot-scope="props">
+                  {{props}}
+                </template>
+              </rf-resource>
             </div>
           </template>
         </rf-nested>
 
-        <rf-resource>
-<!--           <template slot-scope="props">
-            {{props}}
-          </template> -->
-        </rf-resource>
       </rf-form>
       <div style="flex: 1">
         {{user}}

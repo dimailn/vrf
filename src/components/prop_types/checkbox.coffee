@@ -3,4 +3,5 @@ export default {
     type: Boolean
     default: false
   label: String
+  indeterminate: Boolean
 }
