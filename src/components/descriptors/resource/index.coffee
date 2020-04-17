@@ -3,9 +3,8 @@ import baseProps from '../../prop_types/base'
 
 export default {
   extends: Base
-  props: baseProps
-
   render: ->
+    console.log @$scopedSlots
     props = {
       resource: @resource
       resources: @resources
@@ -15,7 +14,7 @@ export default {
       tScope: @tScope
       t: @t
     }
-    @$scopedSlots.default(props)[0]
+    @$scopedSlots?.default?(props)?[0]
 }
 
 

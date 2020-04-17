@@ -35,6 +35,12 @@
             </div>
           </template>
         </rf-nested>
+
+        <rf-resource>
+<!--           <template slot-scope="props">
+            {{props}}
+          </template> -->
+        </rf-resource>
       </rf-form>
       <div style="flex: 1">
         {{user}}
