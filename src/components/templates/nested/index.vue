@@ -4,6 +4,7 @@
   :rf-name="rfName"
   :key="index"
   :resource="collection[index]"
+  :resources="resources"
   :errors="errorsFor(index)"
   :vuex="vuex"
   :path="pathFor(index)"
@@ -24,6 +25,7 @@
         v-for="wrapper in block(wrappedCollection)"
         :key="wrapper.index"
         :resource="wrapper.item"
+        :resources="resources"
         :errors="errorsFor(wrapper.index)"
         :vuex="vuex"
         :path="pathFor(wrapper.index)"
@@ -43,6 +45,7 @@
 <rf-form
   :rf-name="rfName"
   :resource="nestedResource"
+  :resources="resources"
   :errors="errorsForNestedResource"
   :vuex="vuex"
   :path="parentPath"
