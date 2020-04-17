@@ -1,7 +1,7 @@
 <template>
 <select v-model="value" :multiple="multiple" :disabled="$disabled" :name="name" v-on="_listeners">
-  <option v-for="option in $_options" :value="option.id">
-    {{ option.title }}
+  <option v-for="option in $_options" :value="option[idKey]">
+    {{ option[titleKey] }}
   </option>
 </select>
 </template>

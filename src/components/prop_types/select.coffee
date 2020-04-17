@@ -8,4 +8,10 @@ export default {
   clearable:
     type: Boolean
     default: false
+  idKey:
+    type: String
+    default: 'id'
+  titleKey:
+    type: String
+    default: 'title'
 }
