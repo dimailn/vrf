@@ -142,6 +142,8 @@ export default {
       @innerResource = resource
       @$emit 'update:resource', @innerResource if @innerResource?
 
+      resources = {...@innerResources, ...resources} if @innerResources
+
       @setSyncProp 'resources', resources
 
       @$emit 'after-load-success'
