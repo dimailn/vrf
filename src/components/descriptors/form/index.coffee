@@ -15,6 +15,7 @@ provideProps = -> {
   rfName: ''
   pathService: undefined
   rootResource: undefined
+  requireSource: null
 }
 
 nameMapper = (name) ->
@@ -149,6 +150,11 @@ export default {
       @["inner#{capitalize name}"] = value
       @$emit "update:#{name}", value
 
+    addToResources: (name, value) ->
+      return @setSyncProp('resources', "#{name}" : value) unless @innerResources
+
+      @$set(@innerResources, name, value)
+
     submit: ->
       # Даем отработать onChange
       @$nextTick =>
@@ -180,4 +186,7 @@ export default {
     setResource: (resource) ->
       @setSyncProp('resource', resource)
 
+    requireSource: (sourceName) ->
+      if @VueResourceForm.NetworkLayer
+        @networkLayer?.requireSource(sourceName)
 }

@@ -13,6 +13,9 @@ export default {
     submit: ->
       @vueResourceForm.wrapper.submit
 
+    requireSource: ->
+      @vueResourceForm.wrapper.requireSource
+
     saving: ->
       @vueResourceForm.wrapper.saving
 

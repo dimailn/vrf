@@ -48,6 +48,14 @@
         {{user}}
       </div>
     </div>
+
+
+    <h1> Sources </h1>
+
+    <rf-form :resource="resource" :resources="sources">
+      <rf-select name="order" options="orders" />
+    </rf-form>
+
   </div>
 </template>
 
@@ -72,6 +80,19 @@ export default {
           importance: null
           description: ''
           owner: 'User #1'
+        }
+      ]
+
+    resource:
+      order: 1
+
+    sources:
+      orders: [
+        {
+          id: 1, title: 'First'
+        }
+        {
+          id: 2, title: 'second'
         }
       ]
 

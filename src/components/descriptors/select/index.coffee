@@ -10,9 +10,16 @@ export default {
     ...props
   }
 
+  mounted: ->
+    @requireSource(@options) if @isOptionsString
+
+  watch:
+    options: ->
+      @requireSource(@options) if @isOptionsString
+
   computed:
     $_options: ->
-      if typeof @options is 'string'
+      if @isOptionsString
         @resources[@options]
       else
         @options
@@ -22,6 +29,9 @@ export default {
 
     listeners: ->
       input: @onChange
+
+    isOptionsString: ->
+      typeof @options is 'string'
 
   methods:
     onChange: ->
