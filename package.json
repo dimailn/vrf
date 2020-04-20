@@ -14,6 +14,7 @@
   },
   "main": "dist/static/lib.js",
   "dependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "humps": "^2.0.1",
     "moment": "^2.24.0",
     "vue-provide-observable": "0.0.3"

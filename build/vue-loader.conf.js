@@ -19,7 +19,7 @@ module.exports = {
           sourceMap: sourceMapEnabled,
           extract: isProduction
         }),
-    coffee: 'babel-loader?presets[]=es2015!coffee-loader',
+    coffee: 'babel-loader?presets[]=es2015&plugins[]=transform-async-to-generator!coffee-loader',
     js: babelLoader
   },
   cssSourceMap: sourceMapEnabled,
