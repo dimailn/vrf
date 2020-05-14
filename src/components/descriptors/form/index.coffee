@@ -73,6 +73,9 @@ export default {
     vuex:
       type: Boolean
       default: false
+    single:
+      type: Boolean
+      default: false
 
   data: ->
     innerResource: null
