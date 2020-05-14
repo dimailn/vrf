@@ -20,5 +20,8 @@ export default (components) -> {
 
     if options.partials?
       Vue::VueResourceForm.partials = options.partials
+
+    if options.sources?
+      Vue::VueResourceForm.sources = options.sources
 }
 

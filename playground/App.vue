@@ -9,10 +9,12 @@
       <rf-form :resource="todo" class="form">
         <rf-input name="title" />
         <rf-checkbox name="status" />
+        <rf-switch name="status" />
         <rf-datepicker name="finishTill" />
         <rf-select name="importance" :options="importanceOptions" />
         <rf-textarea name="description" />
         <rf-span name="owner" />
+        <rf-select name="priority" options="numerals" />
         <button @click="add">Add</button>
       </rf-form>
       <div style="flex: 1">
