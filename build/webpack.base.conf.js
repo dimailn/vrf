@@ -19,11 +19,6 @@ const babelLoader = {
 
 
 module.exports = {
-  externals:{
-    moment: {
-      commonjs: 'lodash'
-    }
-  },
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './playground/index.coffee',
