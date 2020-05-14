@@ -1,5 +1,5 @@
 import VueProvideObservable from 'vue-provide-observable'
-import {capitalize} from 'lodash'
+import capitalize from 'lodash.capitalize'
 
 provideProps = -> {
   resource: null
@@ -27,7 +27,7 @@ nameMapper = (name) ->
     else name
 
 
-import {set} from 'lodash'
+import set from 'lodash.set'
 
 class PathService
   constructor: ->

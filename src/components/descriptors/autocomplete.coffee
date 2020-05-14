@@ -1,7 +1,7 @@
 import Base from './base'
 import props from '../prop_types/autocomplete'
-import {pick} from 'lodash'
-import {debounce} from 'lodash'
+import pick from 'lodash.pick'
+import debounce from 'lodash.debounce'
 import baseProps from '../prop_types/base'
 
 export default {
