@@ -23,8 +23,10 @@
     "lodash.get": "^4.4.2",
     "lodash.pick": "^4.4.0",
     "lodash.set": "^4.3.2",
-    "moment": "^2.24.0",
     "vue-provide-observable": "0.0.4"
+  },
+  "peerDependencies": {
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -56,6 +58,7 @@
     "html-webpack-plugin": "^2.30.1",
     "jest": "^22.0.4",
     "jest-serializer-vue": "^0.3.0",
+    "moment": "^2.25.3",
     "nightwatch": "^0.9.12",
     "node-notifier": "^5.1.2",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
