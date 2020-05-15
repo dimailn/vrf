@@ -25,9 +25,6 @@
     "lodash.set": "^4.3.2",
     "vue-provide-observable": "0.0.4"
   },
-  "peerDependencies": {
-    "moment": "^2.24.0"
-  },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",

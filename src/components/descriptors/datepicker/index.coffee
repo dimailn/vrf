@@ -8,9 +8,9 @@ export default {
 
   computed:
     date: ->
-      @value?.format('YYYY-MM-DDTHH:mm')
+      @VueResourceForm.dateInterceptor.out(@value)
 
   methods:
     onInput: (e) ->
-      @value = moment(e.target.value)
+      @value = @VueResourceForm.dateInterceptor.in(e.target.value)
 }

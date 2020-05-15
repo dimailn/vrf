@@ -1,9 +1,14 @@
+import dateInterceptor from './utils/date-interceptor'
+
+
 export default (components) -> {
   install: (Vue, options) ->
     for name, component of components
       Vue.component(name, component)
 
     Vue::VueResourceForm ||= {}
+
+    Vue::VueResourceForm.dateInterceptor = dateInterceptor
 
     return unless options?
 
@@ -23,5 +28,8 @@ export default (components) -> {
 
     if options.sources?
       Vue::VueResourceForm.sources = options.sources
+
+    if options.dateInterceptor?
+      Vue::VueResourceForm.dateInterceptor = options.dateInterceptor
 }
 
