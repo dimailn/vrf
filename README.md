@@ -97,8 +97,61 @@ The form passes a reactive context to all child components (using the Provide / 
 There are several ways to access the resource:
 
 * use rf-resource component
+
+```vue
+<rf-resource>
+  <template slot-scope="props">
+    <div>{{props.resource}}</div>
+  </template>
+</rf-resource>
+```
+
 * use Resource mixin
+
+```vue
+
+<template>
+
+<div>
+  {{resource}}
+</div>
+
+</template>
+
+<script>
+
+import {Resource} from 'vrf'
+
+export default {
+   mixins: [
+    Resource
+   ]
+}
+
+</script>
+
+```
+
 * implement your own component using accessible descriptors
+
+```vue
+
+<template>
+<div>
+  <input v-model="value" />
+  {{resource}}
+</div>
+</template>
+
+<script>
+
+import {descriptors} from 'vrf'
+
+export default {
+  extends: descriptors.input
+}
+
+```
 
 # Architecture
 
