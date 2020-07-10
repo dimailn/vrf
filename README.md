@@ -31,7 +31,7 @@ It allows you to write forms in this way:
   <rf-input name="firstName" />
   <rf-input name="lastName" />
   <rf-switch name="blocked" />
-  <rf-select-id name="roleId" options="roles" />
+  <rf-select name="roleId" options="roles" />
   <rf-textarea name="comment" />
   <rf-submit>Save</rf-submit>
 </rf-form>
