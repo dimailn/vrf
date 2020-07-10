@@ -153,6 +153,49 @@ export default {
 
 ```
 
+## Sources
+
+Some components (for example, such as selects) require options for their work.  For these purposes, the form
+```sources``` property serves.  It expects a hash of all the necessary options that can be accessed in specific components by name.
+
+```vue
+
+<template>
+
+<rf-form :resource="todo" :sources="sources">
+  <rf-select name="status" options="statuses" />
+</rf-form>
+
+</template>
+
+<script>
+
+export default {
+  data(){
+    return {
+      resource: {
+        status: 1
+      },
+      sources: {
+        statuses: [
+          {
+            id: 1,
+            title: 'pending'
+          },
+          {
+            id: 2,
+            title: 'ready'
+          }
+        ]
+      }
+    }
+  }
+}
+
+</script>
+```
+Instead of a string with the name of the options, you may also pass directly an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and autoforms can load sources by name).
+
 # Architecture
 
 * Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling. 
