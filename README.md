@@ -79,7 +79,7 @@ export default {
        },
        errors:{
          title: 'Should not be empty'
-      }
+       }
     }
   }
 }
