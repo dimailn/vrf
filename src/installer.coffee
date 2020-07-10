@@ -31,5 +31,8 @@ export default (components) -> {
 
     if options.dateInterceptor?
       Vue::VueResourceForm.dateInterceptor = options.dateInterceptor
+
+    if options.transforms?
+      Vue::VueResourceForm.transforms = options.transforms
 }
 
