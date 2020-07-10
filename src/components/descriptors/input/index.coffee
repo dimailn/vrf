@@ -9,7 +9,9 @@ export default {
   }
   watch:
     value: (value, prev) ->
-      @applyTransform(value, prev) if value != prev[0..-2]
+      return unless value?
+
+      @applyTransform(value, prev) if !prev? || value != prev[0..-2]
 
   methods:
     applyTransform: (value, prev) ->
