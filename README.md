@@ -1,3 +1,13 @@
+# Build Setup
+
+``` bash
+# install dependencies
+npm install
+
+# start playground
+npm start
+```
+
 # What is VRF?
 
 Vue Resource Form is a solution for quickly writing declarative user interface forms.
@@ -43,16 +53,40 @@ It allows you to write forms in this way:
 * Clientside validations
 >
 
-## Build Setup
 
-``` bash
-# install dependencies
-npm install
+# Basics
 
-# start playground
-npm start
+ ## Object binding
+
+Binding to an object is the cornerstone of vrf.  This concept assumes that instead of defining a v-model for a field each time, you do a binding once — entirely on the form object, and simply inform each component of the form what the name of the field to which it is attached is called.  Due to this knowledge, the form can take on the tasks of internationalization and display of validations (whereas when determining the v-model for each field, you are forced to do it yourself).
+
+```vue
+<template>
+
+<rf-form :resource="resource" :errors="errors">
+  <rf-input name="title">
+</rf-form>
+
+</template>
+
+<script>
+
+export default {
+  data(){
+    return {
+       resource: {
+          title: ""
+       },
+       errors:{
+         title: 'Should not be empty'
+      }
+    }
+  }
+}
+
+
+</script>
 ```
-
 
 # Architecture
 
@@ -65,7 +99,6 @@ npm start
 * Middlewares - components containing autoforms logic
 
 * Autocomplete providers - components containing autocompletes logic
-
 
 
 
