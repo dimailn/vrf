@@ -151,6 +151,7 @@ export default {
   extends: descriptors.input
 }
 
+</script>
 ```
 
 ## Sources
