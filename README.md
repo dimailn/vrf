@@ -20,8 +20,6 @@ This package contains a set of descriptors for each form element that you can us
 VRF doesn't depends on current I18n, validation and network interaction libraries. Instead, it provides interfaces for integration with any one.
 
 
-Such form will load and save data without a single line of Javascript code. This is possible due to the use of the middleware, which describes the general logic of working with entities in your project. If some form required very specific logic, the form can be used in a lower level mode(without "auto" flag).
-
 ## What does it look like?
 
 It allows you to write forms in this way:
@@ -37,6 +35,10 @@ It allows you to write forms in this way:
 </rf-form>
 
 ```
+
+
+Such form will load and save data without a single line of Javascript code. This is possible due to the use of the middleware, which describes the general logic of working with entities in your project. If some form required very specific logic, the form can be used in a lower level mode(without "auto" flag).
+
 ## Features
 
 * expressive syntax
@@ -87,6 +89,16 @@ export default {
 
 </script>
 ```
+
+## Access to the resource
+
+The form passes a reactive context to all child components (using the Provide / Inject API), so any descendant of the form (not even direct) can receive this data.  This allows you to break complex forms into parts, but without the need, it is better not to use this opportunity and try to keep the entire form in one file.
+
+There are several ways to access the resource:
+
+* use rf-resource component
+* use Resource mixin
+* implement your own component using accessible descriptors
 
 # Architecture
 
