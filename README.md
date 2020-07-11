@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="166" height="115" src="https://raw.githubusercontent.com/dimailn/vrf/master/static/logo.png" alt="vrf logo">
+</p>
+
 # Build Setup
 
 ``` bash
