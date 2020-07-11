@@ -50,12 +50,6 @@ Such form will load and save data without a single line of Javascript code. This
 * option disabled for form
 * vuex integration
 
-## Planned
-
-* Clientside validations
->
-
-
 # Basics
 
  ## Object binding
@@ -197,6 +191,14 @@ export default {
 ```
 Instead of a string with the name of the options, you may also pass directly an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and autoforms can load sources by name).
 
+## Where is the resource?
+
+The resource can be in three places:
+
+* in the state of the parent component for the form
+* in the state of form(this happens in autoforms, or for example if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
+* in vuex
+
 # Architecture
 
 * Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling. 
@@ -210,6 +212,10 @@ Instead of a string with the name of the options, you may also pass directly an 
 * Autocomplete providers - components containing autocompletes logic
 
 
+## Planned
+
+* Clientside validations
+>
 
 
 
