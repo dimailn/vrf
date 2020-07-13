@@ -17,7 +17,7 @@ npm start
 Vue Resource Form is a solution for quickly writing declarative user interface forms.
 
 
-First of all VRF is the specification of form components. The are so many great ui frameworks with different components API, so if you want migrate from one to other you will must to refactor each form and probably, it isn't you want. VRF provides common abstract standard for forms like pure html forms, but more powerful.
+First of all VRF is the specification of form components. There are so many great ui frameworks with different components API, so if you want migrate from one to other you will must to refactor each form and probably, it isn't you want. VRF provides common abstract standard for forms like pure html forms, but more powerful.
 
 This package contains a set of descriptors for each form element that you can use to create your own implementation.  If you need to add a new property/feature to some component - this is probably an occasion to think about whether it is possible to add it to the core (this can be discussed in issues).  If the it can be added to the core, this will mean that it is included in the standard and all authors of other implementations will also be able to implement it.
 
