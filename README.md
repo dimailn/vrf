@@ -203,6 +203,47 @@ The resource can be in three places:
 * in the state of form(this happens in autoforms, or for example if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
 * in vuex
 
+## Nested entities
+Vrf supports work with nested entities, both single and with collections. To work with them, the ```rf-nested``` component is used, which expects a scoped slot with form components for a nested entity. Internally, ```rf-nested``` uses the ```rf-form``` the required number of times, so the use of rf-nested can be equated with the declaration of the form inside the form, which can be duplicated if necessary.
+
+```vue
+<template>
+
+<rf-form :resource="todo">
+  <rf-input name="title" />
+  <rf-nested name="subtasks">
+    <rf-input name="title">
+    <rf-datepicker name="deadline" />
+  </rf-nested>
+</rf-form>
+
+</template>
+
+<script>
+
+export default {
+  data(){
+    return {
+      resource: {
+        title: '',
+        subtasks: [
+          {
+            title: '',
+            deadline: new Date
+          }
+        ]
+      }
+    }
+  }
+}
+
+
+</script>
+
+
+```
+
+
 # Architecture
 
 * Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling. 
