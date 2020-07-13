@@ -258,6 +258,66 @@ export default {
 
 * Autocomplete providers - components containing autocompletes logic
 
+# Props
+<table>
+    <thead>
+        <tr>
+            <th>Prop</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td colspan="2">
+            All form inputs
+          </td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>Name of resource property</td>
+        </tr>
+        <tr>
+            <td>disabled</td>
+            <td>Prohibits editing content</td>
+        </tr>
+        <tr>
+            <td>placeholder</td>
+            <td>Placeholder</td>
+        </tr>
+        <tr>
+            <td>label</td>
+            <td>Overrides standard translation value for label.</td>
+        </tr>
+        <tr>
+            <td>no-label</td>
+            <td>Hides label </td>
+        </tr>
+        <tr>
+            <td>required</td>
+            <td>Mark field as required</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            rf-input
+          </td>
+        </tr>
+        <tr>
+            <td>transform</td>
+            <td>Input formatting function</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            rf-checkbox, rf-switch
+          </td>
+        </tr>
+        <tr>
+            <td>inverted</td>
+            <td>inverts the value of input</td>
+        </tr>
+    </tbody>
+
+</table>
+
 # Implementations
 - [vrf-vuetify](https://github.com/dimailn/vrf-vuetify) - adapter for Vuetify.
 
