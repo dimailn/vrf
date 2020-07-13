@@ -212,8 +212,10 @@ Vrf supports work with nested entities, both single and with collections. To wor
 <rf-form :resource="todo">
   <rf-input name="title" />
   <rf-nested name="subtasks">
-    <rf-input name="title">
-    <rf-datepicker name="deadline" />
+    <template slot-scope="props">
+      <rf-input name="title">
+      <rf-datepicker name="deadline" />
+    </template>
   </rf-nested>
 </rf-form>
 
