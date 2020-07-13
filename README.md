@@ -258,6 +258,8 @@ export default {
 
 * Autocomplete providers - components containing autocompletes logic
 
+# Implementations
+- [vrf-vuetify](https://github.com/dimailn/vrf-vuetify) - adapter for Vuetify.
 
 ## Planned
 
