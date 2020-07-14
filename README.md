@@ -281,7 +281,7 @@ const middlewares = [
   FooMiddleware
 ]
 
-Vue.use(VueResourceFormVuetify, {middlewares})
+Vue.use(VrfVuetify, {middlewares})
 
 ```
 
