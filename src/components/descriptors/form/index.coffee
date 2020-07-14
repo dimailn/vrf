@@ -76,6 +76,8 @@ export default {
     single:
       type: Boolean
       default: false
+    transport:
+      type: String
 
   data: ->
     innerResource: null
@@ -114,8 +116,12 @@ export default {
     $saving: ->
       @innerSaving || @saving
 
-    networkLayer: ->
-      new @VueResourceForm.NetworkLayer(@rfName, @)
+    middleware: ->
+      middleware = @VueResourceForm.middlewares.find((middleware) -> middleware.accepts({name: @rfName, transport: @transport}))
+
+      throw "Can't find middleware for #{@rfName}" unless middleware
+
+      new middleware(@rfName, @)
 
     $pathService: ->
       window.pathService = @pathService || new PathService
@@ -126,17 +132,17 @@ export default {
       return unless @auto
 
       throw "You must provide rfName for auto-forms." unless @rfName
-      throw "You must provide NetworkLayer for auto-forms." unless @VueResourceForm.NetworkLayer
+      throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
       if @noFetch
-        resources = await @networkLayer.loadSources()
+        resources = await @middleware.loadSources()
         @setSyncProp 'resources', resources
         return
 
       @$emit 'before-load'
       try
         @setSyncProp 'fetching', true
-        [resource, resources] = await @networkLayer.load()
+        [resource, resources] = await @middleware.load()
       finally
         @setSyncProp 'errors', {}
         @setSyncProp 'fetching', false
@@ -162,7 +168,7 @@ export default {
         return unless @auto
 
         @setSyncProp 'saving', true
-        [ok, errors] = await @networkLayer.save(@$resource)
+        [ok, errors] = await @middleware.save(@$resource)
         @setSyncProp 'saving', false
 
         @setSyncProp(
