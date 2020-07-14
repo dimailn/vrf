@@ -15,8 +15,8 @@ export default (components) -> {
     if options.translate?
       Vue::VueResourceForm.translate = options.translate
 
-    if options.NetworkLayer?
-      Vue::VueResourceForm.NetworkLayer = options.NetworkLayer
+    if options.middlewares?
+      Vue::VueResourceForm.middlewares = options.middlewares
     if options.store?
       Vue::VueResourceForm.store = options.store
 
