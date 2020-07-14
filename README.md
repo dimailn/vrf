@@ -245,6 +245,48 @@ export default {
 
 ```
 
+## Autoforms
+
+Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
+
+The logic of autoforms is in the middlewares, which are supplied separately from the vrf. Due to this, it is possible to realize the work of autoforms for the specifics of any project. You can use ready-made middleware or implement your own.
+
+
+Middlewares are set during initialization of forms, and there may be several of them. The form will use the first suitable middleware, the static ```accept``` method is used to determine applicability. The form has a special prop ```transport``` that allows you to specify the preferred middleware (which should respond to a specific value of the prop ```transport```).
+
+
+```javascript
+
+export default class FooMiddleware {
+  constructor(name, form){
+    this.name = name
+    this.form = form
+  }
+  
+  static accepts({name, transport}){ // determines if middleware is applicable for a given form
+    return true
+  }
+  
+  load(){
+  }
+  
+  loadSources(){
+  }
+  
+  save(resource){
+  }
+}
+
+const middlewares = [
+  FooMiddleware
+]
+
+Vue.use(VueResourceFormVuetify, {middlewares})
+
+```
+
+
+
 
 # Architecture
 
