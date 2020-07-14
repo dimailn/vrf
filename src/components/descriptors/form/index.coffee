@@ -117,7 +117,7 @@ export default {
       @innerSaving || @saving
 
     middleware: ->
-      middleware = @VueResourceForm.middlewares.find((middleware) -> middleware.accepts({name: @rfName, transport: @transport}))
+      middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @rfName, transport: @transport}))
 
       throw "Can't find middleware for #{@rfName}" unless middleware
 
