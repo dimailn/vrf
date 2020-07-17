@@ -10,6 +10,8 @@ export default {
       @$emit('input', e)
     onBlur: (e) ->
       @$emit('blur', e)
+    onChange: (e) ->
+      @$emit('change', e)
 
     _evalBoolProp: (name) ->
       if typeof @[name] is 'string'

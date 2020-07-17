@@ -4,6 +4,7 @@
   :disabled="$disabled"
   :name="name"
   @input="onInput"
+  @change="onChange"
   @blur="onBlur"
 />
 </template>
