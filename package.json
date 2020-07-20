@@ -13,6 +13,10 @@
     "pub": "npm run build && npm publish",
     "analyze": "webpack --config build/webpack.prod.conf.js --json > stats.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimailn/vrf"
+  },
   "main": "dist/static/lib.js",
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
