@@ -21,7 +21,6 @@
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "humps": "^2.0.1",
-    "lodash.camelcase": "^4.3.0",
     "lodash.capitalize": "^4.2.1",
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
