@@ -1,8 +1,6 @@
 import set from 'lodash.set'
 
-camelCase = (str) ->
-  str.toLowerCase().replace /[^a-zA-Z0-9]+(.)/g, (m, chr) ->
-    chr.toUpperCase()
+import camelCase from '../utils/camel-case'
 
 export default {
   'vue-resource-form:update': (state, {resourceName, name, value}) ->
