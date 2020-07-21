@@ -22,6 +22,7 @@ import installer from './installer'
 
 components = {
   RfCheckbox
+  RfSwitch: RfCheckbox
   RfInput
   RfTextarea
   RfSelect

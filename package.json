@@ -1,6 +1,6 @@
 {
   "name": "vrf",
-  "version": "0.2.1",
+  "version": "0.7.3",
   "description": "",
   "author": "Dmitry Sadovsky <dimailn9@gmail.com>",
   "scripts": {
@@ -10,13 +10,22 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "build": "node build/build.js",
-    "pub": "npm run build && npm publish"
+    "pub": "npm run build && npm publish",
+    "analyze": "webpack --config build/webpack.prod.conf.js --json > stats.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimailn/vrf"
   },
   "main": "dist/static/lib.js",
   "dependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "humps": "^2.0.1",
-    "moment": "^2.24.0",
+    "lodash.capitalize": "^4.2.1",
+    "lodash.debounce": "^4.0.8",
+    "lodash.get": "^4.4.2",
+    "lodash.pick": "^4.4.0",
+    "lodash.set": "^4.3.2",
     "vue-provide-observable": "0.0.4"
   },
   "devDependencies": {

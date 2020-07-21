@@ -1,7 +1,7 @@
 import Base from './base'
 import props from '../prop_types/autocomplete'
-import {pick} from 'lodash'
-import {debounce} from 'lodash'
+import pick from 'lodash.pick'
+import debounce from 'lodash.debounce'
 import baseProps from '../prop_types/base'
 
 export default {
@@ -60,10 +60,11 @@ export default {
 
       if @active
         @loading = true
-        @items = await @providerInstance.load(pick(@, ['query', 'limit', 'entity']))
-        @loading = false
+        @providerInstance.load(pick(@, ['query', 'limit', 'entity'])).then((@items) =>
+          @loading = false
+          @menu = @items.length > 0
+        )
 
-      @menu = @items.length > 0
 
   computed:
     providerInstance: ->
