@@ -3,6 +3,8 @@
 </p>
 
 <a href="https://www.npmjs.com/package/vrf"><img alt="npm" src="https://img.shields.io/npm/v/vrf"></a>
+<img src="https://img.shields.io/bundlephobia/min/vrf" />
+<img src="https://img.shields.io/bundlephobia/minzip/vrf" />
 
 # Build Setup
 
