@@ -7,6 +7,7 @@
   :name="name"
   @input="onInput"
   @blur="onBlur"
+  @change="onChange"
   :placeholder="placeholder"
   @keyup.enter="submit"
 />

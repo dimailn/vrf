@@ -20,7 +20,7 @@ export default {
   computed:
     $_options: ->
       if @isOptionsString
-        @resources[@options]
+        @resources[@options] || @VueResourceForm.sources?[@options]
       else
         @options
 

@@ -1,5 +1,5 @@
 import VueProvideObservable from 'vue-provide-observable'
-import {capitalize} from 'lodash'
+import capitalize from 'lodash.capitalize'
 
 provideProps = -> {
   resource: null
@@ -28,7 +28,7 @@ nameMapper = (name) ->
     else name
 
 
-import {set} from 'lodash'
+import set from 'lodash.set'
 
 class PathService
   constructor: ->
@@ -74,6 +74,11 @@ export default {
     vuex:
       type: Boolean
       default: false
+    single:
+      type: Boolean
+      default: false
+    transport:
+      type: String
 
   data: ->
     innerResource: null
@@ -112,8 +117,12 @@ export default {
     $saving: ->
       @innerSaving || @saving
 
-    networkLayer: ->
-      new @VueResourceForm.NetworkLayer(@rfName, @)
+    middleware: ->
+      middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @rfName, transport: @transport}))
+
+      throw "Can't find middleware for #{@rfName}" unless middleware
+
+      new middleware(@rfName, @)
 
     $pathService: ->
       window.pathService = @pathService || new PathService
@@ -124,29 +133,33 @@ export default {
       return unless @auto
 
       throw "You must provide rfName for auto-forms." unless @rfName
-      throw "You must provide NetworkLayer for auto-forms." unless @VueResourceForm.NetworkLayer
+      throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
       if @noFetch
-        resources = await @networkLayer.loadSources()
-        @setSyncProp 'resources', resources
+        @middleware.loadSources().then((resources) =>
+          resources = {...@innerResources, ...resources} if @innerResources
+
+          @setSyncProp 'resources', resources
+        )
         return
 
       @$emit 'before-load'
-      try
-        @setSyncProp 'fetching', true
-        [resource, resources] = await @networkLayer.load()
-      finally
-        @setSyncProp 'errors', {}
-        @setSyncProp 'fetching', false
 
-      @innerResource = resource
-      @$emit 'update:resource', @innerResource if @innerResource?
+      @setSyncProp 'fetching', true
 
-      resources = {...@innerResources, ...resources} if @innerResources
+      @middleware.load().then(([resource, resources]) =>
+        @innerResource = resource
+        @$emit 'update:resource', @innerResource if @innerResource?
 
-      @setSyncProp 'resources', resources
+        @setSyncProp 'resources', resources
 
-      @$emit 'after-load-success'
+        @$emit 'after-load-success'
+      ).finally(
+        =>
+          @setSyncProp 'errors', {}
+          @setSyncProp 'fetching', false
+      )
+
 
     setSyncProp: (name, value) ->
       @["inner#{capitalize name}"] = value
@@ -167,21 +180,22 @@ export default {
         return unless @auto
 
         @setSyncProp 'saving', true
-        [ok, errors] = await @networkLayer.save(@$resource)
-        @setSyncProp 'saving', false
+        @middleware.save(@$resource).then(([ok, errors]) =>
+          @setSyncProp 'saving', false
 
-        @setSyncProp(
-          'errors'
-          if ok then {} else errors
-        )
+          @setSyncProp(
+            'errors'
+            if ok then {} else errors
+          )
 
-        @$emit('after-submit')
-        @$emit(
-          if ok
-            'after-submit-success'
-          else
-            'after-submit-failure'
-        )
+          @$emit('after-submit')
+          @$emit(
+            if ok
+              'after-submit-success'
+            else
+              'after-submit-failure'
+          )
+        ).catch(console.error)
 
     deserialize: (json) ->
 
@@ -189,6 +203,5 @@ export default {
       @setSyncProp('resource', resource)
 
     requireSource: (sourceName) ->
-      if @VueResourceForm.NetworkLayer
-        @networkLayer?.requireSource(sourceName)
+      @middleware.requireSource(sourceName)
 }
