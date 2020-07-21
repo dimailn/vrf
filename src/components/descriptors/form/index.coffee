@@ -135,24 +135,28 @@ export default {
       throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
       if @noFetch
-        resources = await @middleware.loadSources()
-        @setSyncProp 'resources', resources
+        @middleware.loadSources().then((resources) =>
+          @setSyncProp 'resources', resources
+        )
         return
 
       @$emit 'before-load'
-      try
-        @setSyncProp 'fetching', true
-        [resource, resources] = await @middleware.load()
-      finally
-        @setSyncProp 'errors', {}
-        @setSyncProp 'fetching', false
 
-      @innerResource = resource
-      @$emit 'update:resource', @innerResource if @innerResource?
+      @setSyncProp 'fetching', true
 
-      @setSyncProp 'resources', resources
+      @middleware.load().then(([resource, resources]) =>
+        @innerResource = resource
+        @$emit 'update:resource', @innerResource if @innerResource?
 
-      @$emit 'after-load-success'
+        @setSyncProp 'resources', resources
+
+        @$emit 'after-load-success'
+      ).finally(
+        =>
+          @setSyncProp 'errors', {}
+          @setSyncProp 'fetching', false
+      )
+
 
     setSyncProp: (name, value) ->
       @["inner#{capitalize name}"] = value
@@ -168,21 +172,22 @@ export default {
         return unless @auto
 
         @setSyncProp 'saving', true
-        [ok, errors] = await @middleware.save(@$resource)
-        @setSyncProp 'saving', false
+        @middleware.save(@$resource).then(([ok, errors]) =>
+          @setSyncProp 'saving', false
 
-        @setSyncProp(
-          'errors'
-          if ok then {} else errors
-        )
+          @setSyncProp(
+            'errors'
+            if ok then {} else errors
+          )
 
-        @$emit('after-submit')
-        @$emit(
-          if ok
-            'after-submit-success'
-          else
-            'after-submit-failure'
-        )
+          @$emit('after-submit')
+          @$emit(
+            if ok
+              'after-submit-success'
+            else
+              'after-submit-failure'
+          )
+        ).catch(console.error)
 
     deserialize: (json) ->
 

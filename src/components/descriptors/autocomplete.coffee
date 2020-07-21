@@ -60,10 +60,11 @@ export default {
 
       if @active
         @loading = true
-        @items = await @providerInstance.load(pick(@, ['query', 'limit', 'entity']))
-        @loading = false
+        @providerInstance.load(pick(@, ['query', 'limit', 'entity'])).then((@items) =>
+          @loading = false
+          @menu = @items.length > 0
+        )
 
-      @menu = @items.length > 0
 
   computed:
     providerInstance: ->
