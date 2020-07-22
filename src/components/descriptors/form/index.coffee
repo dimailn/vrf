@@ -1,5 +1,5 @@
 import VueProvideObservable from 'vue-provide-observable'
-import capitalize from 'lodash.capitalize'
+import capitalize from '../../../utils/capitalize'
 
 provideProps = -> {
   resource: null

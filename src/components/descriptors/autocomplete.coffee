@@ -1,6 +1,6 @@
 import Base from './base'
 import props from '../prop_types/autocomplete'
-import pick from 'lodash.pick'
+import pick from '../../utils/pick'
 import debounce from 'lodash.debounce'
 import baseProps from '../prop_types/base'
 
