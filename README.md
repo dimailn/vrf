@@ -18,7 +18,7 @@ npm start
 
 # What is Vrf?
 
-Vrf(Vue Resource Form) is a solution for quickly writing declarative user interface forms.
+Vrf (Vue Resource Form) is a solution for quickly writing declarative user interface forms.
 
 
 First of all vrf is the specification of form components. There are so many great ui frameworks with different components API, so if you want migrate from one to other you will must to refactor each form and probably, it isn't what you want. Vrf provides common abstract standard for forms like pure html forms, but more powerful.
