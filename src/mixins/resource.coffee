@@ -36,4 +36,7 @@ export default {
 
     $rootResource: ->
       @rootResource || @resource
+
+    form: ->
+      @vueResourceForm.wrapper.form
 }

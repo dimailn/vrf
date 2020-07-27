@@ -15,6 +15,7 @@ provideProps = -> {
   vuex: false
   pathService: undefined
   rootResource: undefined
+  form: null
 }
 
 nameMapper = (name) ->
@@ -99,6 +100,8 @@ export default {
     @forceReload()
 
   computed:
+    form: ->
+      @
     rfName: ->
       @name
     $$resource: ->
