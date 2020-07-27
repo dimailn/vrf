@@ -1,7 +1,7 @@
 <template>
 
 <rf-form
-  :rf-name="rfName"
+  :name="rfName"
   :key="index"
   :resource="collection[index]"
   :resources="resources"
@@ -21,7 +21,7 @@
   <template v-for="block in $schema">
     <template v-if="typeof block === 'function'">
       <rf-form
-        :rf-name="rfName"
+        :name="rfName"
         v-for="wrapper in block(wrappedCollection)"
         :key="wrapper.index"
         :resource="wrapper.item"
@@ -43,7 +43,7 @@
 </component>
 
 <rf-form
-  :rf-name="rfName"
+  :name="rfName"
   :resource="nestedResource"
   :resources="resources"
   :errors="errorsForNestedResource"
