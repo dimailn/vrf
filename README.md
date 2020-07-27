@@ -401,6 +401,7 @@ export default {
 
 ## Planned
 
+* ```rf-radio```
 * Clientside validations
 >
 
