@@ -1,6 +1,7 @@
 import Resource from '../../../mixins/resource'
-import get from 'lodash.get'
 import set from 'lodash.set'
+import get from '../../../utils/get'
+
 
 export default {
   mixins: [Resource]
