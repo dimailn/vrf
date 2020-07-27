@@ -1,5 +1,6 @@
 import VueProvideObservable from 'vue-provide-observable'
 import capitalize from '../../../utils/capitalize'
+import pick from '../../../utils/pick'
 
 provideProps = -> {
   resource: null
@@ -12,7 +13,6 @@ provideProps = -> {
   fetching: false
   saving: false
   vuex: false
-  rfName: ''
   pathService: undefined
   rootResource: undefined
 }
@@ -135,28 +135,45 @@ export default {
       throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
       if @noFetch
-        @middleware.loadSources().then((resources) =>
-          @setSyncProp 'resources', resources
-        )
+        @reloadResourceQuietly()
         return
 
       @$emit 'before-load'
 
       @setSyncProp 'fetching', true
 
-      @middleware.load().then(([resource, resources]) =>
-        @innerResource = resource
-        @$emit 'update:resource', @innerResource if @innerResource?
-
-        @setSyncProp 'resources', resources
-
-        @$emit 'after-load-success'
-      ).finally(
+      Promise.all([
+        @reloadSourcesQuietly
+        @reloadResourceQuietly()
+      ])
+      .then => @$emit 'after-load-success'
+      .finally(
         =>
           @setSyncProp 'errors', {}
           @setSyncProp 'fetching', false
       )
 
+    reloadSourcesQuietly: ->
+      @middleware.loadSources().then((resources) =>
+        @setSyncProp 'resources', resources
+      )
+
+    reloadResourceQuietly: (modifier) ->
+      @middleware.load().then((resource) =>
+        if !modifier || !@innerResource
+          @innerResource = resource
+        else
+          throw 'Modifier must be an array' unless modifier instanceof Array
+
+          # must be deep merge
+          @innerResource = {
+            ...@innerResource
+            ...pick(resource, modifier)
+          }
+
+
+        @$emit 'update:resource', @innerResource if @innerResource?
+      )
 
     setSyncProp: (name, value) ->
       @["inner#{capitalize name}"] = value
