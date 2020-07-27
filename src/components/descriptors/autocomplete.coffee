@@ -50,7 +50,7 @@ export default {
       @$emit 'clear'
 
     load: debounce(
-      -> @instantLoad() if @query.length > 0
+      -> @instantLoad() if @query? && @query.length > 0
       400
     )
 
