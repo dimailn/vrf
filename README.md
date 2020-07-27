@@ -315,7 +315,7 @@ export default {
   extends: descriptors.base,
   methods: {
     ... // some logic mutating data on the server
-    invaldate(){
+    invalidate(){
       this.form.reloadResourceQuietly(this.name)
     }
   }
