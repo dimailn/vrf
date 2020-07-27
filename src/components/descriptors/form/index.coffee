@@ -143,7 +143,7 @@ export default {
       @setSyncProp 'fetching', true
 
       Promise.all([
-        @reloadSourcesQuietly
+        @reloadSourcesQuietly()
         @reloadResourceQuietly()
       ])
       .then => @$emit 'after-load-success'
