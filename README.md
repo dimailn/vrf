@@ -33,7 +33,7 @@ Vrf doesn't depends on current I18n, validation and network interaction librarie
 It allows you to write forms in this way:
 
 ```vue
-<rf-form rf-name="User" auto>
+<rf-form name="User" auto>
   <rf-input name="firstName" />
   <rf-input name="lastName" />
   <rf-switch name="blocked" />
