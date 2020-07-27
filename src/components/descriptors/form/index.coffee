@@ -50,7 +50,7 @@ export default {
     resource: Object
     resources: Object
     disabled: [Boolean, String]
-    rfName: String
+    name: String
     rfId: Number
     rootName: String
     auto:
@@ -99,6 +99,8 @@ export default {
     @forceReload()
 
   computed:
+    rfName: ->
+      @name
     $$resource: ->
       @resource
     $resource: ->
@@ -117,9 +119,9 @@ export default {
       @innerSaving || @saving
 
     middleware: ->
-      middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @rfName, transport: @transport}))
+      middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @name, transport: @transport}))
 
-      throw "Can't find middleware for #{@rfName}" unless middleware
+      throw "Can't find middleware for #{@name}" unless middleware
 
       new middleware(@rfName, @)
 
@@ -131,7 +133,7 @@ export default {
     forceReload: ->
       return unless @auto
 
-      throw "You must provide rfName for auto-forms." unless @rfName
+      throw "You must provide name for auto-forms." unless @name
       throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
       if @noFetch
