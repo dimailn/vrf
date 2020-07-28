@@ -298,11 +298,11 @@ Vrf provide some methods on rf-form allows you to manage data loading:
 
 $refs.form.forceReload() // Completely reloading, excplicitly displayed to user
 
-$refs.form.reloadResourceQuietly() // Reload only resource without showing loaders
+$refs.form.reloadResource() // Reload only resource without showing loaders
 
-$refs.form.reloadResourceQuietly(['messages']) // Reload only 'messages' key on resource
+$refs.form.reloadResource(['messages']) // Reload only 'messages' key on resource
 
-$refs.form.reloadSourcesQuietly() // Reload only sources
+$refs.form.reloadSources() // Reload only sources
 
 ```
 
