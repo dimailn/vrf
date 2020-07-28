@@ -140,7 +140,7 @@ export default {
       throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
       if @noFetch
-        @reloadResource()
+        @reloadSources()
         return
 
       @$emit 'before-load'
