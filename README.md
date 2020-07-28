@@ -298,15 +298,15 @@ Vrf provide some methods on rf-form allows you to manage data loading:
 
 $refs.form.forceReload() // Completely reloading, excplicitly displayed to user
 
-$refs.form.reloadResourceQuietly() // Reload only resource without showing loaders
+$refs.form.reloadResource() // Reload only resource without showing loaders
 
-$refs.form.reloadResourceQuietly(['messages']) // Reload only 'messages' key on resource
+$refs.form.reloadResource(['messages']) // Reload only 'messages' key on resource
 
-$refs.form.reloadSourcesQuietly() // Reload only sources
+$refs.form.reloadSources() // Reload only sources
 
 ```
 
-Method ```reloadResourceQuietly``` allows you to write custom components which may reload the piece of data they are responsible for.
+Method ```reloadResource``` allows you to write custom components which may reload the piece of data they are responsible for.
 
 ```javascript
 import {descriptors} from 'vrf'
@@ -316,7 +316,7 @@ export default {
   methods: {
     ... // some logic mutating data on the server
     invalidate(){
-      this.form.reloadResourceQuietly(this.name)
+      this.form.reloadResource(this.name)
     }
   }
 }
