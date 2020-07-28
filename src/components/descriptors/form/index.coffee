@@ -140,7 +140,7 @@ export default {
       throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
       if @noFetch
-        @reloadResourceQuietly()
+        @reloadResource()
         return
 
       @$emit 'before-load'
@@ -148,8 +148,8 @@ export default {
       @setSyncProp 'fetching', true
 
       Promise.all([
-        @reloadSourcesQuietly()
-        @reloadResourceQuietly()
+        @reloadSources()
+        @reloadResource()
       ])
       .then => @$emit 'after-load-success'
       .finally(
@@ -158,12 +158,12 @@ export default {
           @setSyncProp 'fetching', false
       )
 
-    reloadSourcesQuietly: ->
+    reloadSources: ->
       @middleware.loadSources().then((resources) =>
         @setSyncProp 'resources', resources
       )
 
-    reloadResourceQuietly: (modifier) ->
+    reloadResource: (modifier) ->
       @middleware.load().then((resource) =>
         if !modifier || !@innerResource
           @innerResource = resource
