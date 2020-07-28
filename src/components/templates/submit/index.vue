@@ -1,7 +1,7 @@
 <template>
 <button type="button" @click="submit" v-if="!$disabled">
   <!-- need i18n, temporary workaround -->
-  <slot />
+  <slot>{{humanName}}</slot>
 </button>
 </template>
 
