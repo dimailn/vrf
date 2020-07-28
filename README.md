@@ -306,7 +306,7 @@ $refs.form.reloadSources() // Reload only sources
 
 ```
 
-Method ```reloadResourceQuietly``` allows you to write custom components which may reload the piece of data they are responsible for.
+Method ```reloadResource``` allows you to write custom components which may reload the piece of data they are responsible for.
 
 ```javascript
 import {descriptors} from 'vrf'
@@ -316,7 +316,7 @@ export default {
   methods: {
     ... // some logic mutating data on the server
     invalidate(){
-      this.form.reloadResourceQuietly(this.name)
+      this.form.reloadResource(this.name)
     }
   }
 }
