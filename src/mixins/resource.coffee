@@ -10,7 +10,7 @@ export default {
     formDisabled: ->
       @vueResourceForm.wrapper.disabled
 
-    submit: ->
+    $submit: ->
       @vueResourceForm.wrapper.submit
 
     saving: ->
