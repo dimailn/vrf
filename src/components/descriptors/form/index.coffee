@@ -187,7 +187,6 @@ export default {
       )
 
     reloadResource: (modifier) ->
-      console.log 'reloadResource', modifier
       return console.warn "Reload methods is applicable only to auto-forms" unless @isReloadPossible
 
       if @isNested
@@ -202,6 +201,9 @@ export default {
 
         return @$emit('reload-resource', modifier)
 
+      @reloadRootResource(modifier)
+
+    reloadRootResource: (modifier) ->
 
       @middleware.load().then((resource) =>
         if !modifier || !@innerResource
