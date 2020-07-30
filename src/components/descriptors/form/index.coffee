@@ -204,6 +204,7 @@ export default {
       @reloadRootResource(modifier)
 
     reloadRootResource: (modifier) ->
+      return @$emit('reload-root-resource', modifier) if @isNested
 
       @middleware.load().then((resource) =>
         if !modifier || !@innerResource

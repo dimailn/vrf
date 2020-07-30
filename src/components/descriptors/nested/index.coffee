@@ -66,6 +66,9 @@ export default {
     reloadSources: ->
       @form.reloadSources()
 
+    reloadRootResource: (modifier) ->
+      @form.reloadRootResource(modifier)
+
     errorsFor: (index) ->
       return unless @errors
 

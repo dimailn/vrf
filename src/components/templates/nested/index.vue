@@ -12,6 +12,7 @@
   :disabled="$disabled"
   :root-resource="$rootResource"
   @reload-resource="reloadResource"
+  @reload-root-resource="reloadRootResource"
   @reload-sources="reloadSources"
   v-if="isCollection && (index !== undefined)"
 >
@@ -35,6 +36,7 @@
         :disabled="$disabled"
         :root-resource="$rootResource"
         @reload-resource="reloadResource"
+        @reload-root-resource="reloadRootResource"
         @reload-sources="reloadSources"
       >
         <slot :resource="wrapper.item" />
@@ -58,6 +60,7 @@
   :disabled="$disabled"
   :root-resource="$rootResource"
   @reload-resource="reloadResource"
+  @reload-root-resource="reloadRootResource"
   @reload-sources="reloadSources"
 >
   <slot :resource="nestedResource" />
