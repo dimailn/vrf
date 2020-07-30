@@ -21,7 +21,6 @@
   "dependencies": {
     "humps": "^2.0.1",
     "lodash.debounce": "^4.0.8",
-    "lodash.set": "^4.3.2",
     "vue-provide-observable": "0.0.4"
   },
   "devDependencies": {

@@ -11,6 +11,8 @@
   :path-service="pathService"
   :disabled="$disabled"
   :root-resource="$rootResource"
+  @reload-resource="reloadResource"
+  @reload-sources="reloadSources"
   v-if="isCollection && (index !== undefined)"
 >
   <slot :resource="collection[index]" />
@@ -32,6 +34,8 @@
         :path-service="pathService"
         :disabled="$disabled"
         :root-resource="$rootResource"
+        @reload-resource="reloadResource"
+        @reload-sources="reloadSources"
       >
         <slot :resource="wrapper.item" />
       </rf-form>
@@ -53,6 +57,8 @@
   v-else-if="nestedResource"
   :disabled="$disabled"
   :root-resource="$rootResource"
+  @reload-resource="reloadResource"
+  @reload-sources="reloadSources"
 >
   <slot :resource="nestedResource" />
 </rf-form>

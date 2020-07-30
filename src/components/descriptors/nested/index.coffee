@@ -60,6 +60,12 @@ export default {
       [ => @wrappedCollection]
 
   methods:
+    reloadResource: (modifier) ->
+      @form.reloadResource(modifier)
+
+    reloadSources: ->
+      @form.reloadSources()
+
     errorsFor: (index) ->
       return unless @errors
 

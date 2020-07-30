@@ -1,5 +1,5 @@
 import Resource from '../../../mixins/resource'
-import set from 'lodash.set'
+import set from '../../../utils/set'
 import get from '../../../utils/get'
 
 

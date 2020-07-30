@@ -1,6 +1,9 @@
 import VueProvideObservable from 'vue-provide-observable'
 import capitalize from '../../../utils/capitalize'
 import pick from '../../../utils/pick'
+import set from '../../../utils/set'
+import toPath from '../../../utils/to-path'
+
 
 provideProps = -> {
   resource: null
@@ -28,7 +31,7 @@ nameMapper = (name) ->
     else name
 
 
-import set from 'lodash.set'
+# import set from 'lodash.set'
 
 class PathService
   constructor: ->
@@ -100,6 +103,16 @@ export default {
     @forceReload()
 
   computed:
+    tailPath: ->
+      return unless @path
+
+      lastElement = @path[@path.length - 1]
+
+      if typeof lastElement is 'number'
+        [@path[@path.length - 2], lastElement]
+      else
+        [lastElement]
+
     form: ->
       @
     rfName: ->
@@ -131,6 +144,11 @@ export default {
     $pathService: ->
       window.pathService = @pathService || new PathService
 
+    isReloadPossible: ->
+      @auto || @path?
+
+    isNested: ->
+      !!@path
 
   methods:
     forceReload: ->
@@ -158,12 +176,33 @@ export default {
           @setSyncProp 'fetching', false
       )
 
+
     reloadSources: ->
+      return console.warn "Reload methods is applicable only to auto-forms" unless @isReloadPossible
+
+      return @$emit('reload-sources') if @isNested
+
       @middleware.loadSources().then((resources) =>
         @setSyncProp 'resources', resources
       )
 
     reloadResource: (modifier) ->
+      console.log 'reloadResource', modifier
+      return console.warn "Reload methods is applicable only to auto-forms" unless @isReloadPossible
+
+      if @isNested
+        if @tailPath
+          nestedPath = toPath(@tailPath)
+
+          modifier =
+            if modifier instanceof Array
+              modifier.map (m) -> "#{nestedPath}.#{m}"
+            else
+              nestedPath
+
+        return @$emit('reload-resource', modifier)
+
+
       @middleware.load().then((resource) =>
         if !modifier || !@innerResource
           @innerResource = resource
