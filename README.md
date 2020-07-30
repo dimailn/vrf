@@ -304,6 +304,8 @@ $refs.form.reloadResource(['messages']) // Reload only 'messages' key on resourc
 
 $refs.form.reloadSources() // Reload only sources
 
+$refs.form.reloadRootResource(['options']) // reload root form resource, useful if nested component affecs data on top level
+
 ```
 
 Method ```reloadResource``` allows you to write custom components which may reload the piece of data they are responsible for.
