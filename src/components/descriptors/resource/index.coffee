@@ -12,7 +12,7 @@ export default {
       disabled: @formDisabled
       tScope: @tScope
       t: @t
-      errors: @errors
+      errors: @$errors
     }
     @$scopedSlots?.default?(props)?[0]
 }

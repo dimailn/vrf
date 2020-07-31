@@ -51,7 +51,7 @@ export default {
       @vueResourceFormPathService
 
     errorsForNestedResource: ->
-      @errors && @errors[@name]
+      @$errors && @$errors[@name]
 
     $schema: ->
       @schema || @defaultSchema
@@ -70,15 +70,15 @@ export default {
       @form.reloadRootResource(modifier)
 
     errorsFor: (index) ->
-      return unless @errors
+      return unless @$errors
 
       prefix = @name + "[#{index}]"
 
       errors =
-        Object.keys(@errors)
+        Object.keys(@$errors)
           .filter((path) -> path.substr(0, prefix.length) == prefix)
           .reduce(
-            (ownErrors, path) => ownErrors[path[prefix.length + 1 ...]] = @errors[path]; ownErrors
+            (ownErrors, path) => ownErrors[path[prefix.length + 1 ...]] = @$errors[path]; ownErrors
             {}
           )
 

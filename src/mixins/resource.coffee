@@ -25,7 +25,7 @@ export default {
     $rfName: ->
       @vueResourceForm.wrapper.rfName
 
-    errors: ->
+    $errors: ->
       @vueResourceForm.wrapper.errors
 
     pathService: ->
