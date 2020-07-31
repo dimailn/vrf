@@ -318,7 +318,7 @@ export default {
   methods: {
     ... // some logic mutating data on the server
     invalidate(){
-      this.form.reloadResource(this.name)
+      this.$form.reloadResource(this.name)
     }
   }
 }
