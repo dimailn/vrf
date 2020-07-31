@@ -13,7 +13,7 @@ export default {
     $submit: ->
       @vueResourceForm.wrapper.submit
 
-    saving: ->
+    $saving: ->
       @vueResourceForm.wrapper.saving
 
     fetching: ->
@@ -37,6 +37,6 @@ export default {
     $rootResource: ->
       @rootResource || @resource
 
-    form: ->
+    $form: ->
       @vueResourceForm.wrapper.form
 }
