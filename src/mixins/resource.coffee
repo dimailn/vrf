@@ -1,20 +1,22 @@
 export default {
   inject: ['vueResourceForm']
   computed:
-    resource: ->
+    $resource: ->
       @vueResourceForm.wrapper.resource
 
-    resources: ->
+    $sources: ->
       @vueResourceForm.wrapper.resources
+
+    resource: ->
+      console.warn '[vrf] Field resource in Resource mixin deprecated, use $resource instead.'
+      @$resource
+
+    resources: ->
+      console.warn '[vrf] Field resources in Resource mixin deprecated, use $sources instead.'
+      @$sources
 
     formDisabled: ->
       @vueResourceForm.wrapper.disabled
-
-    $submit: ->
-      @vueResourceForm.wrapper.submit
-
-    $saving: ->
-      @vueResourceForm.wrapper.saving
 
     fetching: ->
       @vueResourceForm.wrapper.fetching
@@ -22,21 +24,27 @@ export default {
     vuex: ->
       @vueResourceForm.wrapper.vuex
 
+    pathService: ->
+      @vueResourceForm.wrapper.pathService
+
     $rfName: ->
       @vueResourceForm.wrapper.rfName
 
     $errors: ->
       @vueResourceForm.wrapper.errors
 
-    pathService: ->
-      @vueResourceForm.wrapper.pathService
+    $submit: ->
+      @vueResourceForm.wrapper.submit
 
+    $saving: ->
+      @vueResourceForm.wrapper.saving
+
+    $form: ->
+      @vueResourceForm.wrapper.form
+ 
     rootResource: ->
       @vueResourceForm.wrapper.rootResource
 
     $rootResource: ->
       @rootResource || @resource
-
-    $form: ->
-      @vueResourceForm.wrapper.form
 }
