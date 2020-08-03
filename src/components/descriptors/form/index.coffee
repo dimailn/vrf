@@ -82,6 +82,8 @@ export default {
       default: false
     transport:
       type: String
+    prepare:
+      type: Function
 
   data: ->
     innerResource: null
@@ -100,7 +102,7 @@ export default {
 
 
   mounted: ->
-    @forceReload()
+    @forceReload() unless @isNested
 
   computed:
     tailPath: ->
@@ -149,6 +151,12 @@ export default {
 
     isNested: ->
       !!@path
+
+    resourceToSave: ->
+      if @prepare?
+        @prepare(@$resource)
+      else
+        @$resource
 
   methods:
     forceReload: ->
@@ -227,7 +235,7 @@ export default {
       @$emit "update:#{name}", value
 
     submit: ->
-      # Даем отработать onChange
+      # Let's work onChange
       @$nextTick =>
         @$emit 'before-submit'
 
@@ -236,7 +244,8 @@ export default {
         return unless @auto
 
         @setSyncProp 'saving', true
-        @middleware.save(@$resource).then(([ok, errors]) =>
+
+        @middleware.save(@resourceToSave).then(([ok, errors]) =>
           @setSyncProp 'saving', false
 
           @setSyncProp(
