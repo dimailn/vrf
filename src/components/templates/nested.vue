@@ -69,4 +69,4 @@
 </template>
 
 
-<script lang="coffee" src="../../descriptors/nested" />
+<script lang="coffee" src="../descriptors/nested.coffee" />

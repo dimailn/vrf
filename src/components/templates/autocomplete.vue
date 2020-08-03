@@ -9,6 +9,6 @@
 </template>
 
 
-<script lang="coffee" src="../../descriptors/autocomplete" />
+<script lang="coffee" src="../../descriptors/autocomplete.coffee" />
 
 

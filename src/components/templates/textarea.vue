@@ -10,6 +10,6 @@
 </template>
 
 
-<script lang="coffee" src="../../descriptors/textarea" />
+<script lang="coffee" src="../descriptors/textarea.coffee" />
 
 

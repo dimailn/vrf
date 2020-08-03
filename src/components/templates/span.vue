@@ -6,4 +6,4 @@
 
 </template>
 
-<script lang="coffee" src="../descriptors/span" />
+<script lang="coffee" src="../descriptors/span.coffee" />

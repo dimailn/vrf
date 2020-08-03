@@ -6,4 +6,4 @@
 </select>
 </template>
 
-<script lang="coffee" src="../../descriptors/select" />
+<script lang="coffee" src="../descriptors/select.coffee" />

@@ -1,8 +1,8 @@
 import VueProvideObservable from 'vue-provide-observable'
-import capitalize from '../../../utils/capitalize'
-import pick from '../../../utils/pick'
-import set from '../../../utils/set'
-import toPath from '../../../utils/to-path'
+import capitalize from '../../utils/capitalize'
+import pick from '../../utils/pick'
+import set from '../../utils/set'
+import toPath from '../../utils/to-path'
 
 
 provideProps = -> {

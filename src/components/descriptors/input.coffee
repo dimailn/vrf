@@ -1,5 +1,5 @@
-import Base from '../base'
-import baseProps from '../../prop_types/base'
+import Base from './base'
+import baseProps from '../prop_types/base'
 
 export default {
   extends: Base

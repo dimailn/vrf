@@ -7,4 +7,4 @@
 />
 </template>
 
-<script lang="coffee" src="../../descriptors/checkbox" />
+<script lang="coffee" src="../descriptors/checkbox.coffee" />
