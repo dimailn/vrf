@@ -2,6 +2,7 @@
   <img width="166" height="115" src="https://raw.githubusercontent.com/dimailn/vrf/master/static/logo.png" alt="vrf logo">
 </p>
 
+<a href="https://travis-ci.org/dimailn/vrf"><img src="https://travis-ci.org/dimailn/vrf.svg?branch=master" /> </a>
 <a href="https://www.npmjs.com/package/vrf"><img alt="npm" src="https://img.shields.io/npm/v/vrf"></a>
 <img src="https://img.shields.io/bundlephobia/min/vrf" />
 <img src="https://img.shields.io/bundlephobia/minzip/vrf" />
