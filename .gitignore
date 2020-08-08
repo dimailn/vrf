@@ -16,4 +16,5 @@ lib/
 *.ntvs*
 *.njsproj
 *.sln
-coverage
+coverage/
+

@@ -5,6 +5,7 @@ export default {
   extends: Base
   props: {
     ...baseProps
+    password: Boolean
     transform: [String, Function]
   }
   watch:
