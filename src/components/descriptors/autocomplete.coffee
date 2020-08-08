@@ -1,8 +1,8 @@
-import Base from './base'
-import props from '../prop_types/autocomplete'
-import pick from '../../utils/pick'
+import Base from '@/components/descriptors/base'
+import props from '@/components/prop_types/autocomplete'
+import pick from '@/utils/pick'
 import debounce from 'lodash.debounce'
-import baseProps from '../prop_types/base'
+import baseProps from '@/components/prop_types/base'
 
 export default {
   extends: Base

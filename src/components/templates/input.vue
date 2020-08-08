@@ -14,4 +14,4 @@
 
 </template>
 
-<script lang="coffee" src="../../descriptors/input" />
+<script lang="coffee" src="../descriptors/input.coffee" />

@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --coverage",
+    "unit": "jest --config test/unit/jest.conf.js --no-cache",
+    "cov":  "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit && npm run e2e",
+    "test": "npm run unit",
     "build": "node build/build.js",
     "pub": "npm run build && npm publish",
     "analyze": "webpack --config build/webpack.prod.conf.js --json > stats.json"
@@ -24,6 +25,8 @@
     "vue-provide-observable": "0.0.4"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.11.0",
+    "@vue/test-utils": "^1.0.3",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
@@ -43,7 +46,7 @@
     "chalk": "^2.0.1",
     "chromedriver": "^2.27.2",
     "coffee-loader": "^0.9.0",
-    "coffeescript": "^2.4.1",
+    "coffeescript": "^2.5.1",
     "copy-webpack-plugin": "^4.0.1",
     "cross-spawn": "^5.0.1",
     "css-loader": "^0.28.0",
@@ -68,7 +71,7 @@
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue": "^2.6.11",
-    "vue-jest": "^1.0.2",
+    "vue-jest": "^1.4.0",
     "vue-loader": "^13.3.0",
     "vue-router": "^3.0.1",
     "vue-style-loader": "^3.0.1",

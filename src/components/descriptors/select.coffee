@@ -1,7 +1,7 @@
-import Base from '../base'
+import Base from '@/components/descriptors/base'
 
-import props from '../../prop_types/select'
-import baseProps from '../../prop_types/base'
+import props from '@/components/prop_types/select'
+import baseProps from '@/components/prop_types/base'
 
 export default {
   extends: Base

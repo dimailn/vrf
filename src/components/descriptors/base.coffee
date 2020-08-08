@@ -1,6 +1,6 @@
-import Resource from '../../../mixins/resource'
-import set from '../../../utils/set'
-import get from '../../../utils/get'
+import Resource from '@/mixins/resource'
+import set from '@/utils/set'
+import get from '@/utils/get'
 
 
 export default {

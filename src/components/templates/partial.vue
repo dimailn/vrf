@@ -4,4 +4,4 @@
 </component>
 </template>
 
-<script lang="coffee" src="../descriptors/partial" />
+<script lang="coffee" src="../descriptors/partial.coffee" />
