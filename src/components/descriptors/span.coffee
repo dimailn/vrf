@@ -1,6 +1,6 @@
-import Base from './base'
+import Base from '@/components/descriptors/base'
 
-import props from '../prop_types/span'
+import props from '@/components/prop_types/span'
 
 export default {
   extends: Base

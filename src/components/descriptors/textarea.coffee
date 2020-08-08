@@ -1,6 +1,6 @@
-import Base from './base'
-import {textarea} from '../prop_types'
-import baseProps from '../prop_types/base'
+import Base from '@/components/descriptors/base'
+import {textarea} from '@/components/prop_types'
+import baseProps from '@/components/prop_types/base'
 
 export default {
   extends: Base

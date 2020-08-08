@@ -1,5 +1,5 @@
-import Resource from '../../mixins/resource'
-import base from './base'
+import Resource from '@/mixins/resource'
+import base from '@/components/descriptors/base'
 
 export default {
   extends: base

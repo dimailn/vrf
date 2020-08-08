@@ -8,14 +8,15 @@ module.exports = {
     'vue',
     'coffee'
   ],
-  // moduleNameMapper: {
-  //   '^@/(.*)$': '<rootDir>/src/$1'
-  // },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
   transform: {
     '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
     '.*\\.(vue)$': '<rootDir>/node_modules/vue-jest',
     "^.+\\.coffee$": "<rootDir>/test/unit/preprocessor.js"
   },
+  modulePaths: ['<rootDir>/src'],
   testPathIgnorePatterns: [
     '<rootDir>/test/e2e'
   ],
