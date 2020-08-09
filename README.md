@@ -117,7 +117,7 @@ There are several ways to access the resource:
 <template>
 
 <div>
-  {{resource}}
+  {{$resource}}
 </div>
 
 </template>
@@ -143,7 +143,7 @@ export default {
 <template>
 <div>
   <input v-model="value" />
-  {{resource}}
+  {{$resource}}
 </div>
 </template>
 
