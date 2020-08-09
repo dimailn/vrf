@@ -1,7 +1,7 @@
 <template>
 <input
   type="checkbox"
-  v-model="checkboxValue"
+  v-model="$value"
   :disabled="$disabled"
   :name="name"
 />

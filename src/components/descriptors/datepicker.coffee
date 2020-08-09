@@ -7,9 +7,9 @@ export default {
 
   computed:
     date: ->
-      @VueResourceForm.dateInterceptor.out(@value)
+      @VueResourceForm.dateInterceptor.out(@$value)
 
   methods:
     onInput: (e) ->
-      @value = @VueResourceForm.dateInterceptor.in(e.target.value)
+      @$value = @VueResourceForm.dateInterceptor.in(e.target.value)
 }

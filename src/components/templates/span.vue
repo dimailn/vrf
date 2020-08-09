@@ -1,7 +1,7 @@
 <template>
 
 <span>
-  {{value}}
+  {{$value}}
 </span>
 
 </template>

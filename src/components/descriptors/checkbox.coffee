@@ -11,12 +11,12 @@ export default {
   }
 
   computed:
-    checkboxValue:
+    $value:
       get: ->
-        return !@value if @inverted
-        @value
+        return !@$originalValue if @inverted
+        @$originalValue
       set: (value) ->
-        @value =
+        @$originalValue =
           if @inverted
             !value
           else

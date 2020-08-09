@@ -6,7 +6,7 @@ export default (components) -> {
   install: (Vue, options) ->
     installedComponentNames = []
 
-    if options.adapters? && options.adapters instanceof Array
+    if options?.adapters? && options.adapters instanceof Array
       options.adapters.forEach((adapter) ->
         for name, component of adapter.components
           unless component.vrfParent

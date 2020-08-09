@@ -2,7 +2,7 @@
 
 <input
   :type="password ? 'password' : 'text'"
-  v-model="value"
+  v-model="$value"
   :disabled="$disabled"
   :name="name"
   @input="onInput"

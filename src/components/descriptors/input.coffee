@@ -10,7 +10,7 @@ export default {
     transform: [String, Function]
   }
   watch:
-    value: (value, prev) ->
+    $value: (value, prev) ->
       return unless value?
 
       @applyTransform(value, prev) if !prev? || value != prev[0..-2]

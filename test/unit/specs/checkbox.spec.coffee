@@ -23,7 +23,7 @@ describe 'checkbox', ->
 
     checkbox = wrapper.find('input')
 
-    expect(checkbox.vm.checkboxValue).toBe true
+    expect(checkbox.vm.$value).toBe true
 
     checkbox.setChecked(false)
 
@@ -44,5 +44,5 @@ describe 'checkbox', ->
 
     checkbox = wrapper.find('input')
 
-    expect(checkbox.vm.checkboxValue).toBe false
+    expect(checkbox.vm.$value).toBe false
 

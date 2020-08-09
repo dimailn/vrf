@@ -24,7 +24,7 @@ describe 'form', ->
     )
 
     input = wrapper.find('input')
-    input.setData(value: 'text')
+    input.setData($value: 'text')
     expect(wrapper.vm.resource.title).toBe 'text'
 
   it 'input transform', ->
@@ -42,6 +42,6 @@ describe 'form', ->
     )
 
     input = wrapper.find('input')
-    input.setData(value: 'text')
+    input.setData($value: 'text')
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.resource.title).toBe 'Text'

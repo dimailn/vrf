@@ -1,6 +1,6 @@
 <template>
 <input
-  v-model="value"
+  v-model="$value"
   :disabled="$disabled"
   :name="name"
   @input="onInput"

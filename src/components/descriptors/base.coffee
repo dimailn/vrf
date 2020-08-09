@@ -21,8 +21,7 @@ export default {
       vue::VueResourceForm.translate(property, modelName)
 
   computed:
-    # $value!!!
-    value:
+    $originalValue:
       get: ->
         get(@$resource, @name)
 
@@ -33,6 +32,18 @@ export default {
           store.commit('vue-resource-form:update', {resourceName: @$rfName, name: @name, value})
         else
           set(@$resource, @name, value)
+    $value:
+      get: ->
+        @$originalValue
+      set: (value ) ->
+        @$originalValue = value
+    value:
+      get: ->
+        console.warn '[vrf] Value computed prop is deprecated, use $value instead'
+        @$value
+      set: (value) ->
+        console.warn '[vrf] Value computed prop is deprecated, use $value instead'
+        @$value = value
     $disabled: ->
       return @$formDisabled unless @disabled?
 
