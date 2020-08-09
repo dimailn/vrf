@@ -2,6 +2,7 @@ import Base from '@/components/descriptors/base'
 import baseProps from '@/components/prop_types/base'
 
 export default {
+  vrfParent: 'Base'
   extends: Base
   props: {
     ...baseProps
