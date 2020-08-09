@@ -142,7 +142,7 @@ export default {
 
 <template>
 <div>
-  <input v-model="value" />
+  <input v-model="$value" />
   {{$resource}}
 </div>
 </template>
