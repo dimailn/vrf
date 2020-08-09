@@ -2,4 +2,4 @@ language: node_js
 node_js:
   - "8"
 after_script:
-  - jest --config test/unit/jest.conf.js --coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage
+  - jest --ci --coverage && codecov
