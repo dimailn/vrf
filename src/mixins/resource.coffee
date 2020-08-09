@@ -1,3 +1,5 @@
+import evalBoolProp from '@/utils/eval-bool-prop'
+
 export default {
   inject: ['vueResourceForm']
   computed:
@@ -15,8 +17,12 @@ export default {
       console.warn '[vrf] Field resources in Resource mixin deprecated, use $sources instead.'
       @$sources
 
+    $formDisabled: ->
+      evalBoolProp(@vueResourceForm.wrapper.disabled, @)
+
     formDisabled: ->
-      @vueResourceForm.wrapper.disabled
+      console.warn '[vrf] Field formDisabled in Resource mixin deprecated, use $formDisabled instead.'
+      @$formDisabled
 
     fetching: ->
       @vueResourceForm.wrapper.fetching
@@ -41,10 +47,11 @@ export default {
 
     $form: ->
       @vueResourceForm.wrapper.form
- 
+
     rootResource: ->
-      @vueResourceForm.wrapper.rootResource
+      console.warn '[vrf] Field rootResource in Resource mixin deprecated, use $rootResource instead.'
+      @$rootResource
 
     $rootResource: ->
-      @rootResource || @resource
+      @vueResourceForm.wrapper.rootResource || @$resource
 }

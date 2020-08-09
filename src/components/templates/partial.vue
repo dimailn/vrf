@@ -1,5 +1,5 @@
 <template>
-<component :is="component" :resource="resource" :rf-name="$rfName" :callback="callback">
+<component :is="component" :resource="$resource" :rf-name="$rfName" :callback="callback">
   <slot />
 </component>
 </template>

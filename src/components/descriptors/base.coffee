@@ -1,6 +1,7 @@
 import Resource from '@/mixins/resource'
 import set from '@/utils/set'
 import get from '@/utils/get'
+import evalBoolProp from '@/utils/eval-bool-prop'
 
 
 export default {
@@ -14,13 +15,6 @@ export default {
     onChange: (e) ->
       @$emit('change', e)
 
-    _evalBoolProp: (name) ->
-      if typeof @[name] is 'string'
-        return false if @[name].length == 0
-        new Function('resource, rootResource, rfName', 'return resource && ' + @[name])(@resource, @$rootResource, @$rfName)
-      else
-        @[name]
-
     t: (property, modelName = @$rfName) ->
       vue = Object.getPrototypeOf(@$root).constructor
 
@@ -30,7 +24,7 @@ export default {
     # $value!!!
     value:
       get: ->
-        get(@resource, @name)
+        get(@$resource, @name)
 
       set: (value) ->
         if @vuex
@@ -38,14 +32,11 @@ export default {
           return console.warn("Store for VueResourceForm is not defined") unless store
           store.commit('vue-resource-form:update', {resourceName: @$rfName, name: @name, value})
         else
-          set(@resource, @name, value)
+          set(@$resource, @name, value)
     $disabled: ->
-      return @_evalBoolProp('formDisabled') unless @disabled?
+      return @$formDisabled unless @disabled?
 
-      @_evalBoolProp('disabled')
-
-    $formDisabled: ->
-      @_evalBoolProp('formDisabled')
+      evalBoolProp(@disabled, @)
 
     humanName: ->
       if @noLabel

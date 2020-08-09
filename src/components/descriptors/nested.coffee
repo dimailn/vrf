@@ -38,7 +38,7 @@ export default {
       @collection.map (item, index) -> { index, item }
 
     nestedResource: ->
-      @resource && @resource[@name]
+      @$resource && @$resource[@name]
 
     parentPath: ->
       @vueResourceFormPathService.add(@vueResourceFormPath, @name)

@@ -5,11 +5,11 @@ export default {
   extends: Base
   render: ->
     props = {
-      resource: @resource
-      resources: @resources
+      resource: @$resource
+      resources: @$sources
       rootResource: @$rootResource
       rootResources: @$rootResources
-      disabled: @formDisabled
+      disabled: @$formDisabled
       tScope: @tScope
       t: @t
       errors: @$errors
