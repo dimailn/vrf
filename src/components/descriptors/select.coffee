@@ -25,5 +25,5 @@ export default {
 
   methods:
     onChange: ->
-      @$emit 'input', @value
+      @$emit 'input', @$value
 }
