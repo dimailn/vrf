@@ -330,7 +330,7 @@ export default {
 ## Adapter API
 
 
-The adapter must export the added components, it can both override components from the vrf, and add new ones(with rf- prefix).
+The adapter must export the added components, it can both override components from the vrf, and add new ones(with ```rf-``` prefix).
 
 ```javascript
 
