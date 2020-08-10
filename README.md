@@ -25,7 +25,7 @@ Vrf (Vue Resource Form) is a solution for quickly writing declarative user inter
 
 First of all vrf is the specification of form components. There are so many great ui frameworks with different components API, so if you want migrate from one to other you will must to refactor each form and probably, it isn't what you want. Vrf provides common abstract standard for forms like pure html forms, but more powerful.
 
-This package contains a set of descriptors for each form element that you can use to create your own implementation.  If you need to add a new property/feature to some component - this is probably an occasion to think about whether it is possible to add it to the core (this can be discussed in issues).  If the it can be added to the core, this will mean that it is included in the standard and all authors of other implementations will also be able to implement it.
+This package contains a set of descriptors for each form element that you can use to create your own implementation.  If you need to add a new property/feature to some component - this is probably an occasion to think about whether it is possible to add it to the core (this can be discussed in issues).  If the it can be added to the core, this will mean that it is included in the standard and all authors of other implementations will also be able to implement it. If this is not possible, the property is added only for the adapter component and will work only for this adapter.
 
 Vrf doesn't depends on current I18n, validation and network interaction libraries. Instead, it provides interfaces for integration with any one.
 
