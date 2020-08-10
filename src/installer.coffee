@@ -8,6 +8,7 @@ export default (components) -> {
 
     if options?.adapters? && options.adapters instanceof Array
       options.adapters.forEach((adapter) ->
+        adapter.install?(Vue)
         for name, component of adapter.components
           unless component.vrfParent
             console.warn("[vrf] Component #{name} from #{adapter.name} has not vrfParent and will not initialized")
