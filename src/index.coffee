@@ -11,7 +11,6 @@ import RfPartial from './components/templates/partial'
 import RfSpan from './components/templates/span'
 
 import descriptors from './components/descriptors'
-import fieldsDescriptors from './fields/descriptors'
 
 import mutations from './vuex/mutations'
 
@@ -51,7 +50,6 @@ export {
   RfSpan
 
   descriptors
-  fieldsDescriptors
   mutations
 
   AutocompleteProvider

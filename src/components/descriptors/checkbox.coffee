@@ -11,6 +11,9 @@ export default {
   }
 
   computed:
+    humanName: ->
+      @label || @t(if @inverted then "#{@name}__inverted" else @name)
+
     $value:
       get: ->
         return !@$originalValue if @inverted
