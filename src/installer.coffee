@@ -23,7 +23,7 @@ export default (components) -> {
 
           Vue.component(name, component)
 
-          installedComponentNames << name
+          installedComponentNames.push name
       )
 
     installedComponentNames = indexBy(installedComponentNames)
