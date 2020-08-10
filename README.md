@@ -327,6 +327,57 @@ export default {
 
 ```
 
+## Adapter API
+
+
+The adapter must export the added components, it can both override components from the vrf, and add new ones(with rf- prefix).
+
+```javascript
+
+export default {
+  name: 'vrf-adapter-name',
+  components: {
+    RfInput
+    ...
+  }
+}
+```
+
+If you need install hook, you can add it, but you should be aware that it does not receive options, since  they refer to vrf. If you want options, you need to export an adapter factory instead of an adapter.
+
+```javascript
+
+export default (options) => {
+  name: 'vrf-adapter-name',
+  components: {
+    RfInput
+    ...
+  },
+  install(Vue){
+  }
+}
+```
+
+One of the main things to consider when writing an adapter is that your adapter should not have a dependency vrf or a ui framework that you are wrapping(you must include them only in dev and peer dependencies). Following this rule will avoid duplication of dependencies in the final product.
+
+For this reason, instead of importing the parent descriptor from vrf (which is only valid in the final product), you need to use the vrfParent key in your component.
+
+```vue
+<template>
+
+<input type="text" v-model="$value" />
+
+</template>
+
+<script>
+
+export default {
+  vrfParent: 'input'
+}
+
+</script>
+
+```
 
 # Architecture
 
