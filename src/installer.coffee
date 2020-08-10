@@ -21,7 +21,7 @@ export default (components) -> {
 
           component.extends = descriptor
 
-          Vue.use(name, component)
+          Vue.component(name, component)
 
           installedComponentNames << name
       )
