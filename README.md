@@ -383,7 +383,7 @@ export default {
 
 * Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling. 
 
-* Adapters - implements VRF using some ui framework over import components descriptors from core.
+* Adapters - implements VRF using some ui framework over link components descriptors from core.
 
 * Translate lambda - function with ```(modelProperty, modelName) -> translation``` signature, used for translations
 
