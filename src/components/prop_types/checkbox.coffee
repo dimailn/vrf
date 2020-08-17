@@ -4,4 +4,5 @@ export default {
     default: false
   label: String
   indeterminate: Boolean
+  noLabel: Boolean
 }
