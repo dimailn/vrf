@@ -3,10 +3,11 @@
     <!-- <img src="./assets/logo.png"> -->
 
     VRF playground
-
     <h1> Simple form </h1>
     <div style="display: flex">
       <rf-form :resource="todo" class="form">
+        <rf-input v-model="todo.title" />
+        <rf-checkbox v-model="todo.status" />
         <rf-input name="title" />
         <rf-checkbox name="status" />
         <rf-switch name="status" />

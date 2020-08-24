@@ -4,6 +4,7 @@
   v-model="$value"
   :disabled="$disabled"
   :name="name"
+  @input="onInput"
 />
 </template>
 

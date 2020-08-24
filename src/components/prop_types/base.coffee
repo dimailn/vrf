@@ -1,7 +1,6 @@
 export default {
   name:
     type: String
-    required: true
   disabled:
     type: [Boolean, String]
     default: undefined
@@ -12,4 +11,13 @@ export default {
   noLabel: Boolean
   label: String
   required: Boolean
+  value:
+    type: [
+      Number
+      String
+      Boolean
+      Object
+      Symbol
+    ]
+    default: Symbol("NOT_DEFINED")
 }
