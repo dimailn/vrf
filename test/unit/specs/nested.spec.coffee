@@ -34,7 +34,7 @@ describe 'nested', ->
 
     subtaskTitle = wrapper.find('.subtask-title')
 
-    subtaskTitle.setData(value: 'Subtask title')
+    subtaskTitle.setData($value: 'Subtask title')
 
     expect(wrapper.vm.resource.subtasks[0].title).toBe 'Subtask title'
 

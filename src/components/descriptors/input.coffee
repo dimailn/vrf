@@ -24,6 +24,6 @@ export default {
           @transform
 
       if transform?
-        @$nextTick => @value = transform(value, prev)
+        @$nextTick => @$value = transform(value, prev)
 
 }
