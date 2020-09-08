@@ -61,5 +61,8 @@ export default (components) -> {
 
     if options.transforms?
       Vue::VueResourceForm.transforms = options.transforms
+      
+    if options.locale?
+      Vue::VueResourceForm.locale = options.locale
 }
 
