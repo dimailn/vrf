@@ -251,6 +251,69 @@ export default {
 
 ```
 
+## Bitwise fields
+
+Sometimes you need to manage some bitwise values in your resource. There is ```rf-bitwise``` component to manage them. It has two modes -
+you can use this component as a wrapper for checkboxes, or use its ```options``` property(like ```rf-select```). It supports ```inverted``` mode as well.
+
+```vue
+<template>
+
+<rf-form :resource="todo">
+
+  <!-- rf-bitwise as wrapper, markup mode -->
+  <rf-bitwise name="flags">
+    <rf-checkbox name="visible" power="0" />
+    <rf-checkbox name="editable" power="1" />
+    <rf-checkbox name="shareable" power="2" />
+  </rf-bitwise>
+
+  <!-- rf-bitwise renders checkboxes itself by options -->
+  <rf-bitwise
+    name="flags"
+    :options="options"
+  />
+</rf-form>
+
+</template>
+
+<script>
+
+export default {
+  data(){
+    return {
+      resource: {
+        flags: 0
+      }
+    }
+  },
+  computed: {
+    options(){
+      return [
+        {
+          id: 0,
+          name: 'visible' // use title instead of name, if you don't need translations
+        },
+        {
+          id: 1,
+          name: 'editable'
+        },
+        {
+          id: 2,
+          name: 'shareable'
+        }
+      ]
+    }
+  }
+}
+
+
+</script>
+
+</template>
+
+```
+
 ## Autoforms
 
 Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
@@ -268,17 +331,17 @@ export default class FooMiddleware {
     this.name = name
     this.form = form
   }
-  
+
   static accepts({name, transport}){ // determines if middleware is applicable for a given form
     return true
   }
-  
+
   load(){
   }
-  
+
   loadSources(){
   }
-  
+
   save(resource){
   }
 }
@@ -381,7 +444,7 @@ export default {
 
 # Architecture
 
-* Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling. 
+* Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling.
 
 * Adapters - implements VRF using some ui framework over link components descriptors from core.
 
