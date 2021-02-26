@@ -11,17 +11,54 @@ export default {
   }
 
   computed:
+    $fieldName: ->
+      return @name unless @$power?
+
+      'bitwiseValue'
+
     humanName: ->
       @label || @t(if @inverted then "#{@name}__inverted" else @name)
 
     $value:
       get: ->
-        return !@$originalValue if @inverted
-        @$originalValue
+        if @$power?
+          @getBitwise()
+        else
+          @getBoolean()
+
       set: (value) ->
-        @$originalValue =
-          if @inverted
-            !value
-          else
-            value
+        if @$power?
+          @setBitwise(value)
+        else
+          @setBoolean(value)
+
+    $power: ->
+      return @power if typeof @power is 'number'
+
+      return parseInt(@power) if typeof  @power is 'string'
+
+  methods:
+    getBoolean: ->
+      return !@$originalValue if @inverted
+
+      @$originalValue
+
+    setBoolean: (value) ->
+      @$originalValue =
+        if @inverted
+          !value
+        else
+          value
+
+    getBitwise: ->
+      throw "[vrf] You can use power property for checkbox only for bitwise group" unless typeof @$originalValue is 'number'
+
+      @$originalValue & 2**@$power
+
+    setBitwise: (value) ->
+      @$originalValue =
+        if value
+          @$originalValue | 2**@$power
+        else
+          @$originalValue & ~(2**@$power)
 }

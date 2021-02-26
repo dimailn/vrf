@@ -10,6 +10,7 @@ import nested from './nested'
 import autocomplete from './autocomplete'
 import form from './form'
 import partial from './partial'
+import bitwise from './bitwise'
 
 export default {
   base
@@ -24,4 +25,5 @@ export default {
   autocomplete
   form
   partial
+  bitwise
 }

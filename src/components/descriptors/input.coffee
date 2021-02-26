@@ -13,6 +13,8 @@ export default {
     $value: (value, prev) ->
       return unless value?
 
+      return unless @transform
+
       @applyTransform(value, prev) if !prev? || value != prev[0..-2]
 
   methods:
