@@ -5,4 +5,5 @@ export default {
   label: String
   indeterminate: Boolean
   noLabel: Boolean
+  power: [Number, String]
 }

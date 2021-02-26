@@ -21,17 +21,19 @@ export default {
       vue::VueResourceForm.translate(property, modelName)
 
   computed:
+    $fieldName: -> @name
     $originalValue:
       get: ->
-        get(@$resource, @name)
+        get(@$resource, @$fieldName)
 
       set: (value) ->
         if @vuex
           store = @VueResourceForm.store
           return console.warn("Store for VueResourceForm is not defined") unless store
-          store.commit('vue-resource-form:update', {resourceName: @$rfName, name: @name, value})
+          store.commit('vue-resource-form:update', {resourceName: @$rfName, name: @$fieldName, value})
         else
-          set(@$resource, @name, value)
+          set(@$resource, @$fieldName, value)
+
     $value:
       get: ->
         @$originalValue
