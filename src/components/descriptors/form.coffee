@@ -3,7 +3,7 @@ import capitalize from '@/utils/capitalize'
 import pick from '@/utils/pick'
 import set from '@/utils/set'
 import toPath from '@/utils/to-path'
-
+import merge from 'lodash.merge'
 
 provideProps = -> {
   resource: null
@@ -199,6 +199,7 @@ export default {
             else
               nestedPath
 
+
         return @$emit('reload-resource', modifier)
 
       @reloadRootResource(modifier)
@@ -207,24 +208,29 @@ export default {
       return @$emit('reload-root-resource', modifier) if @isNested
 
       @middleware.load().then((resource) =>
-        if !modifier || !@innerResource
-          @innerResource = resource
+        if !modifier && !@innerResource
+          @setSyncProp('resource', resource)
         else
           throw 'Modifier must be an array' unless modifier instanceof Array
 
+          console.warn JSON.stringify @innerResource
+          # console.warn pick(resource, modifier)
+
           # must be deep merge
-          @innerResource = {
-            ...@innerResource
-            ...pick(resource, modifier)
-          }
-
-
-        @$emit 'update:resource', @innerResource if @innerResource?
+          @setSyncProp(
+            'resource'
+            merge(@innerResource, pick(resource, modifier))
+          )
+        # @$emit 'update:resource', @innerResource if @innerResource?
       )
 
     setSyncProp: (name, value) ->
+      # console.warn name, value, "inner#{capitalize name}"
+
       @["inner#{capitalize name}"] = value
       @$emit "update:#{name}", value
+
+      console.log name, value, @innerResource
 
     submit: ->
       # Даем отработать onChange

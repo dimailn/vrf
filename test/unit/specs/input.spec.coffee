@@ -10,7 +10,7 @@ import capitalize from '../../../src/utils/capitalize'
 Vue.use(Vrf)
 
 
-describe 'form', ->
+describe 'input', ->
   it 'simple input', ->
     wrapper =  mount(
       template: '''

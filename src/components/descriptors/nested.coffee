@@ -61,13 +61,13 @@ export default {
 
   methods:
     reloadResource: (modifier) ->
-      @form.reloadResource(modifier)
+      @$form.reloadResource(modifier)
 
     reloadSources: ->
-      @form.reloadSources()
+      @$form.reloadSources()
 
     reloadRootResource: (modifier) ->
-      @form.reloadRootResource(modifier)
+      @$form.reloadRootResource(modifier)
 
     errorsFor: (index) ->
       return unless @$errors
