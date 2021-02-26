@@ -7,6 +7,7 @@ export default {
   props: {
     ...baseProps
     options: Array
+    inverted: Boolean
   }
 
   data: ->

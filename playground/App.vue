@@ -23,10 +23,11 @@
           <rf-checkbox name="some 2" power="2" />
         </rf-bitwise>
 
-        <h4>Options based</h4>
+        <h4>Options based(inverted)</h4>
         <rf-bitwise
           name="flags"
           :options="[{id: 1, title: 'some 1'}, {id: 2, title: 'some 2'}]"
+          inverted
         />
 
         <button @click="add">Add</button>

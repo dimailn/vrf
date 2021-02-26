@@ -9,6 +9,7 @@
       :label="option.title"
       :power="option.id"
       :key="option.id"
+      :inverted="inverted"
       v-for="option in $_options"
     />
   </template>

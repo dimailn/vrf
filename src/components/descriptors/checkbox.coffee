@@ -53,9 +53,15 @@ export default {
     getBitwise: ->
       throw "[vrf] You can use power property for checkbox only for bitwise group" unless typeof @$originalValue is 'number'
 
-      @$originalValue & 2**@$power
+      value = @$originalValue & 2**@$power
+
+      return !value if @inverted
+
+      value
 
     setBitwise: (value) ->
+      value = !value if @inverted
+
       @$originalValue =
         if value
           @$originalValue | 2**@$power
