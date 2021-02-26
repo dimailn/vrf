@@ -6,7 +6,7 @@ export default {
   extends: Select
   props: {
     ...baseProps
-    options: Array
+    options: [Array, String]
     inverted: Boolean
   }
 
