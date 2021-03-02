@@ -14,6 +14,11 @@ export default {
     wrapper:
       bitwiseValue: 0
 
+  created: ->
+    return unless @$originalValue?
+
+    @wrapper.bitwiseValue = @$originalValue
+
   watch:
     'wrapper.bitwiseValue': (value) ->
       @$originalValue = value
@@ -23,3 +28,4 @@ export default {
 
       @wrapper.bitwiseValue = parseInt(value) || 0
 }
+
