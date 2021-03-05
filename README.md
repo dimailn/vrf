@@ -57,7 +57,7 @@ Such form will load and save data without a single line of Javascript code. This
 * Serverside validations
 * autoforms
 * nested entities
-* option ```disabled``` for form
+* option ```disabled``` / ```readonly``` for entire form
 * vuex integration
 
 # Basics
