@@ -2,6 +2,7 @@
 <textarea
   v-model="$value"
   :disabled="$disabled"
+  :readonly="$readonly"
   :name="name"
   @input="onInput"
   @change="onChange"

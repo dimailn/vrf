@@ -11,6 +11,11 @@ export default {
   }
 
   computed:
+    $disabled: ->
+      return true if @$readonly
+
+      @$originalDisabled
+
     $fieldName: ->
       return @name unless @$power?
 

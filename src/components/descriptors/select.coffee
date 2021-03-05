@@ -11,6 +11,11 @@ export default {
   }
 
   computed:
+    $disabled: ->
+      return true if @$readonly
+
+      @$originalDisabled
+
     $_options: ->
       if typeof @options is 'string'
         @$sources[@options] || @VueResourceForm.sources?[@options]

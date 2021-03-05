@@ -5,6 +5,9 @@ export default {
   disabled:
     type: [Boolean, String]
     default: undefined
+  readonly:
+    type: [Boolean, String]
+    default: undefined
   placeholder:
     type: String
   tabindex:

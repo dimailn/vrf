@@ -10,6 +10,7 @@ provideProps = -> {
   resources: null
   $$resource: null
   disabled: false
+  readonly: false
   rfName: ''
   errors: {}
   submit: null
@@ -54,6 +55,7 @@ export default {
     resource: Object
     resources: Object
     disabled: [Boolean, String]
+    readonly: [Boolean, String]
     name: String
     rfId: Number
     rootName: String

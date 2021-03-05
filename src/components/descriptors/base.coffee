@@ -46,10 +46,22 @@ export default {
       set: (value) ->
         console.warn '[vrf] Value computed prop is deprecated, use $value instead'
         @$value = value
-    $disabled: ->
+
+    $originalDisabled: ->
       return @$formDisabled unless @disabled?
 
       evalBoolProp(@disabled, @)
+
+    $disabled: ->
+      @$originalDisabled
+
+    $originalReadonly: ->
+      return @$formReadonly unless @readonly?
+
+      evalBoolProp(@readonly, @)
+
+    $readonly: ->
+      @$originalReadonly
 
     humanName: ->
       if @noLabel

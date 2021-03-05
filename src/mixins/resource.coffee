@@ -24,6 +24,9 @@ export default {
       console.warn '[vrf] Field formDisabled in Resource mixin deprecated, use $formDisabled instead.'
       @$formDisabled
 
+    $formReadonly: ->
+      evalBoolProp(@vueResourceForm.wrapper.readonly, @)
+
     fetching: ->
       @vueResourceForm.wrapper.fetching
 
