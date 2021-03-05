@@ -1,6 +1,6 @@
 <template>
 
-<rf-form :resource="wrapper">
+<rf-form :resource="wrapper" :disabled="$disabled" :readonly="$readonly">
   <template
     v-if="$_options"
   >
