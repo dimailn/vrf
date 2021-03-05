@@ -51,10 +51,8 @@
               <rf-span name="owner" />
 
               <h2> rf-resource example </h2>
-              <rf-resource>
-                <template slot-scope="props">
-                  {{props}}
-                </template>
+              <rf-resource v-slot="{resource}">
+                {{resource}}
               </rf-resource>
             </div>
           </template>
