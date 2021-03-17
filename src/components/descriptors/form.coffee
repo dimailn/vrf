@@ -3,7 +3,7 @@ import capitalize from '@/utils/capitalize'
 import pick from '@/utils/pick'
 import set from '@/utils/set'
 import toPath from '@/utils/to-path'
-
+import cloneDeep from 'lodash.clonedeep'
 
 provideProps = -> {
   resource: null
@@ -254,6 +254,16 @@ export default {
               'after-submit-failure'
           )
         ).catch(console.error)
+
+    preserialize: ->
+      resource = cloneDeep(@$resource)
+
+      for name, children of @form.$pathService.root
+        resource[name + 'Attributes'] = resource[name]
+
+        delete resource[name]
+
+      resource
 
     deserialize: (json) ->
 

@@ -94,6 +94,9 @@ export default {
   created: ->
     @todo = @blank()
 
+  mounted: ->
+    console.log @$refs.form.preserialize()
+
   methods:
     add: ->
       @user.todos.push(@todo)

@@ -21,6 +21,7 @@
   "main": "dist/static/lib.js",
   "dependencies": {
     "humps": "^2.0.1",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "vue-provide-observable": "0.0.4"
   },
