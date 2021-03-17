@@ -9,6 +9,7 @@ export default {
     password: Boolean
     transform: [String, Function]
   }
+
   watch:
     $value: (value, prev) ->
       return unless value?

@@ -73,17 +73,24 @@ export default {
       default: -> {}
     fetching: Boolean
     saving: Boolean
-    path: Array
-    pathService: Object
-    rootResource: Object
+    # If it's true, resource store is stored in vuex(mutation installation required)
     vuex:
       type: Boolean
       default: false
+    # If it's true, resources have no id and are one of a kind
     single:
       type: Boolean
       default: false
-    transport:
+    # Middleware identifier
+    api:
       type: String
+    # Namespace for API
+    namespace:
+      type: String
+    # Internal service settings used for nested forms
+    path: Array
+    pathService: Object
+    rootResource: Object
 
   data: ->
     innerResource: null
@@ -137,7 +144,7 @@ export default {
       @innerSaving || @saving
 
     middleware: ->
-      middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @name, transport: @transport}))
+      middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @name, api: @api, namespace: @namespace}))
 
       throw "Can't find middleware for #{@name}" unless middleware
 
