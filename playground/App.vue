@@ -15,6 +15,21 @@
         <rf-textarea name="description" />
         <rf-span name="owner" />
         <rf-select name="priority" options="numerals" />
+
+        <h3>Bitwise field</h3>
+        <h4>Markup based</h4>
+        <rf-bitwise name="flags">
+          <rf-checkbox name="some 1" power="1" />
+          <rf-checkbox name="some 2" power="2" />
+        </rf-bitwise>
+
+        <h4>Options based(inverted)</h4>
+        <rf-bitwise
+          name="flags"
+          :options="[{id: 1, title: 'some 1'}, {id: 2, title: 'some 2'}]"
+          inverted
+        />
+
         <button @click="add">Add</button>
       </rf-form>
       <div style="flex: 1">
@@ -36,10 +51,8 @@
               <rf-span name="owner" />
 
               <h2> rf-resource example </h2>
-              <rf-resource>
-                <template slot-scope="props">
-                  {{props}}
-                </template>
+              <rf-resource v-slot="{resource}">
+                {{resource}}
               </rf-resource>
             </div>
           </template>
@@ -117,6 +130,7 @@ export default {
       importance: null
       description: ''
       owner: 'User #1'
+      flags: 0
 
   computed:
     importanceOptions: ->

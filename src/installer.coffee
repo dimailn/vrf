@@ -1,9 +1,36 @@
 import dateInterceptor from './utils/date-interceptor'
-
+import descriptors from './components/descriptors'
+import indexBy from './utils/index-by'
 
 export default (components) -> {
   install: (Vue, options) ->
+    installedComponentNames = []
+
+    if options?.adapters? && options.adapters instanceof Array
+      options.adapters.forEach((adapter) ->
+        adapter.install?(Vue)
+        for name, component of adapter.components
+          unless component.vrfParent
+            console.warn("[vrf] Component #{name} from #{adapter.name} has not vrfParent and will not initialized")
+            continue
+
+          descriptor = descriptors[component.vrfParent]
+
+          unless descriptor
+            console.warn("[vrf] Vrf parent #{component.vrfParent} is not found for component #{name} from #{adapter.name}")
+            continue
+
+          component.extends = descriptor
+
+          Vue.component(name, component)
+
+          installedComponentNames.push name
+      )
+
+    installedComponentNames = indexBy(installedComponentNames)
+
     for name, component of components
+      continue if installedComponentNames[name]
       Vue.component(name, component)
 
     Vue::VueResourceForm ||= {}
@@ -34,5 +61,8 @@ export default (components) -> {
 
     if options.transforms?
       Vue::VueResourceForm.transforms = options.transforms
+      
+    if options.locale?
+      Vue::VueResourceForm.locale = options.locale
 }
 

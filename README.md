@@ -2,6 +2,8 @@
   <img width="166" height="115" src="https://raw.githubusercontent.com/dimailn/vrf/master/static/logo.png" alt="vrf logo">
 </p>
 
+<a href="https://travis-ci.org/dimailn/vrf"><img src="https://travis-ci.org/dimailn/vrf.svg?branch=master" /></a>
+[![Coverage Status](https://coveralls.io/repos/github/dimailn/vrf/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/dimailn/vrf?branch=master)
 <a href="https://www.npmjs.com/package/vrf"><img alt="npm" src="https://img.shields.io/npm/v/vrf"></a>
 <img src="https://img.shields.io/bundlephobia/min/vrf" />
 <img src="https://img.shields.io/bundlephobia/minzip/vrf" />
@@ -18,12 +20,12 @@ npm start
 
 # What is Vrf?
 
-Vue Resource Form is a solution for quickly writing declarative user interface forms.
+Vrf (Vue Resource Form) is a solution for quickly writing declarative user interface forms.
 
 
 First of all vrf is the specification of form components. There are so many great ui frameworks with different components API, so if you want migrate from one to other you will must to refactor each form and probably, it isn't what you want. Vrf provides common abstract standard for forms like pure html forms, but more powerful.
 
-This package contains a set of descriptors for each form element that you can use to create your own implementation.  If you need to add a new property/feature to some component - this is probably an occasion to think about whether it is possible to add it to the core (this can be discussed in issues).  If the it can be added to the core, this will mean that it is included in the standard and all authors of other implementations will also be able to implement it.
+This package contains a set of descriptors for each form element that you can use to create your own implementation.  If you need to add a new property/feature to some component - this is probably an occasion to think about whether it is possible to add it to the core (this can be discussed in issues).  If the it can be added to the core, this will mean that it is included in the standard and all authors of other implementations will also be able to implement it. If this is not possible, the property is added only for the adapter component and will work only for this adapter.
 
 Vrf doesn't depends on current I18n, validation and network interaction libraries. Instead, it provides interfaces for integration with any one.
 
@@ -33,7 +35,7 @@ Vrf doesn't depends on current I18n, validation and network interaction librarie
 It allows you to write forms in this way:
 
 ```vue
-<rf-form rf-name="User" auto>
+<rf-form name="User" auto>
   <rf-input name="firstName" />
   <rf-input name="lastName" />
   <rf-switch name="blocked" />
@@ -55,7 +57,7 @@ Such form will load and save data without a single line of Javascript code. This
 * Serverside validations
 * autoforms
 * nested entities
-* option disabled for form
+* option ```disabled``` / ```readonly``` for entire form
 * vuex integration
 
 # Basics
@@ -115,7 +117,7 @@ There are several ways to access the resource:
 <template>
 
 <div>
-  {{resource}}
+  {{$resource}}
 </div>
 
 </template>
@@ -140,8 +142,8 @@ export default {
 
 <template>
 <div>
-  <input v-model="value" />
-  {{resource}}
+  <input v-model="$value" />
+  {{$resource}}
 </div>
 </template>
 
@@ -249,6 +251,69 @@ export default {
 
 ```
 
+## Bitwise fields
+
+Sometimes you need to manage some bitwise values in your resource. There is ```rf-bitwise``` component to manage them. It has two modes -
+you can use this component as a wrapper for checkboxes, or use its ```options``` property(like ```rf-select```). It supports ```inverted``` mode as well.
+
+```vue
+<template>
+
+<rf-form :resource="todo">
+
+  <!-- rf-bitwise as wrapper, markup mode -->
+  <rf-bitwise name="flags">
+    <rf-checkbox name="visible" power="0" />
+    <rf-checkbox name="editable" power="1" />
+    <rf-checkbox name="shareable" power="2" />
+  </rf-bitwise>
+
+  <!-- rf-bitwise renders checkboxes itself by options -->
+  <rf-bitwise
+    name="flags"
+    :options="options"
+  />
+</rf-form>
+
+</template>
+
+<script>
+
+export default {
+  data(){
+    return {
+      resource: {
+        flags: 0
+      }
+    }
+  },
+  computed: {
+    options(){
+      return [
+        {
+          id: 0,
+          name: 'visible' // use title instead of name, if you don't need translations
+        },
+        {
+          id: 1,
+          name: 'editable'
+        },
+        {
+          id: 2,
+          name: 'shareable'
+        }
+      ]
+    }
+  }
+}
+
+
+</script>
+
+</template>
+
+```
+
 ## Autoforms
 
 Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
@@ -266,17 +331,17 @@ export default class FooMiddleware {
     this.name = name
     this.form = form
   }
-  
+
   static accepts({name, transport}){ // determines if middleware is applicable for a given form
     return true
   }
-  
+
   load(){
   }
-  
+
   loadSources(){
   }
-  
+
   save(resource){
   }
 }
@@ -285,18 +350,103 @@ const middlewares = [
   FooMiddleware
 ]
 
-Vue.use(VrfVuetify, {middlewares})
+Vue.use(Vrf, {middlewares})
 
 ```
 
 
+## Data loading control
 
+Vrf provide some methods on rf-form allows you to manage data loading:
+
+```javascript
+
+$refs.form.forceReload() // Completely reloading, excplicitly displayed to user
+
+$refs.form.reloadResource() // Reload only resource without showing loaders
+
+$refs.form.reloadResource(['messages']) // Reload only 'messages' key on resource
+
+$refs.form.reloadSources() // Reload only sources
+
+$refs.form.reloadRootResource(['options']) // reload root form resource, useful if nested component affects data on top level
+
+```
+
+Method ```reloadResource``` allows you to write custom components which may reload the piece of data they are responsible for.
+
+```javascript
+import {descriptors} from 'vrf'
+
+export default {
+  extends: descriptors.base,
+  methods: {
+    ... // some logic mutating data on the server
+    invalidate(){
+      this.$form.reloadResource(this.name)
+    }
+  }
+}
+
+```
+
+## Adapter API
+
+
+The adapter must export the added components, it can both override components from the vrf, and add new ones(with ```rf-``` prefix).
+
+```javascript
+
+export default {
+  name: 'vrf-adapter-name',
+  components: {
+    RfInput
+    ...
+  }
+}
+```
+
+If you need install hook, you can add it, but you should be aware that it does not receive options, since  they refer to vrf. If you want options, you need to export an adapter factory instead of an adapter.
+
+```javascript
+
+export default (options) => {
+  name: 'vrf-adapter-name',
+  components: {
+    RfInput
+    ...
+  },
+  install(Vue){
+  }
+}
+```
+
+One of the main things to consider when writing an adapter is that your adapter should not have a dependency vrf or a ui framework that you are wrapping(you must include them only in dev and peer dependencies). Following this rule will avoid duplication of dependencies in the final product.
+
+For this reason, instead of importing the parent descriptor from vrf (which is only valid in the final product), you need to use the vrfParent key in your component.
+
+```vue
+<template>
+
+<input type="text" v-model="$value" />
+
+</template>
+
+<script>
+
+export default {
+  vrfParent: 'input'
+}
+
+</script>
+
+```
 
 # Architecture
 
-* Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling. 
+* Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling.
 
-* Adapters - implements VRF using some ui framework over import components descriptors from core.
+* Adapters - implements VRF using some ui framework over link components descriptors from core.
 
 * Translate lambda - function with ```(modelProperty, modelName) -> translation``` signature, used for translations
 
@@ -369,6 +519,7 @@ Vue.use(VrfVuetify, {middlewares})
 
 ## Planned
 
+* ```rf-radio```
 * Clientside validations
 >
 

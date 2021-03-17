@@ -1,15 +1,12 @@
 <template>
 <input
+  type="checkbox"
   v-model="$value"
   :disabled="$disabled"
   :readonly="$readonly"
   :name="name"
-  @input="onInput"
-  @blur="onBlur"
+  :title="label"
 />
 </template>
 
-
-<script lang="coffee" src="../../descriptors/autocomplete.coffee" />
-
-
+<script lang="coffee" src="../descriptors/checkbox.coffee" />

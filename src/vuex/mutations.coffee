@@ -1,4 +1,4 @@
-import set from 'lodash.set'
+import set from '../utils/set'
 
 import camelCase from '../utils/camel-case'
 

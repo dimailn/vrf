@@ -1,23 +1,34 @@
+import evalBoolProp from '@/utils/eval-bool-prop'
+
 export default {
   inject: ['vueResourceForm']
   computed:
-    resource: ->
+    $resource: ->
       @vueResourceForm.wrapper.resource
 
-    resources: ->
+    $sources: ->
       @vueResourceForm.wrapper.resources
 
-    formDisabled: ->
-      @vueResourceForm.wrapper.disabled
+    resource: ->
+      console.warn '[vrf] Field resource in Resource mixin deprecated, use $resource instead.'
+      @$resource
 
-    submit: ->
-      @vueResourceForm.wrapper.submit
+    resources: ->
+      console.warn '[vrf] Field resources in Resource mixin deprecated, use $sources instead.'
+      @$sources
 
-    requireSource: ->
+    $requireSource: ->
       @vueResourceForm.wrapper.requireSource
 
-    saving: ->
-      @vueResourceForm.wrapper.saving
+    $formDisabled: ->
+      evalBoolProp(@vueResourceForm.wrapper.disabled, @)
+
+    formDisabled: ->
+      console.warn '[vrf] Field formDisabled in Resource mixin deprecated, use $formDisabled instead.'
+      @$formDisabled
+
+    $formReadonly: ->
+      evalBoolProp(@vueResourceForm.wrapper.readonly, @)
 
     fetching: ->
       @vueResourceForm.wrapper.fetching
@@ -25,18 +36,28 @@ export default {
     vuex: ->
       @vueResourceForm.wrapper.vuex
 
-    $rfName: ->
-      @vueResourceForm.wrapper.rfName
-
-    errors: ->
-      @vueResourceForm.wrapper.errors
-
     pathService: ->
       @vueResourceForm.wrapper.pathService
 
+    $rfName: ->
+      @vueResourceForm.wrapper.rfName
+
+    $errors: ->
+      @vueResourceForm.wrapper.errors
+
+    $submit: ->
+      @vueResourceForm.wrapper.submit
+
+    $saving: ->
+      @vueResourceForm.wrapper.saving
+
+    $form: ->
+      @vueResourceForm.wrapper.form
+
     rootResource: ->
-      @vueResourceForm.wrapper.rootResource
+      console.warn '[vrf] Field rootResource in Resource mixin deprecated, use $rootResource instead.'
+      @$rootResource
 
     $rootResource: ->
-      @rootResource || @resource
+      @vueResourceForm.wrapper.rootResource || @$resource
 }

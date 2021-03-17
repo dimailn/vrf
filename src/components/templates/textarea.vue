@@ -1,15 +1,16 @@
 <template>
-<input
+<textarea
   v-model="$value"
   :disabled="$disabled"
   :readonly="$readonly"
   :name="name"
   @input="onInput"
+  @change="onChange"
   @blur="onBlur"
 />
 </template>
 
 
-<script lang="coffee" src="../../descriptors/autocomplete.coffee" />
+<script lang="coffee" src="../descriptors/textarea.coffee" />
 
 

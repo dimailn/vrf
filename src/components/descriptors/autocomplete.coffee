@@ -1,8 +1,8 @@
-import Base from './base'
-import props from '../prop_types/autocomplete'
-import pick from 'lodash.pick'
+import Base from '@/components/descriptors/base'
+import props from '@/components/prop_types/autocomplete'
+import pick from '@/utils/pick'
 import debounce from 'lodash.debounce'
-import baseProps from '../prop_types/base'
+import baseProps from '@/components/prop_types/base'
 
 export default {
   extends: Base
@@ -18,7 +18,7 @@ export default {
     menu: false
 
   watch:
-    value: ->
+    $value: ->
       @providerInstance.onValueChanged()
 
   mounted: ->
@@ -27,7 +27,7 @@ export default {
   methods:
     reset: ->
       @query = ''
-      @value = null
+      @$value = null
 
     onSelect: (item) ->
       @providerInstance.onSelect(item)
@@ -50,13 +50,13 @@ export default {
       @$emit 'clear'
 
     load: debounce(
-      -> @instantLoad() if @query.length > 0
+      -> @instantLoad() if @query? && @query.length > 0
       400
     )
 
   asyncMethods:
     instantLoad: ->
-      throw "[vue-resource-form] Entity for autocomplete #{@name} must be defined" unless @entity
+      throw "[vrf] Entity for autocomplete #{@name} must be defined" unless @entity
 
       if @active
         @loading = true
@@ -72,9 +72,9 @@ export default {
 
       provider = vue::VueResourceForm.autocompletes[@type]
 
-      throw "[vue-resource-form] Autocomplete provider for #{@type} not found" unless provider
+      throw "[vrf] Autocomplete provider for #{@type} not found" unless provider
 
-      new provider(@entity, @resource, @)
+      new provider(@entity, @$resource, @)
 
     itemsComponent: ->
       @providerInstance.getItemsComponent()

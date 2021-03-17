@@ -1,9 +1,9 @@
 <template>
 
 <span>
-  {{value}}
+  {{$value}}
 </span>
 
 </template>
 
-<script lang="coffee" src="../descriptors/span" />
+<script lang="coffee" src="../descriptors/span.coffee" />
