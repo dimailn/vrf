@@ -9,9 +9,9 @@ import RfSubmit from './components/templates/submit'
 import RfNested from './components/templates/nested'
 import RfPartial from './components/templates/partial'
 import RfSpan from './components/templates/span'
+import RfBitwise from './components/templates/bitwise'
 
 import descriptors from './components/descriptors'
-import fieldsDescriptors from './fields/descriptors'
 
 import mutations from './vuex/mutations'
 
@@ -33,6 +33,7 @@ components = {
   RfNested
   RfPartial
   RfSpan
+  RfBitwise
 }
 
 export default installer(components)
@@ -49,9 +50,9 @@ export {
   RfNested
   RfPartial
   RfSpan
+  RfBitwise
 
   descriptors
-  fieldsDescriptors
   mutations
 
   AutocompleteProvider

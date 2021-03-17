@@ -1,9 +1,4 @@
-capitalize = (string) ->
-  firstUpperCase = string.slice(0, 1).toUpperCase()
-  remainLowerCase = string.slice(1).toLowerCase()
-
-  "#{firstUpperCase}#{remainLowerCase}"
-
+import capitalize from './capitalize'
 
 camelCasePattern = '([A-Z]?[a-z]+)'
 lowerCasePattern = '([a-zA-Z]+)'
