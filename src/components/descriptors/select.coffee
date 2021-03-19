@@ -18,7 +18,7 @@ export default {
 
     $_options: ->
       if typeof @options is 'string'
-        @$sources[@options] || @VueResourceForm.sources?[@options]
+        @$sources[@options] || @$resource[@options] || @VueResourceForm.sources?[@options]
       else
         @options
 
