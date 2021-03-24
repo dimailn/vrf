@@ -11,6 +11,7 @@ import autocomplete from './autocomplete'
 import form from './form'
 import partial from './partial'
 import bitwise from './bitwise'
+import scope from './scope'
 
 export default {
   base
@@ -26,4 +27,5 @@ export default {
   form
   partial
   bitwise
+  scope
 }

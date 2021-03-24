@@ -7,14 +7,16 @@
     <h1> Simple form </h1>
     <div style="display: flex">
       <rf-form :resource="todo" class="form">
-        <rf-input name="title" />
-        <rf-checkbox name="status" />
-        <rf-switch name="status" />
-        <rf-datepicker name="finishTill" />
-        <rf-select name="importance" :options="importanceOptions" />
-        <rf-textarea name="description" />
-        <rf-span name="owner" />
-        <rf-select name="priority" options="numerals" />
+        <rf-scope rf-if="$resource.title" disabled style="display: flex; flex-direction: column">
+          <rf-input name="title" />
+          <rf-checkbox name="status" />
+          <rf-switch name="status" />
+          <rf-datepicker name="finishTill" />
+          <rf-select name="importance" :options="importanceOptions" />
+          <rf-textarea name="description" />
+          <rf-span name="owner" />
+          <rf-select name="priority" options="numerals" />
+        </rf-scope>
 
         <h3>Bitwise field</h3>
         <h4>Markup based</h4>
@@ -103,7 +105,7 @@ export default {
       # @user.todos.push(@blank())
 
     blank: ->
-      title: ''
+      title: '1'
       status: false
       finishTill: null
       importance: null

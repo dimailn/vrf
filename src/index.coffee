@@ -10,6 +10,7 @@ import RfNested from './components/templates/nested'
 import RfPartial from './components/templates/partial'
 import RfSpan from './components/templates/span'
 import RfBitwise from './components/templates/bitwise'
+import RfScope from './components/templates/scope'
 
 import descriptors from './components/descriptors'
 
@@ -34,6 +35,7 @@ components = {
   RfPartial
   RfSpan
   RfBitwise
+  RfScope
 }
 
 export default installer(components)
@@ -51,6 +53,7 @@ export {
   RfPartial
   RfSpan
   RfBitwise
+  RfScope
 
   descriptors
   mutations
