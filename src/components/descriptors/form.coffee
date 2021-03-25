@@ -20,6 +20,7 @@ provideProps = -> {
   pathService: undefined
   rootResource: undefined
   form: null
+  responses: {}
 }
 
 nameMapper = (name) ->
@@ -29,6 +30,7 @@ nameMapper = (name) ->
     when 'errors' then '$errors'
     when 'fetching' then '$fetching'
     when 'saving' then '$saving'
+    when 'actionResponses' then '$actionResponses'
     else name
 
 
@@ -98,6 +100,7 @@ export default {
     innerErrors: null
     innerFetching: false
     innerSaving: false
+    actionResponses: {}
 
   watch:
     rfId: ->
@@ -142,6 +145,9 @@ export default {
 
     $saving: ->
       @innerSaving || @saving
+
+    $actionResponses: ->
+      @actionResponses
 
     middleware: ->
       middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @name, api: @api, namespace: @namespace}))
@@ -276,5 +282,8 @@ export default {
 
     setResource: (resource) ->
       @setSyncProp('resource', resource)
+
+    executeAction: (name, {params, data} = {}) ->
+      @middleware.executeAction(name, {params, data})
 
 }

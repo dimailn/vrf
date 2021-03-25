@@ -57,4 +57,7 @@ export default {
 
     $rootResource: ->
       @vueResourceForm.wrapper.rootResource || @$resource
+
+    $actionResponses: ->
+      @vueResourceForm.wrapper.actionResponses
 }
