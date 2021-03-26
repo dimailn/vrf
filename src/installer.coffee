@@ -23,7 +23,7 @@ export default (components) -> {
           component.extends = descriptor
 
           component.computed ||= {}
-          component.computed.$vrfParent = components[name]
+          component.computed.$vrfParent = -> components[name]
 
           Vue.component(name, component)
 
