@@ -22,6 +22,9 @@ export default (components) -> {
 
           component.extends = descriptor
 
+          component.computed ||= {}
+          component.computed.$vrfParent = components[name]
+
           Vue.component(name, component)
 
           installedComponentNames.push name
@@ -61,7 +64,7 @@ export default (components) -> {
 
     if options.transforms?
       Vue::VueResourceForm.transforms = options.transforms
-      
+
     if options.locale?
       Vue::VueResourceForm.locale = options.locale
 }
