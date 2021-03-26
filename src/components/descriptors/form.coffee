@@ -1,9 +1,10 @@
 import VueProvideObservable from 'vue-provide-observable'
-import capitalize from '@/utils/capitalize'
+import capitalizeFirst from '@/utils/capitalize-first'
 import pick from '@/utils/pick'
 import set from '@/utils/set'
 import toPath from '@/utils/to-path'
 import cloneDeep from 'lodash.clonedeep'
+import {camelize} from 'humps'
 
 provideProps = -> {
   resource: null
@@ -20,6 +21,7 @@ provideProps = -> {
   pathService: undefined
   rootResource: undefined
   form: null
+  actionResults: {}
 }
 
 nameMapper = (name) ->
@@ -29,6 +31,7 @@ nameMapper = (name) ->
     when 'errors' then '$errors'
     when 'fetching' then '$fetching'
     when 'saving' then '$saving'
+    when 'actionResults' then '$actionResults'
     else name
 
 
@@ -87,6 +90,9 @@ export default {
     # Namespace for API
     namespace:
       type: String
+    # Sync prop for getting action results
+    actionResults:
+      type: Object
     # Internal service settings used for nested forms
     path: Array
     pathService: Object
@@ -98,6 +104,7 @@ export default {
     innerErrors: null
     innerFetching: false
     innerSaving: false
+    innerActionResults: {}
 
   watch:
     rfId: ->
@@ -143,10 +150,13 @@ export default {
     $saving: ->
       @innerSaving || @saving
 
-    middleware: ->
-      middleware = @VueResourceForm.middlewares.find((middleware) => middleware.accepts({name: @name, api: @api, namespace: @namespace}))
+    $actionResults: ->
+      @innerActionResults || @actionResults
 
-      throw "Can't find middleware for #{@name}" unless middleware
+    middleware: ->
+      middleware = (@VueResourceForm.middlewares || []).find((middleware) => middleware.accepts({name: @name, api: @api, namespace: @namespace}))
+
+      throw "Can't find middleware for #{@name} resource" unless middleware
 
       new middleware(@rfName, @)
 
@@ -232,7 +242,7 @@ export default {
       )
 
     setSyncProp: (name, value) ->
-      @["inner#{capitalize name}"] = value
+      @["inner#{capitalizeFirst camelize(name)}"] = value
       @$emit "update:#{name}", value
 
     submit: ->
@@ -277,4 +287,17 @@ export default {
     setResource: (resource) ->
       @setSyncProp('resource', resource)
 
+    executeAction: (name, {params, data} = {}) ->
+      @middleware.executeAction(name, {params, data})
+        .then(({status, data}) => {status, data})
+        .catch((e = {status, data}) =>
+          throw e unless status
+
+          {status, data}
+        )
+        .finally((result) => @setActionResult(name, result))
+
+
+    setActionResult: (name, result) ->
+      @setSyncProp('actionResults', {...@$actionResults, [name]: result })
 }

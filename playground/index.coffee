@@ -5,7 +5,8 @@ import sources from './sources'
 # import vrf from '../dist/static/lib'
 
 Vue.config.productionTip = false
-Vue.use(vrf, {sources})
+translate = (propertyName) -> propertyName
+Vue.use(vrf, {sources, translate})
 
 new Vue(
   el: '#app',

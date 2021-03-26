@@ -2,10 +2,13 @@ import Resource from '@/mixins/resource'
 import set from '@/utils/set'
 import get from '@/utils/get'
 import evalBoolProp from '@/utils/eval-bool-prop'
-
+import Translate from '@/mixins/translate'
 
 export default {
-  mixins: [Resource]
+  mixins: [
+    Resource
+    Translate
+  ]
 
   methods:
     onInput: (e) ->
@@ -14,11 +17,6 @@ export default {
       @$emit('blur', e)
     onChange: (e) ->
       @$emit('change', e)
-
-    t: (property, modelName = @$rfName) ->
-      vue = Object.getPrototypeOf(@$root).constructor
-
-      vue::VueResourceForm.translate(property, modelName)
 
   computed:
     $fieldName: -> @name
