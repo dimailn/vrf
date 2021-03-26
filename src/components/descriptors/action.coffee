@@ -6,6 +6,7 @@ export default {
     name: String
     params: String # Query params
     data: String # Body params
+    method: String # Request HTTP method
   }
   mixins: [
     Resource
@@ -17,7 +18,7 @@ export default {
 
   methods: {
     onClick: ->
-      @$form.executeAction(@name, {params: @params, data: @data})
+      @$form.executeAction(@name, {params: @params, data: @data, method: @method})
         .then((result) => console.log(result);@$emit('response', result))
 
   }
