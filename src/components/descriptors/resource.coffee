@@ -13,7 +13,7 @@ export default {
       tScope: @tScope
       t: @t
       errors: @$errors
-      actionResponses: @$actionResponses
+      actionResults: @$actionResults
     }
     @$scopedSlots?.default?(props)?[0]
 }

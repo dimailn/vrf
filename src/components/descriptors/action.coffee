@@ -1,6 +1,5 @@
 import Resource from '@/mixins/resource'
-import {decamelize} from 'humps'
-import pluralize from 'pluralize'
+import Translate from '@/mixins/translate'
 
 export default {
   props: {
@@ -10,18 +9,16 @@ export default {
   }
   mixins: [
     Resource
+    Translate
   ]
+  computed:
+    humanName: ->
+      @t("$actions.#{@name}")
+
   methods: {
     onClick: ->
-      try
-        {status, data} = await @$form.executeAction(@name, {params: @params, data: @data})
+      @$form.executeAction(@name, {params: @params, data: @data})
+        .then((result) => console.log(result);@$emit('response', result))
 
-        this.$emit('response', {status, data})
-      catch e
-        throw e unless e.status
-
-        {status, data} = e
-
-        @$emit('response', {status, data})
   }
 }

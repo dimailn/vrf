@@ -1,9 +1,9 @@
 <template>
 
-<v-btn @click="onClick">
+<button @click="onClick">
 {{humanName}}
-</v-btn>
+</button>
 
 </template>
 
-<script lang="coffee" src="../../descriptors/action.coffee" />
+<script lang="coffee" src="../descriptors/action.coffee" />
