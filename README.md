@@ -29,6 +29,11 @@ This package contains a set of descriptors for each form element that you can us
 
 Vrf doesn't depends on current I18n, validation and network interaction libraries. Instead, it provides interfaces for integration with any one.
 
+# Ideology
+
+Vrf puts form at the forefront of your application, but at the same time all high-level features are provided unobtrusively and their activation is implemented explicitly.  The main thesis of vrf is to stay simple while it is possible.  This means, for example, that you can make the most of the built-in autoforming capabilities and not write any code, but if one day you need a more complex flow than middleware can offer, you can simply turn off the auto mode and manually manipulate the form, while still taking the other advantages that  gives vrf.
+
+In other words, the complex has the right to be complex, but the simple must remain simple.
 
 ## What does it look like?
 
@@ -312,6 +317,52 @@ export default {
 
 </template>
 
+```
+
+## Actions
+
+Vrf provide its own way to create simple buttons that activate async requests. These requests are served by middleware and the received data stored in the context of the form(by analogy with a resource).
+
+For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
+```
+<rf-action name="archive" />
+```
+
+You may change requests parameters by props
+
+```
+<rf-action 
+  name="archive"
+  method="put"
+  :data="{force: true}"
+  :params="{queryParameter: 1}"
+/>
+```
+
+```rf-action``` in adapters may handle pending status by loader showing. Moreover, you can implement your own ```rf-action``` view using activator slot
+
+```
+
+<rf-action name="archive">
+  <template v-slot:activator="{on, pending, humanName}">
+    <my-great-button v-on="on" :loading="pending">{{humanName}}</my-great-button>
+  </template>
+</rf-action>
+
+```
+
+To render the results, in simple cases you can use ```rf-action-result``` component(with slot or component).
+
+```
+<rf-action name="loadText" />
+
+<rf-action-result name="loadText" component="some-component-with-data-and-or-status-props" />
+
+<rf-action-result name="loadtext">
+  <template v-slot="{data}">
+    <p>{{data}}></p>
+  </template>
+</rf-action-result>
 ```
 
 ## Autoforms
