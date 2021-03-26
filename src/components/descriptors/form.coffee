@@ -288,14 +288,16 @@ export default {
       @setSyncProp('resource', resource)
 
     executeAction: (name, {params, data, method = 'post'} = {}) ->
+      result = undefined
+
       @middleware.executeAction(name, {params, data, method})
-        .then(({status, data}) => {status, data})
+        .then(({status, data}) => result = {status, data})
         .catch((e = {status, data}) =>
           throw e unless status
 
-          {status, data}
+          result = {status, data}
         )
-        .finally((result) => @setActionResult(name, result))
+        .finally(=> @setActionResult(name, result))
 
 
     setActionResult: (name, result) ->
