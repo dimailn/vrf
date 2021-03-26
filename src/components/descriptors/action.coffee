@@ -19,7 +19,7 @@ export default {
   methods: {
     onClick: ->
       @$form.executeAction(@name, {params: @params, data: @data, method: @method})
-        .then((result) => console.log(result);@$emit('response', result))
+        .then((result) => @$emit('response', result))
 
   }
 }

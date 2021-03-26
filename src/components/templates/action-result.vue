@@ -1,15 +1,15 @@
 <template>
 
-<rf-resource v-slot="{actionResults}">
+<rf-resource v-slot="{actionResults}" v-if="actionResults[name]">
   <component
     :is="component"
-    :data="actionResults[name] && actionResults[name].data"
-    :status="actionResults[name] && actionResults[name].status"
+    :data="actionResults[name].data"
+    :status="actionResults[name].status"
     v-if="component"
   />
   <slot
-    :data="actionResults[name] && actionResults[name].data"
-    :status="actionResults[name] && actionResults[name].status"
+    :data="actionResults[name].data"
+    :status="actionResults[name].status"
     v-else
   />
 </rf-resource>
