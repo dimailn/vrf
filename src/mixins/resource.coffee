@@ -60,4 +60,7 @@ export default {
 
     $actionResults: ->
       @vueResourceForm.wrapper.actionResults
+
+    $actionPendings: ->
+      @vueResourceForm.wrapper.actionPendings
 }

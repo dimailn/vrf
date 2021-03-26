@@ -22,6 +22,7 @@ provideProps = -> {
   rootResource: undefined
   form: null
   actionResults: {}
+  actionPendings: {}
 }
 
 nameMapper = (name) ->
@@ -32,6 +33,7 @@ nameMapper = (name) ->
     when 'fetching' then '$fetching'
     when 'saving' then '$saving'
     when 'actionResults' then '$actionResults'
+    when 'actionPendings' then '$actionPendings'
     else name
 
 
@@ -93,6 +95,8 @@ export default {
     # Sync prop for getting action results
     actionResults:
       type: Object
+    actionPendings:
+      type: Object
     # Internal service settings used for nested forms
     path: Array
     pathService: Object
@@ -105,6 +109,7 @@ export default {
     innerFetching: false
     innerSaving: false
     innerActionResults: {}
+    innerActionPendings: {}
 
   watch:
     rfId: ->
@@ -152,6 +157,9 @@ export default {
 
     $actionResults: ->
       @innerActionResults || @actionResults
+
+    $actionPendings: ->
+      @innerActionPendings || @actionPendings
 
     middleware: ->
       middleware = (@VueResourceForm.middlewares || []).find((middleware) => middleware.accepts({name: @name, api: @api, namespace: @namespace}))
@@ -288,6 +296,8 @@ export default {
       @setSyncProp('resource', resource)
 
     executeAction: (name, {params, data, method = 'post'} = {}) ->
+      @setActionPending(name, true)
+
       result = undefined
 
       @middleware.executeAction(name, {params, data, method})
@@ -302,4 +312,8 @@ export default {
 
     setActionResult: (name, result) ->
       @setSyncProp('actionResults', {...@$actionResults, [name]: result })
+      @setActionPending(name, false)
+
+    setActionPending: (name, inProgress) ->
+      @setSyncProp('actionPendings', { ...@$actionPendings, [name]: inProgress })
 }

@@ -16,6 +16,19 @@ export default {
     humanName: ->
       @t("$actions.#{@name}")
 
+  render: (h) ->
+    events = {click: @onClick}
+    if @$scopedSlots.activator
+      nodes = @$scopedSlots['activator']({humanName: @humanName, on: events, pending: @$actionPendings[@name] || false})
+
+      if nodes.length > 1
+        h('div', null, nodes)
+      else
+        nodes
+    else
+      h('button', {on: events}, @humanName)
+
+
   methods: {
     onClick: ->
       @$form.executeAction(@name, {params: @params, data: @data, method: @method})
