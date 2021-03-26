@@ -28,4 +28,6 @@ export default {
   form
   partial
   bitwise
+  action
+  actionResult
 }
