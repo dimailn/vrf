@@ -319,52 +319,6 @@ export default {
 
 ```
 
-## Actions
-
-Vrf provide its own way to create simple buttons that activate async requests. These requests are served by middleware and the received data stored in the context of the form(by analogy with a resource).
-
-For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
-```vue
-<rf-action name="archive" />
-```
-
-You may change requests parameters by props
-
-```vue
-<rf-action 
-  name="archive"
-  method="put"
-  :data="{force: true}"
-  :params="{queryParameter: 1}"
-/>
-```
-
-```rf-action``` in adapters may handle pending status by loader showing. Moreover, you can implement your own ```rf-action``` view using activator slot
-
-```vue
-
-<rf-action name="archive">
-  <template v-slot:activator="{on, pending, humanName}">
-    <my-great-button v-on="on" :loading="pending">{{humanName}}</my-great-button>
-  </template>
-</rf-action>
-
-```
-
-To render the results, in simple cases you can use ```rf-action-result``` component(with slot or component).
-
-```vue
-<rf-action name="loadText" />
-
-<rf-action-result name="loadText" component="some-component-with-data-and-or-status-props" />
-
-<rf-action-result name="loadtext">
-  <template v-slot="{data}">
-    <p>{{data}}></p>
-  </template>
-</rf-action-result>
-```
-
 ## Autoforms
 
 Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
@@ -440,6 +394,54 @@ export default {
 }
 
 ```
+
+
+## Actions
+
+Vrf provide its own way to create simple buttons that activate async requests. These requests are served by middleware and the received data stored in the context of the form(by analogy with a resource).
+
+For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
+```vue
+<rf-action name="archive" />
+```
+
+You may change requests parameters by props
+
+```vue
+<rf-action 
+  name="archive"
+  method="put"
+  :data="{force: true}"
+  :params="{queryParameter: 1}"
+/>
+```
+
+```rf-action``` in adapters may handle pending status by loader showing. Moreover, you can implement your own ```rf-action``` view using activator slot
+
+```vue
+
+<rf-action name="archive">
+  <template v-slot:activator="{on, pending, humanName}">
+    <my-great-button v-on="on" :loading="pending">{{humanName}}</my-great-button>
+  </template>
+</rf-action>
+
+```
+
+To render the results, in simple cases you can use ```rf-action-result``` component(with slot or component).
+
+```vue
+<rf-action name="loadText" />
+
+<rf-action-result name="loadText" component="some-component-with-data-and-or-status-props" />
+
+<rf-action-result name="loadtext">
+  <template v-slot="{data}">
+    <p>{{data}}></p>
+  </template>
+</rf-action-result>
+```
+
 
 ## Adapter API
 
