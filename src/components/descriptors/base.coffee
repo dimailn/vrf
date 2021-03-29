@@ -30,7 +30,7 @@ export default {
           return console.warn("Store for VueResourceForm is not defined") unless store
           store.commit('vue-resource-form:update', {resourceName: @$rfName, name: @$fieldName, value})
         else
-          set(@$resource, @$fieldName, value)
+          set(@$resource, @$fieldName, value, @$set)
 
     $value:
       get: ->
