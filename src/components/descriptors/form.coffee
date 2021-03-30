@@ -295,12 +295,12 @@ export default {
     setResource: (resource) ->
       @setSyncProp('resource', resource)
 
-    executeAction: (name, {params, data, method = 'post'} = {}) ->
+    executeAction: (name, {params, data, method = 'post', url} = {}) ->
       @setActionPending(name, true)
 
       result = undefined
 
-      @middleware.executeAction(name, {params, data, method})
+      @middleware.executeAction(name, {params, data, method, url})
         .then(({status, data}) => result = {status, data})
         .catch((e = {status, data}) =>
           throw e unless status
