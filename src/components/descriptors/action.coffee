@@ -8,6 +8,7 @@ export default {
     data: String # Body params
     method: String # Request HTTP method
     url: String # Override default based on name
+    label: String
     reloadOnResult: Boolean
   }
   mixins: [
@@ -16,6 +17,8 @@ export default {
   ]
   computed:
     humanName: ->
+      return @label if @label
+
       @t("$actions.#{@name}")
 
   render: (h) ->
