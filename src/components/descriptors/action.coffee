@@ -8,6 +8,7 @@ export default {
     data: String # Body params
     method: String # Request HTTP method
     url: String # Override default based on name
+    reloadOnResult: Boolean
   }
   mixins: [
     Resource
@@ -33,7 +34,11 @@ export default {
   methods: {
     onClick: ->
       @$form.executeAction(@name, {params: @params, data: @data, method: @method, url: @url})
-        .then((result) => @$emit('result', result))
+        .then((result) =>
+          @$form.reloadResource() if @reloadOnResult
+
+          @$emit('result', result)
+        )
 
   }
 }
