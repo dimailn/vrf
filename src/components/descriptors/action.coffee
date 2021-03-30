@@ -32,7 +32,7 @@ export default {
 
   methods: {
     onClick: ->
-      @$form.executeAction(@name, {params: @params, data: @data, method: @method})
+      @$form.executeAction(@name, {params: @params, data: @data, method: @method, url: @url})
         .then((result) => @$emit('result', result))
 
   }
