@@ -7,6 +7,7 @@ export default {
     params: String # Query params
     data: String # Body params
     method: String # Request HTTP method
+    url: String # Override default based on name
   }
   mixins: [
     Resource
