@@ -256,9 +256,9 @@ export default {
     submit: ->
       # Даем отработать onChange
       @$nextTick =>
-        @$emit 'before-submit'
+        @$emit 'before-submit', resource: @$resource
 
-        @$emit 'submit'
+        @$emit 'submit', resource: @$resource
 
         return unless @auto
 
