@@ -442,6 +442,12 @@ To render the results, in simple cases you can use ```rf-action-result``` compon
 </rf-action-result>
 ```
 
+Or/and use event ```result```
+
+```vue
+
+<rf-action name="doSomething" @result="onResult" />
+
 If your action must show toast in UI by result, this can be done in the middleware. For example, in REST middleware $message field will be processed by middleware as a message for user and it will be shown by ```showErrorMessage``` / ```showSuccessMessage``` functions(passed on vrf initialization).
 
 ## Adapter API
