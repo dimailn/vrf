@@ -447,6 +447,15 @@ Or/and use event ```result```
 ```vue
 
 <rf-action name="doSomething" @result="onResult" />
+```
+
+If you need reload resource on result, you may use prop ```reload-on-result```
+
+```vue
+
+<rf-action name="switchMode" reload-on-result />
+
+```
 
 If your action must show toast in UI by result, this can be done in the middleware. For example, in REST middleware $message field will be processed by middleware as a message for user and it will be shown by ```showErrorMessage``` / ```showSuccessMessage``` functions(passed on vrf initialization).
 
