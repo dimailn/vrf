@@ -1,4 +1,4 @@
-import VueProvideObservable from 'vue-provide-observable'
+# import VueProvideObservable from 'vue-provide-observable'
 import capitalizeFirst from '@/utils/capitalize-first'
 import pick from '@/utils/pick'
 import set from '@/utils/set'
@@ -6,7 +6,7 @@ import toPath from '@/utils/to-path'
 import cloneDeep from 'lodash.clonedeep'
 import {camelize} from 'humps'
 
-provideProps = -> {
+propsFactory = -> {
   resource: null
   resources: null
   $$resource: null
@@ -51,8 +51,13 @@ class PathService
 
 
 
+
+
 export default {
-  mixins: [VueProvideObservable('vueResourceForm', provideProps, nameMapper)]
+  provideObservable: {
+    vrf: { propsFactory, nameMapper }
+  }
+
   provide: ->
     vueResourceFormPath: @path
     vueResourceFormPathService: @$pathService

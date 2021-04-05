@@ -1,13 +1,13 @@
 import evalBoolProp from '@/utils/eval-bool-prop'
 
 export default {
-  inject: ['vueResourceForm']
+  inject: ['$vpo']
   computed:
     $resource: ->
-      @vueResourceForm.wrapper.resource
+      @$vpo.wrapper.vrf.resource
 
     $sources: ->
-      @vueResourceForm.wrapper.resources
+      @$vpo.wrapper.vrf.resources
 
     resource: ->
       console.warn '[vrf] Field resource in Resource mixin deprecated, use $resource instead.'
@@ -18,49 +18,49 @@ export default {
       @$sources
 
     $formDisabled: ->
-      evalBoolProp(@vueResourceForm.wrapper.disabled, @)
+      evalBoolProp(@$vpo.wrapper.vrf.disabled, @)
 
     formDisabled: ->
       console.warn '[vrf] Field formDisabled in Resource mixin deprecated, use $formDisabled instead.'
       @$formDisabled
 
     $formReadonly: ->
-      evalBoolProp(@vueResourceForm.wrapper.readonly, @)
+      evalBoolProp(@$vpo.wrapper.vrf.readonly, @)
 
     fetching: ->
-      @vueResourceForm.wrapper.fetching
+      @$vpo.wrapper.vrf.fetching
 
     vuex: ->
-      @vueResourceForm.wrapper.vuex
+      @$vpo.wrapper.vrf.vuex
 
     pathService: ->
-      @vueResourceForm.wrapper.pathService
+      @$vpo.wrapper.vrf.pathService
 
     $rfName: ->
-      @vueResourceForm.wrapper.rfName
+      @$vpo.wrapper.vrf.rfName
 
     $errors: ->
-      @vueResourceForm.wrapper.errors
+      @$vpo.wrapper.vrf.errors
 
     $submit: ->
-      @vueResourceForm.wrapper.submit
+      @$vpo.wrapper.vrf.submit
 
     $saving: ->
-      @vueResourceForm.wrapper.saving
+      @$vpo.wrapper.vrf.saving
 
     $form: ->
-      @vueResourceForm.wrapper.form
+      @$vpo.wrapper.vrf.form
 
     rootResource: ->
       console.warn '[vrf] Field rootResource in Resource mixin deprecated, use $rootResource instead.'
       @$rootResource
 
     $rootResource: ->
-      @vueResourceForm.wrapper.rootResource || @$resource
+      @$vpo.wrapper.vrf.rootResource || @$resource
 
     $actionResults: ->
-      @vueResourceForm.wrapper.actionResults
+      @$vpo.wrapper.vrf.actionResults
 
     $actionPendings: ->
-      @vueResourceForm.wrapper.actionPendings
+      @$vpo.wrapper.vrf.actionPendings
 }
