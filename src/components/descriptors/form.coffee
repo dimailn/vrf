@@ -1,4 +1,3 @@
-# import VueProvideObservable from 'vue-provide-observable'
 import capitalizeFirst from '@/utils/capitalize-first'
 import pick from '@/utils/pick'
 import set from '@/utils/set'
