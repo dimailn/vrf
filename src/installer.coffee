@@ -1,13 +1,10 @@
 import dateInterceptor from './utils/date-interceptor'
 import descriptors from './components/descriptors'
 import indexBy from './utils/index-by'
-import VueProvideObservable from 'vue-provide-observable'
 
 
 export default (components) -> {
   install: (Vue, options) ->
-    Vue.use(VueProvideObservable)
-
     installedComponentNames = []
 
     if options?.adapters? && options.adapters instanceof Array

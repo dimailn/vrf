@@ -4,6 +4,7 @@ import set from '@/utils/set'
 import toPath from '@/utils/to-path'
 import cloneDeep from 'lodash.clonedeep'
 import {camelize} from 'humps'
+import VueProvideObservable from 'vue-provide-observable'
 
 propsFactory = -> {
   resource: null
@@ -53,9 +54,7 @@ class PathService
 
 
 export default {
-  provideObservable: {
-    vrf: { propsFactory, nameMapper }
-  }
+  mixins: [VueProvideObservable('vrf', propsFactory, nameMapper)]
 
   provide: ->
     vueResourceFormPath: @path

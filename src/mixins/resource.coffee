@@ -1,13 +1,13 @@
 import evalBoolProp from '@/utils/eval-bool-prop'
 
 export default {
-  inject: ['$vpo']
+  inject: ['vrf']
   computed:
     $resource: ->
-      @$vpo.wrapper.vrf.resource
+      @vrf.wrapper.resource
 
     $sources: ->
-      @$vpo.wrapper.vrf.resources
+      @vrf.wrapper.resources
 
     resource: ->
       console.warn '[vrf] Field resource in Resource mixin deprecated, use $resource instead.'
@@ -18,49 +18,49 @@ export default {
       @$sources
 
     $formDisabled: ->
-      evalBoolProp(@$vpo.wrapper.vrf.disabled, @)
+      evalBoolProp(@vrf.wrapper.disabled, @)
 
     formDisabled: ->
       console.warn '[vrf] Field formDisabled in Resource mixin deprecated, use $formDisabled instead.'
       @$formDisabled
 
     $formReadonly: ->
-      evalBoolProp(@$vpo.wrapper.vrf.readonly, @)
+      evalBoolProp(@vrf.wrapper.readonly, @)
 
     fetching: ->
-      @$vpo.wrapper.vrf.fetching
+      @vrf.wrapper.fetching
 
     vuex: ->
-      @$vpo.wrapper.vrf.vuex
+      @vrf.wrapper.vuex
 
     pathService: ->
-      @$vpo.wrapper.vrf.pathService
+      @vrf.wrapper.pathService
 
     $rfName: ->
-      @$vpo.wrapper.vrf.rfName
+      @vrf.wrapper.rfName
 
     $errors: ->
-      @$vpo.wrapper.vrf.errors
+      @vrf.wrapper.errors
 
     $submit: ->
-      @$vpo.wrapper.vrf.submit
+      @vrf.wrapper.submit
 
     $saving: ->
-      @$vpo.wrapper.vrf.saving
+      @vrf.wrapper.saving
 
     $form: ->
-      @$vpo.wrapper.vrf.form
+      @vrf.wrapper.form
 
     rootResource: ->
       console.warn '[vrf] Field rootResource in Resource mixin deprecated, use $rootResource instead.'
       @$rootResource
 
     $rootResource: ->
-      @$vpo.wrapper.vrf.rootResource || @$resource
+      @vrf.wrapper.rootResource || @$resource
 
     $actionResults: ->
-      @$vpo.wrapper.vrf.actionResults
+      @vrf.wrapper.actionResults
 
     $actionPendings: ->
-      @$vpo.wrapper.vrf.actionPendings
+      @vrf.wrapper.actionPendings
 }
