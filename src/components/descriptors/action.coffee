@@ -5,6 +5,7 @@ export default {
   props: {
     name: String
     params: Object # Body params
+    data: Object
     method: String # Request HTTP method
     url: String # Override default based on name
     label: String
