@@ -63,4 +63,7 @@ export default {
 
     $actionPendings: ->
       @vrf.wrapper.actionPendings
+
+    $lastSaveFailed: ->
+      @vrf.wrapper.lastSaveFailed
 }

@@ -23,6 +23,7 @@ propsFactory = -> {
   form: null
   actionResults: {}
   actionPendings: {}
+  lastSaveFailed: false
 }
 
 nameMapper = (name) ->
@@ -34,6 +35,7 @@ nameMapper = (name) ->
     when 'saving' then '$saving'
     when 'actionResults' then '$actionResults'
     when 'actionPendings' then '$actionPendings'
+    when 'lastSaveFailed' then '$lastSaveFailed'
     else name
 
 
@@ -113,6 +115,7 @@ export default {
     innerSaving: false
     innerActionResults: {}
     innerActionPendings: {}
+    innerLastSaveFailed: false
 
   watch:
     rfId: ->
@@ -163,6 +166,9 @@ export default {
 
     $actionPendings: ->
       @innerActionPendings || @actionPendings
+
+    $lastSaveFailed: ->
+      @innerLastSaveFailed
 
     middleware: ->
       middleware = (@VueResourceForm.middlewares || []).find((middleware) => middleware.accepts({name: @name, api: @api, namespace: @namespace}))
@@ -267,6 +273,8 @@ export default {
 
         @setSyncProp 'saving', true
         @middleware.save(@$resource).then(([ok, errors]) =>
+          @lastSaveFailed = !ok
+
           @setSyncProp 'saving', false
 
           @setSyncProp(
