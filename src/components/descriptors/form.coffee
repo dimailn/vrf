@@ -273,7 +273,7 @@ export default {
 
         @setSyncProp 'saving', true
         @middleware.save(@$resource).then(([ok, errors]) =>
-          @lastSaveFailed = !ok
+          @innerLastSaveFailed = !ok
 
           @setSyncProp 'saving', false
 
