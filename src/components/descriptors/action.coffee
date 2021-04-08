@@ -4,11 +4,11 @@ import Translate from '@/mixins/translate'
 export default {
   props: {
     name: String
-    params: String # Query params
-    data: String # Body params
+    params: Object # Body params
     method: String # Request HTTP method
     url: String # Override default based on name
     label: String
+    labelName: String
     reloadOnResult: Boolean
   }
   mixins: [
@@ -19,7 +19,7 @@ export default {
     humanName: ->
       return @label if @label
 
-      @t("$actions.#{@name}")
+      @t("$actions.#{@labelName || @name}")
 
   render: (h) ->
     events = {click: @onClick}
