@@ -609,8 +609,12 @@ export default {
 
 </table>
 
-# Implementations
+# Adapters
 - [vrf-vuetify](https://github.com/dimailn/vrf-vuetify) - adapter for Vuetify.
+- [vrf-tiny-mce](https://github.com/dimailn/vrf-tiny-mce) - adapter for Tiny MCE.
+
+# Middlewares
+- [vrf-rest](https://github.com/dimailn/vrf-rest) - REST middleware.
 
 ## Planned
 
