@@ -536,7 +536,6 @@ export default {
 
 ```
 
-```
 
 # Architecture
 
