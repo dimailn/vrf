@@ -508,6 +508,7 @@ export default {
 }
 
 </script>
+```
 
 If you need a basic implementation of element from core - use ```$vrfParent```
 
