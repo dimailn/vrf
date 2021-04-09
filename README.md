@@ -509,6 +509,32 @@ export default {
 
 </script>
 
+If you need a basic implementation of element from core - use ```$vrfParent```
+
+```vue
+
+<template>
+
+<button @onClick="onClick" v-if="someCondition">{{humanName}}</button>
+<component :is="$vrfParent" v-else />
+
+</template>
+
+<script>
+
+export default {
+  vrfParent: 'action',
+  computed: {
+    someCondition() {
+      ...
+    }
+  }
+}
+
+</script>
+
+```
+
 ```
 
 # Architecture
