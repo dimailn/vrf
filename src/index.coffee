@@ -60,6 +60,7 @@ export {
 
   descriptors
   mutations
+  components
 
   AutocompleteProvider
   Resource
