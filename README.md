@@ -459,6 +459,32 @@ If you need reload resource on result, you may use prop ```reload-on-result```
 
 If your action must show toast in UI by result, this can be done in the middleware. For example, in REST middleware $message field will be processed by middleware as a message for user and it will be shown by ```showErrorMessage``` / ```showSuccessMessage``` functions(passed on vrf initialization).
 
+
+### Run actions programmatically
+
+You may run actions programmatically as well
+
+```vue
+
+<template>
+
+<rf-form name="Todo" auto>
+  ...
+</rf-form>
+
+</template>
+
+export default {
+  methods: {
+    attachImage() {
+      const data = new FormData()
+      this.$form.executeAction('attachImage', {data, method: 'PUT'})
+    }
+  }
+}
+
+```
+
 ## Adapter API
 
 
