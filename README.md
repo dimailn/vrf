@@ -474,6 +474,7 @@ You may run actions programmatically as well
 
 </template>
 
+<script>
 export default {
   methods: {
     attachImage() {
@@ -482,6 +483,7 @@ export default {
     }
   }
 }
+</script>
 
 ```
 
