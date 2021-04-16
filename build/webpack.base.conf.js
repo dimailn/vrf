@@ -12,7 +12,6 @@ function resolve (dir) {
 const babelLoader = {
   loader: 'babel-loader',
   options: {
-    presets: ['es2015'],
     plugins: ['transform-async-to-generator']
   }
 }
