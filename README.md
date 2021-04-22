@@ -8,6 +8,9 @@
 <img src="https://img.shields.io/bundlephobia/min/vrf" />
 <img src="https://img.shields.io/bundlephobia/minzip/vrf" />
 
+
+<a href="https://dimailn.github.io/vrf-demo.github.io">Live demo</a>
+
 # Build Setup
 
 ``` bash
