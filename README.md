@@ -401,7 +401,7 @@ export default {
 
 ## Actions
 
-Vrf provide its own way to create simple buttons that activate async requests. These requests are served by middleware and the received data stored in the context of the form(by analogy with a resource).
+Vrf provides its own way to create simple buttons that activate async requests. These requests are served by middleware and the received data stored in the context of the form(by analogy with a resource).
 
 For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
 ```vue
