@@ -9,7 +9,6 @@ const sourceMapEnabled = isProduction
 const babelLoader = {
   loader: 'babel-loader',
   options: {
-    presets: ['es2015']
   }
 }
 
@@ -19,7 +18,7 @@ module.exports = {
           sourceMap: sourceMapEnabled,
           extract: isProduction
         }),
-    coffee: 'babel-loader?presets[]=es2015!coffee-loader',
+    coffee: 'babel-loader?!coffee-loader',
     js: babelLoader
   },
   cssSourceMap: sourceMapEnabled,

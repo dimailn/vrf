@@ -14,14 +14,14 @@ module.exports = {
   transform: {
     '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
     '.*\\.(vue)$': '<rootDir>/node_modules/vue-jest',
-    "^.+\\.coffee$": "<rootDir>/test/unit/preprocessor.js"
+    "^.+\\.coffee$": "<rootDir>/../coffee-jest"
   },
   modulePaths: ['<rootDir>/src'],
   testPathIgnorePatterns: [
     '<rootDir>/test/e2e'
   ],
   snapshotSerializers: ['<rootDir>/node_modules/jest-serializer-vue'],
-  setupFiles: ['<rootDir>/test/unit/setup'],
+  setupFilesAfterEnv: ['<rootDir>/test/unit/jest.setup'],
   verbose: true,
   testURL: "http://localhost/",
   testMatch: [
