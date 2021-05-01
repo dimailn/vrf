@@ -21,7 +21,7 @@ npm install
 npm start
 ```
 
-# What is Vrf?
+# What is vrf?
 
 Vrf (Vue Resource Form) is a solution for quickly writing declarative user interface forms.
 
