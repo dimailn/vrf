@@ -25,7 +25,7 @@ describe 'form', ->
 
     input = wrapper.find('input')
     input.setData($value: 'text')
-    expect(wrapper.vm.resource.title).toBe 'text2'
+    expect(wrapper.vm.resource.title).toBe 'text'
 
   it 'input transform', ->
     wrapper =  mount(
