@@ -14,7 +14,7 @@ module.exports = {
   transform: {
     '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
     '.*\\.(vue)$': '<rootDir>/node_modules/vue-jest',
-    "^.+\\.coffee$": "<rootDir>/../coffee-jest"
+    "^.+\\.coffee$": "<rootDir>/node_modules/coffee-jest"
   },
   modulePaths: ['<rootDir>/src'],
   testPathIgnorePatterns: [
