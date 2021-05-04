@@ -3,5 +3,9 @@ export default {
     t: (property, modelName = @$rfName) ->
       vue = Object.getPrototypeOf(@$root).constructor
 
-      vue::VueResourceForm.translate(property, modelName)
+      translate = vue::VueResourceForm.translate
+
+      return property unless translate
+      
+      translate(property, modelName)
 }
