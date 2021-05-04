@@ -66,4 +66,7 @@ export default {
         ''
       else
         @label || @t(@name)
+
+    $firstError: ->
+      @$errors[@name] && @$errors[@name][0]
 }
