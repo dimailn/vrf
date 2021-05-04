@@ -76,4 +76,21 @@ describe 'form', ->
     expect(status).toBe 200
     expect(executeAction.mock.calls[0][0]).toBe('archive')
 
+  it 'disabled all inputs', ->
+    wrapper = mount(
+      template: '''
+        <rf-form :resource="resource" disabled="$resource.disabled">
+          <rf-input name="title" />
+        </rf-form>
+      '''
+
+      data: ->
+        resource:
+          title: ''
+          disabled: true
+    )
+
+    input = wrapper.find('input')
+    expect(input.attributes('disabled')).toBe 'disabled'
+
 
