@@ -7,7 +7,7 @@ export default {
       @vrf.wrapper.resource
 
     $sources: ->
-      @vrf.wrapper.resources
+      @vrf.wrapper.sources
 
     resource: ->
       console.warn '[vrf] Field resource in Resource mixin deprecated, use $resource instead.'
@@ -66,4 +66,7 @@ export default {
 
     $lastSaveFailed: ->
       @vrf.wrapper.lastSaveFailed
+    
+    $requireSource: ->
+      @vrf.wrapper.requireSource
 }

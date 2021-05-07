@@ -9,6 +9,14 @@ export default {
     ...baseProps
     ...props
   }
+  
+  mounted: ->
+    console.log 'mounted select'
+    @$requireSource(@options) if @sourceMustBeRequired
+
+  watch:
+    options: ->
+      @$requireSource(@options) if @sourceMustBeRequired
 
   computed:
     $disabled: ->
@@ -27,6 +35,9 @@ export default {
 
     listeners: ->
       input: @onChange
+            
+    sourceMustBeRequired: ->
+      typeof @options is 'string' && !@VueResourceForm.sources?[@options]
 
   methods:
     onChange: ->
