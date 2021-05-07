@@ -25,6 +25,7 @@ npm start
 
 - [What is vrf](#what-is-vrf)
 - [Ideology](#ideology)
+- [What does it look like?](#what-does-it-look-like)
 - [Basics](#basics)
   - [Object binding](#object-binding)
   - [Access to the resource](#access-to-the-resource)
@@ -60,7 +61,7 @@ Vrf puts form at the forefront of your application, but at the same time all hig
 
 In other words, the complex has the right to be complex, but the simple must remain simple.
 
-## What does it look like?
+# What does it look like?
 
 It allows you to write forms in this way:
 
