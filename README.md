@@ -209,6 +209,8 @@ export default {
 ```
 Instead of a string with the name of the options, you may also pass directly an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and autoforms can load sources by name).
 
+When you use string with a source name, form uses a middleware to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
+
 ## Where is the resource?
 
 The resource can be in three places:
@@ -331,6 +333,14 @@ The logic of autoforms is in the middlewares, which are supplied separately from
 
 Middlewares are set during initialization of forms, and there may be several of them. The form will use the first suitable middleware, the static ```accepts``` method is used to determine applicability. The form has a special prop ```transport``` that allows you to specify the preferred middleware (which should respond to a specific value of the prop ```transport```).
 
+## Middleware API
+
+Vrf creates an instance of middleware during form initializtion. There are some middleware instance methods you neeed to implement:
+
+* ```load``` - return Promise that resolves with resource
+* ```loadSources``` - this method is called when form is mounted and ready to eager load all sources for rendered components. It resolves with object where keys are source names and values are collections.
+* ```loadSource``` - it's called when some component need to require one source after eager loading and resolves with collection for this source
+* ```save``` - used to save form resource
 
 ```javascript
 
@@ -340,17 +350,24 @@ export default class FooMiddleware {
     this.form = form
   }
 
-  static accepts({name, transport}){ // determines if middleware is applicable for a given form
+  static accepts({name, api, namespace}){ // determines if middleware is applicable for a given form
     return true
   }
 
   load(){
+    return Promise.resolve({})
   }
 
-  loadSources(){
+  loadSource(name) {
+    return Promise.resolve([])
   }
-
+  
+  loadSources(names){
+    return Promise.resolve({})
+  }
+  
   save(resource){
+    return Promise.resolve()
   }
 }
 
