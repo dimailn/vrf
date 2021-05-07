@@ -228,8 +228,6 @@ export default {
 
       return @$emit('reload-sources') if @isNested
 
-      console.log 'reloadSources'
-
       @middleware.loadSources(Object.keys(@requiredSources)).then((sources) =>
         sources = {...@innerSources, ...sources} if @innerResources
 
@@ -345,9 +343,8 @@ export default {
       @setSyncProp('actionPendings', { ...@$actionPendings, [name]: inProgress })
 
     requireSource: (name) ->
-      console.log 'required source', name
       if !@requiredSources[name] && @innerResource
-        @middleware.loadSource(sourceName).then((sourceCollection) =>
+        @middleware.loadSource(name).then((sourceCollection) =>
           @form.addToSources(name, sourceCollection)
         )
         

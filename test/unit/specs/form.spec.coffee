@@ -155,3 +155,66 @@ describe 'form', ->
     expect(formSources.roles.length).toBe 2
     expect(formSources.types.length).toBe 1
 
+  it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
+    loadSources = jest.fn -> Promise.resolve({
+      roles: [
+        {
+          id: 'admin'
+          title: 'Admin'
+        }
+        {
+          id: 'manager'
+          title: 'Manager'
+        }
+      ],
+      types: [
+        {
+          id: 1,
+          title: 'Some type'
+        }
+      ]
+    })
+
+    loadSource = jest.fn -> Promise.resolve(
+      [
+        {
+          id: 1
+          title: 'Category 1'
+        }
+        {
+          id: 2
+          title: 'Category 2'
+        }
+      ]
+    )
+
+    middleware = class extends Middleware
+      loadSources: loadSources
+      loadSource: loadSource
+
+    setup(middleware)
+
+    wrapper = mount(
+      template: '''
+        <rf-form name="User" auto>
+          <rf-select name="role" options="roles" />
+          <rf-select name="type" options="types" />
+        </rf-form>
+      '''
+    )
+
+    await wrapper.vm.$nextTick()
+
+    expect(loadSource.mock.calls.length).toBe 0
+
+    form = wrapper.vm.$children[0]
+
+    form.requireSource('categories')
+
+    await wrapper.vm.$nextTick()
+
+    expect(loadSource.mock.calls[0][0]).toBe 'categories'
+    expect(form.$sources.categories.length).toBe 2
+
+
+
