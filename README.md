@@ -35,7 +35,7 @@ npm start
   - [Autoforms](#autoforms)
   - [Data loading control](#data-loading-control)
   - [Actions](#actions)
-- [Advanced]
+- [Advanced](#advanced)
   - [Middleware API](#middleware-api)
   - [Adapter API](#adapter-api)
   - [Architecture](#architecture)
@@ -481,6 +481,7 @@ export default {
 
 ```
 
+# Advanced
 
 ## Middleware API
 
