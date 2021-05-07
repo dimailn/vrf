@@ -26,6 +26,10 @@ setup = (middleware) ->
 
     Vue::VueResourceForm.middlewares = middlewares
 
+describe 'form', ->
+  it 'loads resource', ->
+    setup(Middleware)
+
     wrapper = mount(
       template: '''
         <rf-form name="Todo" auto class="form">
@@ -34,9 +38,6 @@ setup = (middleware) ->
         </rf-form>
       '''
     )
-describe 'form', ->
-  it 'loads resource', ->
-    setup(Middleware)
 
     input = wrapper.find('input')
     
@@ -53,6 +54,15 @@ describe 'form', ->
 
     setup(middleware)
 
+    wrapper = mount(
+      template: '''
+        <rf-form name="Todo" auto class="form">
+          <rf-input name="title" />
+          <rf-submit class="submit" />
+        </rf-form>
+      '''
+    )
+
     submit = wrapper.find('.submit')
     submit.trigger('click')
 
@@ -67,6 +77,15 @@ describe 'form', ->
       executeAction: executeAction
 
     setup(middleware)
+
+    wrapper = mount(
+      template: '''
+        <rf-form name="Todo" auto class="form">
+          <rf-input name="title" />
+          <rf-submit class="submit" />
+        </rf-form>
+      '''
+    )
 
     form = wrapper.vm.$children[0]
 
@@ -92,5 +111,110 @@ describe 'form', ->
 
     input = wrapper.find('input')
     expect(input.attributes('disabled')).toBe 'disabled'
+
+  it 'eager load sources', ->
+    loadSources = jest.fn -> Promise.resolve({
+      roles: [
+        {
+          id: 'admin'
+          title: 'Admin'
+        }
+        {
+          id: 'manager'
+          title: 'Manager'
+        }
+      ],
+      types: [
+        {
+          id: 1,
+          title: 'Some type'
+        }
+      ]
+    })
+
+    middleware = class extends Middleware
+      loadSources: loadSources
+
+    setup(middleware)
+
+    wrapper = mount(
+      template: '''
+        <rf-form name="User" auto>
+          <rf-select name="role" options="roles" />
+          <rf-select name="type" options="types" />
+        </rf-form>
+      '''
+    )
+
+    await wrapper.vm.$nextTick()
+
+    expect(loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
+
+    formSources = wrapper.vm.$children[0].$sources
+
+    expect(formSources.roles.length).toBe 2
+    expect(formSources.types.length).toBe 1
+
+  it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
+    loadSources = jest.fn -> Promise.resolve({
+      roles: [
+        {
+          id: 'admin'
+          title: 'Admin'
+        }
+        {
+          id: 'manager'
+          title: 'Manager'
+        }
+      ],
+      types: [
+        {
+          id: 1,
+          title: 'Some type'
+        }
+      ]
+    })
+
+    loadSource = jest.fn -> Promise.resolve(
+      [
+        {
+          id: 1
+          title: 'Category 1'
+        }
+        {
+          id: 2
+          title: 'Category 2'
+        }
+      ]
+    )
+
+    middleware = class extends Middleware
+      loadSources: loadSources
+      loadSource: loadSource
+
+    setup(middleware)
+
+    wrapper = mount(
+      template: '''
+        <rf-form name="User" auto>
+          <rf-select name="role" options="roles" />
+          <rf-select name="type" options="types" />
+        </rf-form>
+      '''
+    )
+
+    await wrapper.vm.$nextTick()
+
+    expect(loadSource.mock.calls.length).toBe 0
+
+    form = wrapper.vm.$children[0]
+
+    form.requireSource('categories')
+
+    await wrapper.vm.$nextTick()
+
+    expect(loadSource.mock.calls[0][0]).toBe 'categories'
+    expect(form.$sources.categories.length).toBe 2
+
 
 

@@ -21,6 +21,29 @@ npm install
 npm start
 ```
 
+# Table of contents
+
+- [What is vrf?](#what-is-vrf)
+- [Ideology](#ideology)
+- [What does it look like?](#what-does-it-look-like)
+- [Basics](#basics)
+  - [Object binding](#object-binding)
+  - [Access to the resource](#access-to-the-resource)
+  - [Where is the resource?](#where-is-the-resource)
+  - [Sources](#sources)
+  - [Nested entities](#nested-entities)
+  - [Autoforms](#autoforms)
+  - [Data loading control](#data-loading-control)
+  - [Actions](#actions)
+    - [Run actions programmatically](#run-actions-programmatically)
+  - [Bitwise fields](#bitwise-fields)
+- [Advanced](#advanced)
+  - [Architecture](#architecture)
+  - [Middleware API](#middleware-api)
+  - [Adapter API](#adapter-api)
+
+ 
+
 # What is vrf?
 
 Vrf (Vue Resource Form) is a solution for quickly writing declarative user interface forms.
@@ -38,7 +61,7 @@ Vrf puts form at the forefront of your application, but at the same time all hig
 
 In other words, the complex has the right to be complex, but the simple must remain simple.
 
-## What does it look like?
+# What does it look like?
 
 It allows you to write forms in this way:
 
@@ -166,6 +189,15 @@ export default {
 </script>
 ```
 
+## Where is the resource?
+
+The resource can be in three places:
+
+* in the state of the parent component for the form
+* in the state of form(this happens in autoforms, or for example if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
+* in vuex
+
+
 ## Sources
 
 Some components (for example, such as selects) require options for their work.  For these purposes, the form
@@ -209,13 +241,8 @@ export default {
 ```
 Instead of a string with the name of the options, you may also pass directly an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and autoforms can load sources by name).
 
-## Where is the resource?
+When you use a source name with autoforms, form uses a middleware to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
 
-The resource can be in three places:
-
-* in the state of the parent component for the form
-* in the state of form(this happens in autoforms, or for example if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
-* in vuex
 
 ## Nested entities
 Vrf supports work with nested entities, both single and with collections. To work with them, the ```rf-nested``` component is used, which expects a scoped slot with form components for a nested entity. Internally, ```rf-nested``` uses the ```rf-form``` the required number of times, so the use of rf-nested can be equated with the declaration of the form inside the form, which can be duplicated if necessary.
@@ -259,68 +286,6 @@ export default {
 
 ```
 
-## Bitwise fields
-
-Sometimes you need to manage some bitwise values in your resource. There is ```rf-bitwise``` component to manage them. It has two modes -
-you can use this component as a wrapper for checkboxes, or use its ```options``` property(like ```rf-select```). It supports ```inverted``` mode as well.
-
-```vue
-<template>
-
-<rf-form :resource="todo">
-
-  <!-- rf-bitwise as wrapper, markup mode -->
-  <rf-bitwise name="flags">
-    <rf-checkbox name="visible" power="0" />
-    <rf-checkbox name="editable" power="1" />
-    <rf-checkbox name="shareable" power="2" />
-  </rf-bitwise>
-
-  <!-- rf-bitwise renders checkboxes itself by options -->
-  <rf-bitwise
-    name="flags"
-    :options="options"
-  />
-</rf-form>
-
-</template>
-
-<script>
-
-export default {
-  data(){
-    return {
-      resource: {
-        flags: 0
-      }
-    }
-  },
-  computed: {
-    options(){
-      return [
-        {
-          id: 0,
-          name: 'visible' // use title instead of name, if you don't need translations
-        },
-        {
-          id: 1,
-          name: 'editable'
-        },
-        {
-          id: 2,
-          name: 'shareable'
-        }
-      ]
-    }
-  }
-}
-
-
-</script>
-
-</template>
-
-```
 
 ## Autoforms
 
@@ -330,37 +295,6 @@ The logic of autoforms is in the middlewares, which are supplied separately from
 
 
 Middlewares are set during initialization of forms, and there may be several of them. The form will use the first suitable middleware, the static ```accepts``` method is used to determine applicability. The form has a special prop ```transport``` that allows you to specify the preferred middleware (which should respond to a specific value of the prop ```transport```).
-
-
-```javascript
-
-export default class FooMiddleware {
-  constructor(name, form){
-    this.name = name
-    this.form = form
-  }
-
-  static accepts({name, transport}){ // determines if middleware is applicable for a given form
-    return true
-  }
-
-  load(){
-  }
-
-  loadSources(){
-  }
-
-  save(resource){
-  }
-}
-
-const middlewares = [
-  FooMiddleware
-]
-
-Vue.use(Vrf, {middlewares})
-
-```
 
 
 ## Data loading control
@@ -490,6 +424,132 @@ export default {
 
 ```
 
+## Bitwise fields
+
+Sometimes you need to manage some bitwise values in your resource. There is ```rf-bitwise``` component to manage them. It has two modes -
+you can use this component as a wrapper for checkboxes, or use its ```options``` property(like ```rf-select```). It supports ```inverted``` mode as well.
+
+```vue
+<template>
+
+<rf-form :resource="todo">
+
+  <!-- rf-bitwise as wrapper, markup mode -->
+  <rf-bitwise name="flags">
+    <rf-checkbox name="visible" power="0" />
+    <rf-checkbox name="editable" power="1" />
+    <rf-checkbox name="shareable" power="2" />
+  </rf-bitwise>
+
+  <!-- rf-bitwise renders checkboxes itself by options -->
+  <rf-bitwise
+    name="flags"
+    :options="options"
+  />
+</rf-form>
+
+</template>
+
+<script>
+
+export default {
+  data(){
+    return {
+      resource: {
+        flags: 0
+      }
+    }
+  },
+  computed: {
+    options(){
+      return [
+        {
+          id: 0,
+          name: 'visible' // use title instead of name, if you don't need translations
+        },
+        {
+          id: 1,
+          name: 'editable'
+        },
+        {
+          id: 2,
+          name: 'shareable'
+        }
+      ]
+    }
+  }
+}
+
+
+</script>
+
+</template>
+
+```
+
+
+# Advanced
+
+## Architecture
+
+Vrf is all about modularity, you may customize almost any part of it. The final result is achieved due to symbiosis of the following components:
+
+* Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling and it's the foundation providing APIs for other modules.
+
+* Adapters - implements VRF using some ui framework over link components descriptors from core. Most likely you will use vrf with some adapter.
+
+* Translate lambda - function with ```(modelProperty, modelName) -> translation``` signature, used for translations
+
+* Middlewares - components containing autoforms logic
+
+* Autocomplete providers - components containing autocompletes logic
+
+## Middleware API
+
+Vrf creates an instance of middleware during form initialization. There are some middleware instance methods you neeed to implement:
+
+* ```load``` - return Promise that resolves with resource
+* ```loadSources``` - this method is called when form is mounted and ready to eager load all sources for rendered components. It resolves with object where keys are source names and values are collections.
+* ```loadSource``` - it's called when some component need to require one source after eager loading and resolves with collection for this source
+* ```save``` - used to save form resource
+
+```javascript
+
+export default class FooMiddleware {
+  constructor(name, form){
+    this.name = name
+    this.form = form
+  }
+
+  static accepts({name, api, namespace}){ // determines if middleware is applicable for a given form
+    return true
+  }
+
+  load(){
+    return Promise.resolve({})
+  }
+
+  loadSource(name) {
+    return Promise.resolve([])
+  }
+  
+  loadSources(names){
+    return Promise.resolve({})
+  }
+  
+  save(resource){
+    return Promise.resolve()
+  }
+}
+
+const middlewares = [
+  FooMiddleware
+]
+
+Vue.use(Vrf, {middlewares})
+
+```
+
 ## Adapter API
 
 
@@ -568,17 +628,7 @@ export default {
 ```
 
 
-# Architecture
 
-* Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling.
-
-* Adapters - implements VRF using some ui framework over link components descriptors from core.
-
-* Translate lambda - function with ```(modelProperty, modelName) -> translation``` signature, used for translations
-
-* Middlewares - components containing autoforms logic
-
-* Autocomplete providers - components containing autocompletes logic
 
 # Props
 <table>

@@ -8,7 +8,7 @@ import VueProvideObservable from 'vue-provide-observable'
 
 propsFactory = -> {
   resource: null
-  resources: null
+  sources: null
   $$resource: null
   disabled: false
   readonly: false
@@ -24,12 +24,13 @@ propsFactory = -> {
   actionResults: {}
   actionPendings: {}
   lastSaveFailed: false
+  requireSource: null
 }
 
 nameMapper = (name) ->
   switch name
     when 'resource' then '$resource'
-    when 'resources' then '$resources'
+    when 'sources' then '$sources'
     when 'errors' then '$errors'
     when 'fetching' then '$fetching'
     when 'saving' then '$saving'
@@ -63,7 +64,8 @@ export default {
     vueResourceFormPathService: @$pathService
   props:
     resource: Object
-    resources: Object
+    sources: Object
+    resources: Object # deprecated
     disabled: [Boolean, String]
     readonly: [Boolean, String]
     name: String
@@ -109,13 +111,14 @@ export default {
 
   data: ->
     innerResource: null
-    innerResources: null
+    innerSources: null
     innerErrors: null
     innerFetching: false
     innerSaving: false
     innerActionResults: {}
     innerActionPendings: {}
     innerLastSaveFailed: false
+    requiredSources: {}
 
   watch:
     rfId: ->
@@ -149,8 +152,15 @@ export default {
     $resource: ->
       @innerResource || @resource
 
-    $resources: ->
-      @innerResources || @resources || {}
+    $sources: ->
+      @innerSources || @sources || @$resourcesDeprecated || {}
+
+    $resourcesDeprecated: ->
+      return unless @resources
+
+      console.warn '[vrf] Prop "resources" was deprecated and will be removed in next version. Please, use "sources" instead.'
+
+      @resources
 
     $errors: ->
       @innerErrors || @errors
@@ -218,8 +228,10 @@ export default {
 
       return @$emit('reload-sources') if @isNested
 
-      @middleware.loadSources().then((resources) =>
-        @setSyncProp 'resources', resources
+      @middleware.loadSources(Object.keys(@requiredSources)).then((sources) =>
+        sources = {...@innerSources, ...sources} if @innerResources
+
+        @setSyncProp 'sources', sources
       )
 
     reloadResource: (modifier) ->
@@ -261,6 +273,8 @@ export default {
     setSyncProp: (name, value) ->
       @["inner#{capitalizeFirst camelize(name)}"] = value
       @$emit "update:#{name}", value
+
+      @$emit("update:resources", value) if name == 'sources' # for deprecated prop sources sync
 
     submit: ->
       # Даем отработать onChange
@@ -327,4 +341,17 @@ export default {
 
     setActionPending: (name, inProgress) ->
       @setSyncProp('actionPendings', { ...@$actionPendings, [name]: inProgress })
+
+    requireSource: (name) ->
+      if !@requiredSources[name] && @innerResource
+        @middleware.loadSource(name).then((sourceCollection) =>
+          @form.addToSources(name, sourceCollection)
+        )
+        
+      @requiredSources[name] = true
+
+    addToSources: (name, value) ->
+      return @setSyncProp('sources', "#{name}" : value) unless @innerSources
+
+      @$set(@innerSources, name, value)
 }
