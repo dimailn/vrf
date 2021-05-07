@@ -23,7 +23,7 @@ npm start
 
 # Table of contents
 
-- [What is vrf](#what-is-vrf)
+- [What is vrf?](#what-is-vrf)
 - [Ideology](#ideology)
 - [What does it look like?](#what-does-it-look-like)
 - [Basics](#basics)
