@@ -506,7 +506,7 @@ Vrf is all about modularity, you may customize almost any part of it. The final 
 
 ## Middleware API
 
-Vrf creates an instance of middleware during form initializtion. There are some middleware instance methods you neeed to implement:
+Vrf creates an instance of middleware during form initialization. There are some middleware instance methods you neeed to implement:
 
 * ```load``` - return Promise that resolves with resource
 * ```loadSources``` - this method is called when form is mounted and ready to eager load all sources for rendered components. It resolves with object where keys are source names and values are collections.
