@@ -21,6 +21,26 @@ npm install
 npm start
 ```
 
+# Table of contents
+
+- [What is vrf](#what-is-vrf)
+- [Ideology](#ideology)
+- [Basics](#basics)
+  - [Object binding](#object-binding)
+  - [Access to the resource](#access-to-the-resource)
+  - [Sources](#sources)
+  - [Where is the resource?](#where-is-the-resource)
+  - [Nested entities](#nested-entities)
+  - [Bitwise fields](#bitwise-fields)
+  - [Autoforms](#autoforms)
+  - [Data loading control](#data-loading-control)
+  - [Actions](#actions)
+- [Advanced]
+  - [Middleware API](#middleware-api)
+  - [Adapter API](#adapter-api)
+  - [Architecture](#architecture)
+ 
+
 # What is vrf?
 
 Vrf (Vue Resource Form) is a solution for quickly writing declarative user interface forms.
