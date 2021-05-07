@@ -112,7 +112,7 @@ describe 'form', ->
     input = wrapper.find('input')
     expect(input.attributes('disabled')).toBe 'disabled'
 
-  it.only 'eager load sources', ->
+  it 'eager load sources', ->
     loadSources = jest.fn -> Promise.resolve({
       roles: [
         {
@@ -149,4 +149,9 @@ describe 'form', ->
     await wrapper.vm.$nextTick()
 
     expect(loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
+
+    formSources = wrapper.vm.$children[0].$sources
+
+    expect(formSources.roles.length).toBe 2
+    expect(formSources.types.length).toBe 1
 

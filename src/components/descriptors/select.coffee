@@ -11,7 +11,6 @@ export default {
   }
   
   mounted: ->
-    console.log 'mounted select'
     @$requireSource(@options) if @sourceMustBeRequired
 
   watch:

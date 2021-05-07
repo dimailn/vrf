@@ -130,7 +130,6 @@ export default {
 
 
   mounted: ->
-    console.log 'mounted form' + @name
     @forceReload()
 
   computed:
