@@ -333,52 +333,6 @@ The logic of autoforms is in the middlewares, which are supplied separately from
 
 Middlewares are set during initialization of forms, and there may be several of them. The form will use the first suitable middleware, the static ```accepts``` method is used to determine applicability. The form has a special prop ```transport``` that allows you to specify the preferred middleware (which should respond to a specific value of the prop ```transport```).
 
-## Middleware API
-
-Vrf creates an instance of middleware during form initializtion. There are some middleware instance methods you neeed to implement:
-
-* ```load``` - return Promise that resolves with resource
-* ```loadSources``` - this method is called when form is mounted and ready to eager load all sources for rendered components. It resolves with object where keys are source names and values are collections.
-* ```loadSource``` - it's called when some component need to require one source after eager loading and resolves with collection for this source
-* ```save``` - used to save form resource
-
-```javascript
-
-export default class FooMiddleware {
-  constructor(name, form){
-    this.name = name
-    this.form = form
-  }
-
-  static accepts({name, api, namespace}){ // determines if middleware is applicable for a given form
-    return true
-  }
-
-  load(){
-    return Promise.resolve({})
-  }
-
-  loadSource(name) {
-    return Promise.resolve([])
-  }
-  
-  loadSources(names){
-    return Promise.resolve({})
-  }
-  
-  save(resource){
-    return Promise.resolve()
-  }
-}
-
-const middlewares = [
-  FooMiddleware
-]
-
-Vue.use(Vrf, {middlewares})
-
-```
-
 
 ## Data loading control
 
@@ -504,6 +458,53 @@ export default {
   }
 }
 </script>
+
+```
+
+
+## Middleware API
+
+Vrf creates an instance of middleware during form initializtion. There are some middleware instance methods you neeed to implement:
+
+* ```load``` - return Promise that resolves with resource
+* ```loadSources``` - this method is called when form is mounted and ready to eager load all sources for rendered components. It resolves with object where keys are source names and values are collections.
+* ```loadSource``` - it's called when some component need to require one source after eager loading and resolves with collection for this source
+* ```save``` - used to save form resource
+
+```javascript
+
+export default class FooMiddleware {
+  constructor(name, form){
+    this.name = name
+    this.form = form
+  }
+
+  static accepts({name, api, namespace}){ // determines if middleware is applicable for a given form
+    return true
+  }
+
+  load(){
+    return Promise.resolve({})
+  }
+
+  loadSource(name) {
+    return Promise.resolve([])
+  }
+  
+  loadSources(names){
+    return Promise.resolve({})
+  }
+  
+  save(resource){
+    return Promise.resolve()
+  }
+}
+
+const middlewares = [
+  FooMiddleware
+]
+
+Vue.use(Vrf, {middlewares})
 
 ```
 
