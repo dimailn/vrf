@@ -209,7 +209,7 @@ export default {
 ```
 Instead of a string with the name of the options, you may also pass directly an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and autoforms can load sources by name).
 
-When you use string with a source name, form uses a middleware to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
+When you use a source name with autoforms, form uses a middleware to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
 
 ## Where is the resource?
 
