@@ -14,7 +14,12 @@
         <rf-select name="importance" :options="importanceOptions" />
         <rf-textarea name="description" />
         <rf-span name="owner" />
-        <rf-select name="priority" options="numerals" />
+<!--         <rf-resource v-slot="props">
+          <div  v-rf="'s'" v-if="props.resource.title"></div>
+        </rf-resource> -->
+
+        <!-- </rf-resource> -->
+        <rf-select name="priority" options="numerals" v-rf:v-if="$resource.title" />
 
         <h3>Bitwise field</h3>
         <h4>Markup based</h4>
