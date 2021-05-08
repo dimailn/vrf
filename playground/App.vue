@@ -19,7 +19,18 @@
         </rf-resource> -->
 
         <!-- </rf-resource> -->
+
         <rf-select name="priority" options="numerals" v-rf:v-if="$resource.title" />
+        <div v-rf:v-else>text</div>
+
+        test
+
+        <rf-resource>
+          <template v-slot="props">
+            <div v-if="todo"/>
+            <div v-else v-rf:v-if="true" />
+          </template>
+        </rf-resource>
 
         <h3>Bitwise field</h3>
         <h4>Markup based</h4>

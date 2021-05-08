@@ -31,67 +31,103 @@ module.exports = {
   },
   compilerDirectives: {
     rf (node, directiveMeta) {
-      const copyOfNode = {...node}
+      // console.log(directiveMeta)
+      // console.log(node)
+      // console.log(node.parent.children[0].ifConditions)
 
-      console.log(copyOfNode)
 
-      const template = {
-        type: 1,
-        tag: 'template',
-        attrsList: [],
-        attrsMap: {},
-        rawAttrsMap: {},
-        parent: node,
-        children: [copyOfNode],
-        slotTarget: '"default"',
-        slotTargetDynamic: false,
-        slotScope: 'props'
+      const {arg, value} = directiveMeta
+
+      switch(arg) {
+        case 'v-else':
+          console.log(node)
+          console.log(node.parent, 'aprent')
+
+          const nodeIndex = node.parent.children.findIndex((someNode) => someNode === node)
+          console.log(nodeIndex)
+          console.log(nodeIndex)
+
+          let newParentRoot = null
+          let offset = -1
+
+          while((newParentRoot = node.parent.children[nodeIndex + offset]).type != 1)
+            offset -= 1
+
+          console.log(newParentRoot)
+          const newParent = newParentRoot.scopedSlots['"default"']
+
+          const sibling = newParent.children[0]
+          console.log(sibling)
+          sibling.ifConditions.push(node)
+
+          node.parent = sibling.parent
+
+          node.else = true
+          node.attrsMap['v-else'] = ''
+
+          node.parent.children = node.parent.children.filter((someNode) => someNode !== node)
+
+          console.log(node)
+
+        break;
+
+        case 'v-if':
+          const copyOfNode = {...node}
+
+          const template = {
+            type: 1,
+            tag: 'template',
+            attrsList: [],
+            attrsMap: {},
+            rawAttrsMap: {},
+            parent: node,
+            children: [copyOfNode],
+            slotTarget: '"default"',
+            slotTargetDynamic: false,
+            slotScope: 'props'
+          }
+
+          copyOfNode.parent = template
+
+          node.scopedSlots =  {
+            '"default"': template
+          }
+
+          node.attrsList = []
+          node.attrsMap = {}
+          node.rawAttrsMap = {}
+          node.children = []
+
+          node.tag = 'rf-resource'
+
+          node.attrsList = []
+          node.directives = []
+          node.attrsMap = {}
+
+          copyOfNode.directives = copyOfNode.directives.filter((innerDirective) => innerDirective !== directiveMeta)
+          copyOfNode.attrsList = [copyOfNode.attrsList.filter((attr) => !/v-rf/.test(attr.name))]
+
+
+          Object.keys(copyOfNode.attrsMap).forEach((attrKey) => /v-rf/.test(attrKey) && (delete copyOfNode.attrsMap[attrKey]))
+
+          const exp = [
+            "resource",
+            "sources",
+            "rootResource",
+            "errors"
+          ].reduce((exp, propName) => exp.replace(new RegExp("\\$" + propName, 'g'), `props.${propName}`), value)
+
+          copyOfNode.if = exp
+          copyOfNode.ifConditions = [
+            {
+              exp,
+              block: copyOfNode
+            }
+          ]
+
+          copyOfNode.attrsMap['v-if'] = exp
+        break;
       }
-
-      copyOfNode.parent = template
-
-      node.scopedSlots =  {
-        '"default"': template
-      }
-
-      node.attrsList = []
-      node.attrsMap = {}
-      node.rawAttrsMap = {}
-      node.children = []
-
-      node.tag = 'rf-resource'
-
-      const directive = copyOfNode.directives.find((directive) => directive.name === 'rf')
-
-      copyOfNode.directives = copyOfNode.directives.filter((innerDirective) => innerDirective !== directive)
-      node.directives = copyOfNode.directives
-
-      node.attrsList = node.attrsList.filter((attr) => !/v-rf/.test(attr.name))
-      copyOfNode.attrsList = copyOfNode.attrsList.filter((attr) => !/v-rf/.test(attr.name))
-
-      Object.keys(node.attrsMap).forEach((attrKey) => /v-rf/.test(attrKey) && (delete node.attrsMap[attrKey]))
-      Object.keys(copyOfNode.attrsMap).forEach((attrKey) => /v-rf/.test(attrKey) && (delete copyOfNode.attrsMap[attrKey]))
-
-      const {arg, value} = directive
-
-      const exp = value.replace("$resource", "props.resource")
-
-      copyOfNode.if = exp
-      copyOfNode.ifConditions = [
-        {
-          exp,
-          block: copyOfNode
-        }
-      ]
-      // copyOfNode.ifProcessed = true
-      copyOfNode.attrsMap['v-if'] = exp
-
-  //       if: 'resource.title',
-  // ifConditions: [ { exp: 'resource.title', block: [Circular *1] } ],
-
-
-      // debugger
-      // transform node based on directiveMeta
     }
   }
 }
