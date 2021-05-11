@@ -40,38 +40,58 @@ module.exports = {
 
       switch(arg) {
         case 'v-else':
-          console.log(node)
-          console.log(node.parent, 'aprent')
+          // console.log(node)
+          // console.log(node.parent, 'aprent')
+          // console.log(node.parent.children.map((child) => child.ifConditions))
 
-          const nodeIndex = node.parent.children.findIndex((someNode) => someNode === node)
-          console.log(nodeIndex)
-          console.log(nodeIndex)
+          // const nodeIndex = node.parent.children.findIndex((someNode) => someNode === node)
+          // console.log(nodeIndex)
 
-          let newParentRoot = null
-          let offset = -1
+          // let newParentRoot = null
+          // let offset = -1
 
-          while((newParentRoot = node.parent.children[nodeIndex + offset]).type != 1)
-            offset -= 1
+          // while((newParentRoot = node.parent.children[nodeIndex + offset]).type != 1)
+          //   offset -= 1
 
-          console.log(newParentRoot)
-          const newParent = newParentRoot.scopedSlots['"default"']
+          // console.log(newParentRoot)
+          // const newParent = newParentRoot.scopedSlots['"default"']
 
-          const sibling = newParent.children[0]
-          console.log(sibling)
-          sibling.ifConditions.push(node)
+          // const sibling = newParent.children[0]
 
-          node.parent = sibling.parent
+          // // sibling.ifConditions.push({exp: undefined, block: node})
+          // console.log(sibling, 'sibling')
 
-          node.else = true
-          node.attrsMap['v-else'] = ''
 
-          node.parent.children = node.parent.children.filter((someNode) => someNode !== node)
+          // node.parent.children = node.parent.children.filter((someNode) => someNode !== node)
 
-          console.log(node)
+          // console.log(node.parent)
+
+          // node.parent = null
+
+
+          // node.parent = sibling.parent
+
+          // sibling.parent.children.push(node)
+          // sibling.ifProcessed = false
+
+          // node.else = true
+          // node.attrsMap['v-else'] = ''
+
+          // Object.keys(node).forEach((key) => delete node[key])
+
+          // node.if = 'false'
+          // node.ifConditions = [{exp: 'false', block: node}]
+          // node.attrsMap = {'v-if': 'false'}
+          // console.log(node)
+
+
+
+          // console.log(node)
 
         break;
 
         case 'v-if':
+          console.log(node)
           const copyOfNode = {...node}
 
           const template = {
@@ -96,13 +116,14 @@ module.exports = {
           node.attrsList = []
           node.attrsMap = {}
           node.rawAttrsMap = {}
+          node.attrs = []
+
           node.children = []
 
           node.tag = 'rf-resource'
 
-          node.attrsList = []
           node.directives = []
-          node.attrsMap = {}
+
 
           copyOfNode.directives = copyOfNode.directives.filter((innerDirective) => innerDirective !== directiveMeta)
           copyOfNode.attrsList = [copyOfNode.attrsList.filter((attr) => !/v-rf/.test(attr.name))]
@@ -117,6 +138,9 @@ module.exports = {
             "errors"
           ].reduce((exp, propName) => exp.replace(new RegExp("\\$" + propName, 'g'), `props.${propName}`), value)
 
+
+          const elseNode = node.parent.children.find((someNode) => someNode.attrsMap && someNode.attrsMap['v-rf:v-else'] === '')
+
           copyOfNode.if = exp
           copyOfNode.ifConditions = [
             {
@@ -125,7 +149,37 @@ module.exports = {
             }
           ]
 
+          console.log(copyOfNode)
+
+          if(elseNode) {
+            copyOfNode.ifConditions.push(
+              {
+                exp: undefined,
+                block: {...elseNode, else: true, parent: undefined}
+              }
+            )
+          }
+
+
+
           copyOfNode.attrsMap['v-if'] = exp
+
+          Object.keys(elseNode).forEach((key) => delete elseNode[key])
+
+          elseNode.type = 3
+          elseNode.text = ''
+
+          console.log(node)
+
+
+          // console.log(node.parent.children.length)
+          // node.parent.children = node.parent.children.filter((someNode) => someNode !== elseNode)
+
+          // Object.keys(elseNode).forEach((key) => delete elseNode[key])
+          // elseNode.parent = undefined
+          // console.log(node.parent.children.length)
+
+          // console.log(node.parent.children)
         break;
       }
     }
