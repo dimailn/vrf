@@ -12,6 +12,13 @@ const babelLoader = {
   }
 }
 
+
+const clearNode = (node) => {
+  Object.keys(node).forEach((key) => delete node[key])
+  node.type = 3
+  node.text = ''
+}
+
 module.exports = {
   loaders: {
     ...utils.cssLoaders({
@@ -139,7 +146,6 @@ module.exports = {
           ].reduce((exp, propName) => exp.replace(new RegExp("\\$" + propName, 'g'), `props.${propName}`), value)
 
 
-          const elseNode = node.parent.children.find((someNode) => someNode.attrsMap && someNode.attrsMap['v-rf:v-else'] === '')
 
           copyOfNode.if = exp
           copyOfNode.ifConditions = [
@@ -149,7 +155,24 @@ module.exports = {
             }
           ]
 
-          console.log(copyOfNode)
+
+          const elseNode = node.parent.children.find((someNode) => someNode.attrsMap && someNode.attrsMap['v-rf:v-else'] === '')
+          const elseIfNodes = node.parent.children.filter((someNode) => someNode.attrsMap && someNode.attrsMap['v-rf:v-else-if'])
+
+          elseIfNodes.forEach((elseIfNode) => {
+            if(elseIfNode) {
+              const directive = elseIfNode.directives.find((directive) => directive.name === 'rf')
+
+              copyOfNode.ifConditions.push(
+                {
+                  exp: directive.value,
+                  block: {...elseIfNode, elseif: directive.value, parent: undefined }
+                }
+              )
+
+              clearNode(elseIfNode)
+            }
+          })
 
           if(elseNode) {
             copyOfNode.ifConditions.push(
@@ -158,28 +181,14 @@ module.exports = {
                 block: {...elseNode, else: true, parent: undefined}
               }
             )
+
+            clearNode(elseNode)
           }
 
 
 
           copyOfNode.attrsMap['v-if'] = exp
 
-          Object.keys(elseNode).forEach((key) => delete elseNode[key])
-
-          elseNode.type = 3
-          elseNode.text = ''
-
-          console.log(node)
-
-
-          // console.log(node.parent.children.length)
-          // node.parent.children = node.parent.children.filter((someNode) => someNode !== elseNode)
-
-          // Object.keys(elseNode).forEach((key) => delete elseNode[key])
-          // elseNode.parent = undefined
-          // console.log(node.parent.children.length)
-
-          // console.log(node.parent.children)
         break;
       }
     }

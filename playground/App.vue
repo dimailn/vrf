@@ -21,6 +21,7 @@
         <!-- </rf-resource> -->
 
         <rf-select name="priority" options="numerals" v-rf:v-if="$resource.title" />
+        <div v-rf:v-else-if="true">v-else-if</div>
         <div v-rf:v-else>text</div>
 
         ---------------------------
