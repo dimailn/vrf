@@ -19,6 +19,15 @@ const clearNode = (node) => {
   node.text = ''
 }
 
+const compileExpression = (expression) => {
+  return [
+    "resource",
+    "sources",
+    "rootResource",
+    "errors"
+  ].reduce((exp, propName) => exp.replace(new RegExp("\\$" + propName, 'g'), `props.${propName}`), expression)
+}
+
 module.exports = {
   loaders: {
     ...utils.cssLoaders({
@@ -138,14 +147,7 @@ module.exports = {
 
           Object.keys(copyOfNode.attrsMap).forEach((attrKey) => /v-rf/.test(attrKey) && (delete copyOfNode.attrsMap[attrKey]))
 
-          const exp = [
-            "resource",
-            "sources",
-            "rootResource",
-            "errors"
-          ].reduce((exp, propName) => exp.replace(new RegExp("\\$" + propName, 'g'), `props.${propName}`), value)
-
-
+          const exp = compileExpression(value)
 
           copyOfNode.if = exp
           copyOfNode.ifConditions = [
@@ -159,19 +161,30 @@ module.exports = {
           const elseNode = node.parent.children.find((someNode) => someNode.attrsMap && someNode.attrsMap['v-rf:v-else'] === '')
           const elseIfNodes = node.parent.children.filter((someNode) => someNode.attrsMap && someNode.attrsMap['v-rf:v-else-if'])
 
+          console.log(elseIfNodes)
+
           elseIfNodes.forEach((elseIfNode) => {
-            if(elseIfNode) {
-              const directive = elseIfNode.directives.find((directive) => directive.name === 'rf')
 
-              copyOfNode.ifConditions.push(
-                {
-                  exp: directive.value,
-                  block: {...elseIfNode, elseif: directive.value, parent: undefined }
-                }
-              )
+            console.log(elseIfNode)
+            const directive = elseIfNode.directives.find((directive) => directive.name === 'rf')
 
-              clearNode(elseIfNode)
-            }
+            const elseIfExp = compileExpression(directive.value)
+
+            const elseIfNodeClone = {...elseIfNode, elseif: elseIfExp, parent: undefined, directives: [], attrsList: [], attrsMap: {} }
+
+            elseIfNodeClone.children.forEach((child) => child.parent = elseIfNodeClone)
+
+            copyOfNode.ifConditions.push(
+              {
+                exp: elseIfExp,
+                block: elseIfNodeClone
+              }
+            )
+
+            console.log(copyOfNode.ifConditions[copyOfNode.ifConditions.length - 1].children)
+
+            clearNode(elseIfNode)
+
           })
 
           if(elseNode) {
@@ -185,10 +198,11 @@ module.exports = {
             clearNode(elseNode)
           }
 
+          console.log(copyOfNode.ifConditions)
+
 
 
           copyOfNode.attrsMap['v-if'] = exp
-
         break;
       }
     }
