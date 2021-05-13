@@ -9,7 +9,7 @@ export default {
     ...baseProps
     ...props
   }
-  
+
   mounted: ->
     @$requireSource(@options) if @sourceMustBeRequired
 
@@ -25,7 +25,9 @@ export default {
 
     $_options: ->
       if typeof @options is 'string'
-        @$sources[@options] || @$resource?[@options] || @VueResourceForm.sources?[@options]
+        @$sources[@options] ||
+        @$resource?[@options] instanceof Array && @$resource?[@options] ||
+        @VueResourceForm.sources?[@options]
       else
         @options
 
@@ -34,7 +36,7 @@ export default {
 
     listeners: ->
       input: @onChange
-            
+
     sourceMustBeRequired: ->
       typeof @options is 'string' && !@VueResourceForm.sources?[@options]
 
