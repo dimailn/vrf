@@ -37,7 +37,7 @@
     "babel-loader": "^8.2.2",
     "chalk": "^2.0.1",
     "chromedriver": "^2.27.2",
-    "coffee-jest": "0.0.0",
+    "coffee-jest": "0.0.1",
     "coffee-loader": "^0.9.0",
     "coffeescript": "^2.5.1",
     "copy-webpack-plugin": "^4.0.1",
