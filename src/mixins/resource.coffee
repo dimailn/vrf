@@ -66,7 +66,10 @@ export default {
 
     $lastSaveFailed: ->
       @vrf.wrapper.lastSaveFailed
-    
+
     $requireSource: ->
       @vrf.wrapper.requireSource
+
+    $translationName: ->
+      @vrf.wrapper.translationName
 }

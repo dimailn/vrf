@@ -25,6 +25,7 @@ propsFactory = -> {
   actionPendings: {}
   lastSaveFailed: false
   requireSource: null
+  translationName: null
 }
 
 nameMapper = (name) ->
@@ -37,6 +38,7 @@ nameMapper = (name) ->
     when 'actionResults' then '$actionResults'
     when 'actionPendings' then '$actionPendings'
     when 'lastSaveFailed' then '$lastSaveFailed'
+    when 'translationName' then '$translationName'
     else name
 
 
@@ -70,7 +72,8 @@ export default {
     readonly: [Boolean, String]
     name: String
     rfId: Number
-    rootName: String
+    rootName: String # deprecated
+    translationName: String
     auto:
       type: Boolean
       default: false
@@ -147,6 +150,9 @@ export default {
       @
     rfName: ->
       @name
+    $translationName: ->
+      @translationName || @name
+
     $$resource: ->
       @resource
     $resource: ->
@@ -347,7 +353,7 @@ export default {
         @middleware.loadSource(name).then((sourceCollection) =>
           @form.addToSources(name, sourceCollection)
         )
-        
+
       @requiredSources[name] = true
 
     addToSources: (name, value) ->
