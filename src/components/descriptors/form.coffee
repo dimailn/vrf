@@ -349,6 +349,8 @@ export default {
       @setSyncProp('actionPendings', { ...@$actionPendings, [name]: inProgress })
 
     requireSource: (name) ->
+      return @$sources[name] if @$sources && @$sources[name]
+
       if !@requiredSources[name] && @innerResource
         @middleware.loadSource(name).then((sourceCollection) =>
           @form.addToSources(name, sourceCollection)
