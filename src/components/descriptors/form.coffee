@@ -234,8 +234,10 @@ export default {
 
       return @$emit('reload-sources') if @isNested
 
+      return if Object.keys(@requiredSources).length == 0
+
       @middleware.loadSources(Object.keys(@requiredSources)).then((sources) =>
-        sources = {...@innerSources, ...sources} if @innerResources
+        sources = {...@$sources, ...sources} if Object.keys(@$sources).length > 0
 
         @setSyncProp 'sources', sources
       )
