@@ -51,7 +51,14 @@ export default {
       @vueResourceFormPathService
 
     errorsForNestedResource: ->
-      @$errors && @$errors[@name]
+      prefix = @name
+
+      Object.keys(@$errors)
+        .filter((path) -> path.substr(0, prefix.length) == prefix)
+        .reduce(
+          (ownErrors, path) => ownErrors[path[prefix.length + 1 ...]] = @$errors[path]; ownErrors
+          {}
+        )
 
     $schema: ->
       @schema || @defaultSchema
