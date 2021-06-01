@@ -53,7 +53,7 @@
 <rf-form
   :name="rfName"
   :resource="nestedResource"
-  :resources="$sources"
+  :sources="$sources"
   :errors="errorsForNestedResource"
   :vuex="vuex"
   :path="parentPath"
