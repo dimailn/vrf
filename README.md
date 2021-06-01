@@ -135,7 +135,7 @@ There are several ways to access the resource:
 
 ```vue
 <rf-resource>
-  <template slot-scope="props">
+  <template v-slot="props">
     <div>{{props.resource}}</div>
   </template>
 </rf-resource>
@@ -252,8 +252,8 @@ Vrf supports work with nested entities, both single and with collections. To wor
 
 <rf-form :resource="todo">
   <rf-input name="title" />
-  <rf-nested name="subtasks">
-    <template slot-scope="props">
+  <rf-nested name="subtasks" rf-name="subtask">
+    <template v-slot="props">
       <rf-input name="title">
       <rf-datepicker name="deadline" />
     </template>
