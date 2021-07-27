@@ -125,7 +125,7 @@ export default {
 
   watch:
     rfId: ->
-      @forceReload()
+      @forceReload(boot: true)
     resource: (old, current) ->
       return if old == current
 
@@ -133,7 +133,7 @@ export default {
 
 
   mounted: ->
-    @forceReload()
+    @forceReload(boot: true)
 
   computed:
     tailPath: ->
@@ -203,13 +203,13 @@ export default {
       !!@path
 
   methods:
-    forceReload: ->
+    forceReload: (options = boot: false) ->
       return unless @auto
 
       throw "You must provide name for auto-forms." unless @name
       throw "You must provide middlewares for auto-forms." unless @VueResourceForm.middlewares
 
-      if @noFetch
+      if @noFetch && options.boot
         @reloadSources()
         return
 
