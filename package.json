@@ -23,7 +23,7 @@
     "humps": "^2.0.1",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
-    "vue-provide-observable": "^3.0.1"
+    "vue-provide-observable": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
