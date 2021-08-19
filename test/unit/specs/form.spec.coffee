@@ -70,13 +70,11 @@ describe 'form', ->
     ]
   ))
   def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
-  def(
-    'middleware'
-    => class extends Middleware
-      save: $save
-      loadSources: $loadSources
-      loadSource: $loadSource
-      executeAction: $executeAction
+  def('middleware', -> class extends Middleware
+    save: $save
+    loadSources: $loadSources
+    loadSource: $loadSource
+    executeAction: $executeAction
   )
 
   def('wrapper', ->
@@ -132,22 +130,6 @@ describe 'form', ->
 
     expect($save.mock.calls.length).toBe(1)
 
-  it 'disabled all inputs', ->
-    wrapper = mount(
-      template: '''
-        <rf-form :resource="resource" disabled="$resource.disabled">
-          <rf-input name="title" />
-        </rf-form>
-      '''
-
-      data: ->
-        resource:
-          title: ''
-          disabled: true
-    )
-
-    input = wrapper.find('input')
-    expect(input.attributes('disabled')).toBe 'disabled'
 
   it 'executes action', ->
     form = $wrapper.vm.$children[0]
@@ -157,6 +139,26 @@ describe 'form', ->
     expect(data).toBe 'data'
     expect(status).toBe 200
     expect($executeAction.mock.calls[0][0]).toBe('archive')
+
+  describe 'form disabled', ->
+    def('wrapper', ->
+      mount(
+        template: '''
+          <rf-form :resource="resource" disabled="$resource.disabled">
+            <rf-input name="title" />
+          </rf-form>
+        '''
+
+        data: ->
+          resource:
+            title: ''
+            disabled: true
+      )
+    )
+
+    it 'disables all inputs', ->
+      input = $wrapper.find('input')
+      expect(input.attributes('disabled')).toBe 'disabled'
 
   describe 'sources', ->
     def('wrapper', ->
