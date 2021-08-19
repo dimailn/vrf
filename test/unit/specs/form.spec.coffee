@@ -9,8 +9,6 @@ import Vuex from 'vuex'
 Vue.use(Vrf)
 Vue.use(Vuex)
 
-wrapper = null
-
 class Middleware
   @accepts: -> true
   constructor: (@name, @form) ->
@@ -27,8 +25,6 @@ class Middleware
 sharedExamplesFor "successful load", ->
   it 'loads resource and show data in ui', ->
     input = $wrapper.find('input')
-
-
 
     expect(input.vm.$value).toBe 'Test'
 
@@ -189,7 +185,7 @@ describe 'form', ->
 
       form.requireSource('categories')
 
-      await wrapper.vm.$nextTick()
+      await $wrapper.vm.$nextTick()
 
       expect($loadSource.mock.calls[0][0]).toBe 'categories'
       expect(form.$sources.categories.length).toBe 2
