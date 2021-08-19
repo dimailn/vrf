@@ -263,6 +263,8 @@ export default {
       return @$emit('reload-root-resource', modifier) if @isNested
 
       @middleware.load().then((resource) =>
+        @$store.commit('vue-resource-form:set', {resourceName: @name, payload: resource}) if @vuex
+
         if !modifier || !@innerResource
           @innerResource = resource
         else
