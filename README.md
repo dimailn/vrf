@@ -3,7 +3,6 @@
 </p>
 
 <a href="https://github.com/dimailn/vrf/actions/workflows/node.js.yml"><img src="https://github.com/dimailn/vrf/actions/workflows/node.js.yml/badge.svg" /></a>
-
 [![Coverage Status](https://coveralls.io/repos/github/dimailn/vrf/badge.svg?branch=master&kill_cache=1)](https://coveralls.io/github/dimailn/vrf?branch=master)
 <a href="https://www.npmjs.com/package/vrf"><img alt="npm" src="https://img.shields.io/npm/v/vrf"></a>
 <img src="https://img.shields.io/bundlephobia/min/vrf" />
