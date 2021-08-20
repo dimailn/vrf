@@ -26,6 +26,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - run: npx jest --config test/unit/jest.conf.js --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
