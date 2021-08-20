@@ -33,6 +33,6 @@ jobs:
       uses: coverallsapp/github-action@1.1.3
       with:
         github-token: ${{ secrets.github_token }}
-        path-to-lcov: ${{ github.workspace }}/../coverage/lcov.info
+        path-to-lcov: ${{ github.workspace }}
 
     - run: npx jest --config test/unit/jest.conf.js --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
