@@ -2,12 +2,12 @@ import {
   mount
 } from '@vue/test-utils'
 
-import Vrf from '../../../src'
+import Vrf, {mutations} from '../../../src'
 import Vue from 'vue'
+import Vuex from 'vuex'
 
 Vue.use(Vrf)
-
-wrapper = null
+Vue.use(Vuex)
 
 class Middleware
   @accepts: -> true
@@ -20,41 +20,65 @@ class Middleware
     Promise.resolve({})
   save: ->
     Promise.resolve()
-    
-setup = (middleware) ->
-    middlewares = [middleware]
 
-    Vue::VueResourceForm.middlewares = middlewares
 
-describe 'form', ->
-  it 'loads resource', ->
-    setup(Middleware)
-
-    wrapper = mount(
-      template: '''
-        <rf-form name="Todo" auto class="form">
-          <rf-input name="title" />
-          <rf-submit class="submit" />
-        </rf-form>
-      '''
-    )
-
-    input = wrapper.find('input')
-    
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+sharedExamplesFor "successful load", ->
+  it 'loads resource and show data in ui', ->
+    input = $wrapper.find('input')
 
     expect(input.vm.$value).toBe 'Test'
 
-  it 'saves resource', ->
-    save = jest.fn -> Promise.resolve([true, null])
+describe 'form', ->
+  beforeEach ->
+    middlewares = [$middleware]
 
-    middleware = class extends Middleware
-      save: save
+    Vue::VueResourceForm.middlewares = middlewares
 
-    setup(middleware)
+    await $wrapper.vm.$nextTick()
+    await $wrapper.vm.$nextTick()
 
-    wrapper = mount(
+  def('save', => jest.fn -> Promise.resolve([true, null]))
+  def('loadSources', -> jest.fn -> Promise.resolve({
+      roles: [
+        {
+          id: 'admin'
+          title: 'Admin'
+        }
+        {
+          id: 'manager'
+          title: 'Manager'
+        }
+      ],
+      types: [
+        {
+          id: 1,
+          title: 'Some type'
+        }
+      ]
+    })
+  )
+  def('loadSource', -> jest.fn -> Promise.resolve(
+    [
+      {
+        id: 1
+        title: 'Category 1'
+      }
+      {
+        id: 2
+        title: 'Category 2'
+      }
+    ]
+  ))
+  def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
+  def('middleware', -> class extends Middleware
+    save: $save
+    loadSources: $loadSources
+    loadSource: $loadSource
+    executeAction: $executeAction
+  )
+
+  def('wrapper', ->
+    mount(
       template: '''
         <rf-form name="Todo" auto class="form">
           <rf-input name="title" />
@@ -62,159 +86,112 @@ describe 'form', ->
         </rf-form>
       '''
     )
+  )
 
-    submit = wrapper.find('.submit')
+  itBehavesLike "successful load"
+
+  describe 'vuex enabled', ->
+    def('store', ->
+      new Vuex.Store(
+        {
+          state: {
+            todo: null
+          }
+          mutations
+        }
+      )
+    )
+    def('wrapper', ->
+      mount(
+        template: '''
+          <rf-form name="Todo" auto class="form" vuex>
+            <rf-input name="title" />
+            <rf-submit class="submit" />
+          </rf-form>
+        '''
+        {store: $store}
+      )
+    )
+
+    itBehavesLike "successful load"
+
+    it 'puts resource in vuex', ->
+      expect($store.state.todo).toBeDefined()
+      expect($store.state.todo).toEqual(
+        expect.objectContaining(title: 'Test')
+      )
+
+
+  it 'saves resource', ->
+    submit = $wrapper.find('.submit')
     submit.trigger('click')
 
-    await wrapper.vm.$nextTick()
-    
-    expect(save.mock.calls.length).toBe(1)
+    await $wrapper.vm.$nextTick()
+
+    expect($save.mock.calls.length).toBe(1)
+
 
   it 'executes action', ->
-    executeAction = jest.fn -> Promise.resolve({data: 'data', status: 200})
-
-    middleware = class extends Middleware
-      executeAction: executeAction
-
-    setup(middleware)
-
-    wrapper = mount(
-      template: '''
-        <rf-form name="Todo" auto class="form">
-          <rf-input name="title" />
-          <rf-submit class="submit" />
-        </rf-form>
-      '''
-    )
-
-    form = wrapper.vm.$children[0]
+    form = $wrapper.vm.$children[0]
 
     {data, status} = await form.executeAction('archive')
 
     expect(data).toBe 'data'
     expect(status).toBe 200
-    expect(executeAction.mock.calls[0][0]).toBe('archive')
+    expect($executeAction.mock.calls[0][0]).toBe('archive')
 
-  it 'disabled all inputs', ->
-    wrapper = mount(
-      template: '''
-        <rf-form :resource="resource" disabled="$resource.disabled">
-          <rf-input name="title" />
-        </rf-form>
-      '''
+  describe 'form disabled', ->
+    def('wrapper', ->
+      mount(
+        template: '''
+          <rf-form :resource="resource" disabled="$resource.disabled">
+            <rf-input name="title" />
+          </rf-form>
+        '''
 
-      data: ->
-        resource:
-          title: ''
-          disabled: true
+        data: ->
+          resource:
+            title: ''
+            disabled: true
+      )
     )
 
-    input = wrapper.find('input')
-    expect(input.attributes('disabled')).toBe 'disabled'
+    it 'disables all inputs', ->
+      input = $wrapper.find('input')
+      expect(input.attributes('disabled')).toBe 'disabled'
 
-  it 'eager load sources', ->
-    loadSources = jest.fn -> Promise.resolve({
-      roles: [
-        {
-          id: 'admin'
-          title: 'Admin'
-        }
-        {
-          id: 'manager'
-          title: 'Manager'
-        }
-      ],
-      types: [
-        {
-          id: 1,
-          title: 'Some type'
-        }
-      ]
-    })
-
-    middleware = class extends Middleware
-      loadSources: loadSources
-
-    setup(middleware)
-
-    wrapper = mount(
-      template: '''
-        <rf-form name="User" auto>
-          <rf-select name="role" options="roles" />
-          <rf-select name="type" options="types" />
-        </rf-form>
-      '''
+  describe 'sources', ->
+    def('wrapper', ->
+      mount(
+        template: '''
+          <rf-form name="User" auto>
+            <rf-select name="role" options="roles" />
+            <rf-select name="type" options="types" />
+          </rf-form>
+        '''
+      )
     )
 
-    await wrapper.vm.$nextTick()
+    it 'is loaded eager', ->
+      expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
 
-    expect(loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
+      formSources = $wrapper.vm.$children[0].$sources
 
-    formSources = wrapper.vm.$children[0].$sources
+      expect(formSources.roles.length).toBe 2
+      expect(formSources.types.length).toBe 1
 
-    expect(formSources.roles.length).toBe 2
-    expect(formSources.types.length).toBe 1
+    it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
+      expect($loadSource.mock.calls.length).toBe 0
 
-  it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
-    loadSources = jest.fn -> Promise.resolve({
-      roles: [
-        {
-          id: 'admin'
-          title: 'Admin'
-        }
-        {
-          id: 'manager'
-          title: 'Manager'
-        }
-      ],
-      types: [
-        {
-          id: 1,
-          title: 'Some type'
-        }
-      ]
-    })
+      form = $wrapper.vm.$children[0]
 
-    loadSource = jest.fn -> Promise.resolve(
-      [
-        {
-          id: 1
-          title: 'Category 1'
-        }
-        {
-          id: 2
-          title: 'Category 2'
-        }
-      ]
-    )
+      form.requireSource('categories')
 
-    middleware = class extends Middleware
-      loadSources: loadSources
-      loadSource: loadSource
+      await $wrapper.vm.$nextTick()
 
-    setup(middleware)
+      expect($loadSource.mock.calls[0][0]).toBe 'categories'
+      expect(form.$sources.categories.length).toBe 2
 
-    wrapper = mount(
-      template: '''
-        <rf-form name="User" auto>
-          <rf-select name="role" options="roles" />
-          <rf-select name="type" options="types" />
-        </rf-form>
-      '''
-    )
-
-    await wrapper.vm.$nextTick()
-
-    expect(loadSource.mock.calls.length).toBe 0
-
-    form = wrapper.vm.$children[0]
-
-    form.requireSource('categories')
-
-    await wrapper.vm.$nextTick()
-
-    expect(loadSource.mock.calls[0][0]).toBe 'categories'
-    expect(form.$sources.categories.length).toBe 2
 
 
 
