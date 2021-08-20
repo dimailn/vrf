@@ -34,5 +34,7 @@ jobs:
       with:
         github-token: ${{ secrets.github_token }}
         path-to-lcov: ${{ github.workspace }}/coverage
+    - run: ls -la
+    - run: cd coverage  && ls -la 
 
     - run: npx jest --config test/unit/jest.conf.js --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
