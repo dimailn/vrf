@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import vrf from '../src/index'
 import sources from './sources'
-# import vrf from '../dist/static/lib'
+
 
 Vue.config.productionTip = false
 translate = (propertyName) -> propertyName

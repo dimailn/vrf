@@ -6,7 +6,7 @@ import {installer} from 'vue-provide-observable'
 
 export default (components) -> {
   install: (Vue, options) ->
-    console.log("[vrf] v.#{process.env.VERSION}") if process.env.NODE_ENV == 'development'
+    console.log("[vrf] v.#{__VERSION__}") if process.env.NODE_ENV == 'development'
 
     Vue.use(installer)
 

@@ -13,14 +13,14 @@ const babelLoader = {
 }
 
 module.exports = {
-  loaders: {
-    ...utils.cssLoaders({
-          sourceMap: sourceMapEnabled,
-          extract: isProduction
-        }),
-    coffee: 'babel-loader?!coffee-loader',
-    js: babelLoader
-  },
+  // loaders: {
+  //   ...utils.cssLoaders({
+  //         sourceMap: sourceMapEnabled,
+  //         extract: isProduction
+  //       }),
+  //   coffee: 'babel-loader?!coffee-loader',
+  //   js: babelLoader
+  // },
   cssSourceMap: sourceMapEnabled,
   cacheBusting: config.dev.cacheBusting,
   transformToRequire: {
