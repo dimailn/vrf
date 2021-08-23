@@ -22,8 +22,8 @@ class Middleware
     Promise.resolve()
 
 
-sharedExamplesFor "successful load", ->
-  it 'loads resource and show data in ui', ->
+sharedExamplesFor "successful data showing", ->
+  it 'show data in ui', ->
     input = $wrapper.find('input')
 
     expect(input.vm.$value).toBe 'Test'
@@ -33,9 +33,6 @@ describe 'form', ->
     middlewares = [$middleware]
 
     Vue::VueResourceForm.middlewares = middlewares
-
-    await $wrapper.vm.$nextTick()
-    await $wrapper.vm.$nextTick()
 
   def('save', => jest.fn -> Promise.resolve([true, null]))
   def('loadSources', -> jest.fn -> Promise.resolve({
@@ -88,110 +85,150 @@ describe 'form', ->
     )
   )
 
-  itBehavesLike "successful load"
-
-  describe 'vuex enabled', ->
-    def('store', ->
-      new Vuex.Store(
-        {
-          state: {
-            todo: null
-          }
-          mutations
+  def('store', ->
+    new Vuex.Store(
+      {
+        state: {
+          todo: null
         }
-      )
+        mutations
+      }
     )
-    def('wrapper', ->
-      mount(
-        template: '''
-          <rf-form name="Todo" auto class="form" vuex>
-            <rf-input name="title" />
-            <rf-submit class="submit" />
-          </rf-form>
-        '''
-        {store: $store}
+  )
+
+  describe 'auto mode, after load', ->
+    beforeEach ->
+      await $wrapper.vm.$nextTick()
+      await $wrapper.vm.$nextTick()
+
+    itBehavesLike "successful data showing"
+
+    describe 'vuex enabled', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto class="form" vuex>
+              <rf-input name="title" />
+              <rf-submit class="submit" />
+            </rf-form>
+          '''
+          {store: $store}
+        )
       )
-    )
 
-    itBehavesLike "successful load"
+      itBehavesLike "successful data showing"
 
-    it 'puts resource in vuex', ->
-      expect($store.state.todo).toBeDefined()
-      expect($store.state.todo).toEqual(
-        expect.objectContaining(title: 'Test')
-      )
-
-
-  it 'saves resource', ->
-    submit = $wrapper.find('.submit')
-    submit.trigger('click')
-
-    await $wrapper.vm.$nextTick()
-
-    expect($save.mock.calls.length).toBe(1)
+      it 'puts resource in vuex', ->
+        expect($store.state.todo).toBeDefined()
+        expect($store.state.todo).toEqual(
+          expect.objectContaining(title: 'Test')
+        )
 
 
-  it 'executes action', ->
-    form = $wrapper.vm.$children[0]
-
-    {data, status} = await form.executeAction('archive')
-
-    expect(data).toBe 'data'
-    expect(status).toBe 200
-    expect($executeAction.mock.calls[0][0]).toBe('archive')
-
-  describe 'form disabled', ->
-    def('wrapper', ->
-      mount(
-        template: '''
-          <rf-form :resource="resource" disabled="$resource.disabled">
-            <rf-input name="title" />
-          </rf-form>
-        '''
-
-        data: ->
-          resource:
-            title: ''
-            disabled: true
-      )
-    )
-
-    it 'disables all inputs', ->
-      input = $wrapper.find('input')
-      expect(input.attributes('disabled')).toBe 'disabled'
-
-  describe 'sources', ->
-    def('wrapper', ->
-      mount(
-        template: '''
-          <rf-form name="User" auto>
-            <rf-select name="role" options="roles" />
-            <rf-select name="type" options="types" />
-          </rf-form>
-        '''
-      )
-    )
-
-    it 'is loaded eager', ->
-      expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
-
-      formSources = $wrapper.vm.$children[0].$sources
-
-      expect(formSources.roles.length).toBe 2
-      expect(formSources.types.length).toBe 1
-
-    it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
-      expect($loadSource.mock.calls.length).toBe 0
-
-      form = $wrapper.vm.$children[0]
-
-      form.requireSource('categories')
+    it 'saves resource', ->
+      submit = $wrapper.find('.submit')
+      submit.trigger('click')
 
       await $wrapper.vm.$nextTick()
 
-      expect($loadSource.mock.calls[0][0]).toBe 'categories'
-      expect(form.$sources.categories.length).toBe 2
+      expect($save.mock.calls.length).toBe(1)
 
 
+    it 'executes action', ->
+      form = $wrapper.vm.$children[0]
+
+      {data, status} = await form.executeAction('archive')
+
+      expect(data).toBe 'data'
+      expect(status).toBe 200
+      expect($executeAction.mock.calls[0][0]).toBe('archive')
+
+    describe 'form disabled', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form :resource="resource" disabled="$resource.disabled">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+
+          data: ->
+            resource:
+              title: ''
+              disabled: true
+        )
+      )
+
+      it 'disables all inputs', ->
+        input = $wrapper.find('input')
+        expect(input.attributes('disabled')).toBe 'disabled'
+
+    describe 'sources', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="User" auto>
+              <rf-select name="role" options="roles" />
+              <rf-select name="type" options="types" />
+            </rf-form>
+          '''
+        )
+      )
+
+      it 'is loaded eager', ->
+        expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
+
+        formSources = $wrapper.vm.$children[0].$sources
+
+        expect(formSources.roles.length).toBe 2
+        expect(formSources.types.length).toBe 1
+
+      it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
+        expect($loadSource.mock.calls.length).toBe 0
+
+        form = $wrapper.vm.$children[0]
+
+        form.requireSource('categories')
+
+        await $wrapper.vm.$nextTick()
+
+        expect($loadSource.mock.calls[0][0]).toBe 'categories'
+        expect(form.$sources.categories.length).toBe 2
+
+  describe 'non-auto mode', ->
+    describe 'vuex mode', ->
+      def('store', ->
+        new Vuex.Store(
+          {
+            state: {
+              todo: {
+                title: 'Test'
+              }
+            }
+            mutations
+          }
+        )
+      )
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" :resource.sync="resource" auto class="form" vuex>
+              <rf-input name="title" />
+              <rf-submit class="submit" />
+            </rf-form>
+          '''
+          data: ->
+            resource: null
+          {store: $store}
+        )
+      )
+
+      itBehavesLike "successful data showing"
+
+      it "syncs resource from vuex", ->
+        await $wrapper.vm.$nextTick()
+
+        expect($wrapper.vm.resource).not.toBeNull()
+        expect($wrapper.vm.resource.title).toBe 'Test'
 
 

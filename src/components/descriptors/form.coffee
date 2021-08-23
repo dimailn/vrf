@@ -2,6 +2,7 @@ import capitalizeFirst from '@/utils/capitalize-first'
 import pick from '@/utils/pick'
 import set from '@/utils/set'
 import toPath from '@/utils/to-path'
+import camelCase from '@/utils/camel-case'
 import cloneDeep from 'lodash.clonedeep'
 import {camelize} from 'humps'
 import VueProvideObservable from 'vue-provide-observable'
@@ -155,7 +156,10 @@ export default {
 
     $$resource: ->
       @resource
+
     $resource: ->
+      return @$store.state[camelCase @name] if @vuex
+
       @innerResource || @resource
 
     $sources: ->
