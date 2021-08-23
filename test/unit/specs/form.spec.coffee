@@ -80,6 +80,7 @@ describe 'form', ->
         <rf-form name="Todo" auto class="form">
           <rf-input name="title" />
           <rf-submit class="submit" />
+          <rf-action name="archive" class="rf-action" />
         </rf-form>
       '''
     )
@@ -133,7 +134,6 @@ describe 'form', ->
 
       expect($save.mock.calls.length).toBe(1)
 
-
     it 'executes action', ->
       form = $wrapper.vm.$children[0]
 
@@ -142,6 +142,13 @@ describe 'form', ->
       expect(data).toBe 'data'
       expect(status).toBe 200
       expect($executeAction.mock.calls[0][0]).toBe('archive')
+
+    it 'executes action through rf-action', ->
+      rfAction = $wrapper.find('.rf-action')
+      rfAction.trigger('click')
+
+      expect($executeAction.mock.calls[0][0]).toBe('archive')
+
 
     describe 'form disabled', ->
       def('wrapper', ->
@@ -230,5 +237,7 @@ describe 'form', ->
 
         expect($wrapper.vm.resource).not.toBeNull()
         expect($wrapper.vm.resource.title).toBe 'Test'
+
+  
 
 
