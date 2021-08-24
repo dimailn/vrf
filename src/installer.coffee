@@ -48,30 +48,15 @@ export default (components) -> {
 
     return unless options?
 
-    if options.translate?
-      Vue::VueResourceForm.translate = options.translate
-
-    if options.middlewares?
-      Vue::VueResourceForm.middlewares = options.middlewares
-    if options.store?
-      Vue::VueResourceForm.store = options.store
-
-    if options.autocompletes?
-      Vue::VueResourceForm.autocompletes = options.autocompletes
-
-    if options.partials?
-      Vue::VueResourceForm.partials = options.partials
-
-    if options.sources?
-      Vue::VueResourceForm.sources = options.sources
-
-    if options.dateInterceptor?
-      Vue::VueResourceForm.dateInterceptor = options.dateInterceptor
-
-    if options.transforms?
-      Vue::VueResourceForm.transforms = options.transforms
-
-    if options.locale?
-      Vue::VueResourceForm.locale = options.locale
+    [
+      'translate',
+      'middlewares',
+      'store',
+      'autocompletes',
+      'partials',
+      'sources',
+      'dateInterceptor',
+      'transforms',
+      'locale'
+    ].forEach((optionName) -> Vue::VueResourceForm[optionName] = options[optionName] if options[optionName]?)
 }
-
