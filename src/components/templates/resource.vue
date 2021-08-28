@@ -1,1 +1,1 @@
-<script lang="coffee" src="../descriptors/resource.coffee" />
+<script src="../descriptors/resource" />

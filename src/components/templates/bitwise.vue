@@ -19,4 +19,4 @@
 
 </template>
 
-<script lang="coffee" src="../descriptors/bitwise.coffee" />
+<script src="../descriptors/bitwise" />

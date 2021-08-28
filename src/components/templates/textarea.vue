@@ -11,6 +11,6 @@
 </template>
 
 
-<script lang="coffee" src="../descriptors/textarea.coffee" />
+<script src="../descriptors/textarea" />
 
 

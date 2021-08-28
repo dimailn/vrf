@@ -1,4 +1,4 @@
 module.exports = {
-    components: 'src/components/templates/**/[A-Z]*.vue',
-    webpackConfig: require('./build/webpack.dev.conf')
+  components: 'src/components/templates/[A-z]*.vue',
+  webpackConfig: require('./build/webpack.base.conf')
 }

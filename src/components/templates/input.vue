@@ -15,4 +15,4 @@
 
 </template>
 
-<script lang="coffee" src="../descriptors/input.coffee" />
+<script src="../descriptors/input" />

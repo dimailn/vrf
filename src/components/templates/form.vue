@@ -4,5 +4,5 @@
 </form>
 </template>
 
-<script lang="coffee" src="../descriptors/form.coffee" />
+<script src="../descriptors/form" />
 
