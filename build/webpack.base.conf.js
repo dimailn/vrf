@@ -11,10 +11,7 @@ function resolve (dir) {
 }
 
 const babelLoader = {
-  loader: 'babel-loader',
-  // options: {
-  //   plugins: ['transform-async-to-generator']
-  // }
+  loader: 'babel-loader'
 }
 
 

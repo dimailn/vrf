@@ -17,7 +17,7 @@ const definitions = process.env.NODE_ENV === 'testing'
 
 
 baseWebpackConfig.entry = {
-  lib: './src/index.coffee'
+  lib: './src/index.js'
 }
 
 const webpackConfig = merge(baseWebpackConfig, {
