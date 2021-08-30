@@ -1,9 +1,7 @@
-import Base from '@/components/descriptors/base'
-import baseProps from '@/components/prop_types/base'
+import BaseInput from '@/components/descriptors/base-input'
 
 export default {
-  extends: Base
-  props: baseProps
+  extends: BaseInput
 
   computed:
     date: ->

@@ -1,14 +1,21 @@
-import Base from '@/components/descriptors/base'
-import props from '@/components/prop_types/autocomplete'
+import BaseInput from '@/components/descriptors/base-input'
 import pick from '@/utils/pick'
 import debounce from 'lodash.debounce'
-import baseProps from '@/components/prop_types/base'
 
 export default {
-  extends: Base
+  extends: BaseInput
   props: {
-    ...baseProps
-    ...props
+    type: String
+    entity: String
+    limit: [Number, String]
+    disabled: [Boolean, String]
+    text: String
+    autofocus: Boolean
+    active:
+      type: Boolean
+      default: true
+    stateless: Boolean
+    rfParams: Object
   }
 
   data: ->

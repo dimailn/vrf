@@ -1,11 +1,9 @@
-import Base from '@/components/descriptors/base'
-import baseProps from '@/components/prop_types/base'
+import BaseInput from '@/components/descriptors/base-input'
 
 export default {
   vrfParent: 'Base'
-  extends: Base
+  extends: BaseInput
   props: {
-    ...baseProps
     password: Boolean
     transform: [String, Function]
   }
