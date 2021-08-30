@@ -5,7 +5,13 @@ export default {
   vrfParent: 'Base',
   extends: BaseInput,
   props: {
+    /**
+      *  Password mode
+      */
     password: Boolean,
+    /**
+      *  Set transform that is applied after changing value. You may use it to implement masks.
+      */
     transform: [String, Function]
   },
   watch: {

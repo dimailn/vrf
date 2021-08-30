@@ -4,6 +4,9 @@ import BaseInput from '@/components/descriptors/base-input';
 export default {
   extends: BaseInput,
   props: {
+    /**
+      *  Inverts value
+      */
     inverted: {
       type: Boolean,
       default: false
@@ -11,6 +14,9 @@ export default {
     label: String,
     indeterminate: Boolean,
     noLabel: Boolean,
+    /**
+      * Set the power of bitmask, when checkbox is used inside of rf-bitwise
+    */
     power: [Number, String]
   },
   computed: {
