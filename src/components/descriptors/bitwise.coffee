@@ -1,11 +1,9 @@
 import Select from '@/components/descriptors/select'
-import baseProps from '@/components/prop_types/base'
 
 export default {
   vrfParent: 'Base'
   extends: Select
   props: {
-    ...baseProps
     options: [Array, String]
     inverted: Boolean
   }

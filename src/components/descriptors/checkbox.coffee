@@ -1,13 +1,16 @@
-import Base from '@/components/descriptors/base'
-import baseProps from '@/components/prop_types/base'
-import props from '@/components/prop_types/checkbox'
+import BaseInput from '@/components/descriptors/base-input'
 
 export default {
-  extends: Base
+  extends: BaseInput
 
   props: {
-    ...baseProps
-    ...props
+    inverted:
+      type: Boolean
+      default: false
+    label: String
+    indeterminate: Boolean
+    noLabel: Boolean
+    power: [Number, String]
   }
 
   computed:

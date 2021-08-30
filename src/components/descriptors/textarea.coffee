@@ -1,11 +1,9 @@
-import Base from '@/components/descriptors/base'
-import {textarea} from '@/components/prop_types'
-import baseProps from '@/components/prop_types/base'
+import BaseInput from '@/components/descriptors/base-input'
 
 export default {
-  extends: Base
+  extends: BaseInput
   props: {
-    ...baseProps
-    ...textarea
+    rows: Number
+    noResize: Boolean
   }
 }

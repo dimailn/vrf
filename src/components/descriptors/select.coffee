@@ -1,13 +1,23 @@
-import Base from '@/components/descriptors/base'
-
-import props from '@/components/prop_types/select'
-import baseProps from '@/components/prop_types/base'
+import BaseInput from '@/components/descriptors/base-input'
 
 export default {
-  extends: Base
+  extends: BaseInput
   props: {
-    ...baseProps
-    ...props
+    options:
+      type: [Array, String]
+      required: true
+    multiple:
+      type: Boolean
+      default: false
+    clearable:
+      type: Boolean
+      default: false
+    idKey:
+      type: String
+      default: 'id'
+    titleKey:
+      type: String
+      default: 'title'
   }
 
   mounted: ->
