@@ -72,4 +72,4 @@
 </template>
 
 
-<script  src="../descriptors/nested" />
+<script  src="../descriptors/nested.js" />

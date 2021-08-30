@@ -1,1 +1,1 @@
-<script src="../descriptors/resource" />
+<script src="../descriptors/resource.js" />

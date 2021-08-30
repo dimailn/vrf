@@ -1,1 +1,1 @@
-<script src="../descriptors/action" />
+<script src="../descriptors/action.js" />

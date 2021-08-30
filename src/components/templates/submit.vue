@@ -6,4 +6,4 @@
 
 
 
-<script src="../descriptors/submit" />
+<script src="../descriptors/submit.js" />

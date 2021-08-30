@@ -19,4 +19,4 @@
 </template>
 
 
-<script src="../descriptors/action-result" />
+<script src="../descriptors/action-result.js" />

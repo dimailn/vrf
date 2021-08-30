@@ -13,4 +13,4 @@
 </select>
 </template>
 
-<script src="../descriptors/select" />
+<script src="../descriptors/select.js" />

@@ -11,6 +11,6 @@
 </template>
 
 
-<script src="../descriptors/textarea" />
+<script src="../descriptors/textarea.js" />
 
 

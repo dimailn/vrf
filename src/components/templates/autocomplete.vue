@@ -10,6 +10,6 @@
 </template>
 
 
-<script src="../descriptors/autocomplete" />
+<script src="../descriptors/autocomplete.js" />
 
 

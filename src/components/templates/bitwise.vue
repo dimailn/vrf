@@ -19,4 +19,4 @@
 
 </template>
 
-<script src="../descriptors/bitwise" />
+<script src="../descriptors/bitwise.js" />

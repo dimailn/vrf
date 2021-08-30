@@ -12,9 +12,9 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
   transform: {
-    '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
-    '.*\\.(vue)$': '<rootDir>/node_modules/vue-jest',
-    "^.+\\.coffee$": "<rootDir>/node_modules/coffee-jest"
+    '^.+\\.js$': 'babel-jest',
+    '.*\\.(vue)$': 'vue-jest',
+    "^.+\\.coffee$": "coffee-jest"
   },
   modulePaths: ['<rootDir>/src'],
   testPathIgnorePatterns: [

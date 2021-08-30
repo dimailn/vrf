@@ -9,5 +9,5 @@
 />
 </template>
 
-<script src="../descriptors/datepicker" />
+<script src="../descriptors/datepicker.js" />
 

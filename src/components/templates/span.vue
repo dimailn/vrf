@@ -6,4 +6,4 @@
 
 </template>
 
-<script src="../descriptors/span" />
+<script src="../descriptors/span.js" />

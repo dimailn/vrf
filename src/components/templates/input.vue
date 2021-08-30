@@ -15,4 +15,4 @@
 
 </template>
 
-<script src="../descriptors/input" />
+<script src="../descriptors/input.js" />

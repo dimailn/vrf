@@ -4,4 +4,4 @@
 </component>
 </template>
 
-<script  src="../descriptors/partial" />
+<script  src="../descriptors/partial.js" />

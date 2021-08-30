@@ -9,4 +9,4 @@
 />
 </template>
 
-<script src="../descriptors/checkbox" />
+<script src="../descriptors/checkbox.js" />
