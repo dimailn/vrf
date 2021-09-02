@@ -21,6 +21,7 @@ baseWebpackConfig.entry = {
 }
 
 const webpackConfig = merge(baseWebpackConfig, {
+  mode: 'production',
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
