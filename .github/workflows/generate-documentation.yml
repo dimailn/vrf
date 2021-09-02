@@ -1,13 +1,10 @@
 name: Generate documentation
 
-# on:
-#   push:
-#     tags:
-#       - '*'
 on:
   push:
-    branches:
+    tags:
       - '*'
+
 
 jobs:
   build:
