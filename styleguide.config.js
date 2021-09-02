@@ -12,5 +12,6 @@ module.exports = {
   exampleMode: 'expand',
   getComponentPathLine(componentPath) {
     return ""
-  }
+  },
+  styleguideDir: 'docs'
 }
