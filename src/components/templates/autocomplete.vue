@@ -10,6 +10,6 @@
 </template>
 
 
-<script lang="coffee" src="../../descriptors/autocomplete.coffee" />
+<script src="../descriptors/autocomplete.js" />
 
 

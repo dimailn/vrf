@@ -13,4 +13,4 @@
 </select>
 </template>
 
-<script lang="coffee" src="../descriptors/select.coffee" />
+<script src="../descriptors/select.js" />

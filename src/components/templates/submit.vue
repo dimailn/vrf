@@ -6,4 +6,4 @@
 
 
 
-<script lang="coffee" src="../descriptors/submit.coffee" />
+<script src="../descriptors/submit.js" />

@@ -9,4 +9,4 @@
 />
 </template>
 
-<script lang="coffee" src="../descriptors/checkbox.coffee" />
+<script src="../descriptors/checkbox.js" />

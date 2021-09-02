@@ -19,4 +19,4 @@
 </template>
 
 
-<script lang="coffee" src="../descriptors/action-result.coffee" />
+<script src="../descriptors/action-result.js" />

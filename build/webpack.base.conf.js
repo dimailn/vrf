@@ -4,16 +4,14 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const { VueLoaderPlugin } = require('vue-loader')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
 const babelLoader = {
-  loader: 'babel-loader',
-  options: {
-    plugins: ['transform-async-to-generator']
-  }
+  loader: 'babel-loader'
 }
 
 
@@ -21,7 +19,7 @@ module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './playground/index.coffee',
-    lib: './src/index.coffee'
+    lib: './src/index.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -31,12 +29,15 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json', '.coffee'],
+    extensions: ['.js', '.vue', '.json', '.coffee', '.js'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
     }
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   module: {
     rules: [
       {
