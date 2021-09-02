@@ -1,5 +1,5 @@
 module.exports = {
-  // components: 'src/components/templates/[A-z]*.vue',
+  title: 'Vrf components API',
   webpackConfig: require('./build/webpack.base.conf'),
   sections: [
     {
@@ -10,4 +10,7 @@ module.exports = {
   ],
   usageMode: 'expand',
   exampleMode: 'expand',
+  getComponentPathLine(componentPath) {
+    return ""
+  }
 }
