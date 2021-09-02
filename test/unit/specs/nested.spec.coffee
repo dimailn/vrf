@@ -21,7 +21,7 @@ describe 'nested', ->
   describe "array", ->
     def('template', ->
       '''
-        <rf-form :resource="resource" :errors="errors">
+        <rf-form :resource="resource" :errors="errors" ref="form">
           <rf-input name="title" />
           <rf-nested name="subtasks">
             <template slot-scope="props">
@@ -42,15 +42,25 @@ describe 'nested', ->
       ]
     )
 
-
-
     it "renders nested array", ->
       subtaskTitle = $wrapper.find('.subtask-title')
 
       subtaskTitle.setData($value: 'Subtask title')
 
       expect($wrapper.vm.resource.subtasks[0].title).toBe 'Subtask title'
-    
+
+    it "preserializes data", ->
+      expect($wrapper.vm.$refs.form.preserialize()).toEqual(
+        {
+          title: ''
+          subtasksAttributes: [
+            {
+              title: ''
+              deadline: $resource.subtasks[0].deadline
+            }
+          ]
+        }
+      )
     describe "with errors", ->
       def('errors', ->
         {
