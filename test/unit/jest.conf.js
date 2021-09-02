@@ -27,12 +27,7 @@ module.exports = {
   testMatch: [
     "**/specs/**/*.spec.coffee"
   ],
-  // mapCoverage: true,
-  // coverageDirectory: '<rootDir>/test/unit/coverage',
-  // collectCoverageFrom: [
-  //   'src/**/*.{js,vue,coffee}',
-  //   '!src/main.js',
-  //   '!src/router/index.js',
-  //   '!**/node_modules/**'
-  // ]
+  coveragePathIgnorePatterns: [
+     "<rootDir>/src/components/descriptors"
+  ]
 }
