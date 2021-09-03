@@ -202,6 +202,32 @@ describe 'form', ->
         expect($loadSource.mock.calls[0][0]).toBe 'categories'
         expect(form.$sources.categories.length).toBe 2
 
+      describe 'change options in runtime', ->
+        def('wrapper', ->
+          mount(
+            template: '''
+              <rf-form name="User" auto>
+                <rf-select name="entityId" :options="options" />
+              </rf-form>
+            '''
+            data: ->
+              options: 'roles'
+          )
+        )
+        def('select', -> $wrapper.find("select"))
+
+        beforeEach -> $wrapper.vm.options = 'types'
+
+        it 'contains types', ->
+          expect($select.vm.$_options).toEqual(
+            [
+              {
+                id: 1,
+                title: 'Some type'
+              }
+            ]
+          )
+
   describe 'non-auto mode', ->
     describe 'vuex mode', ->
       def('store', ->
@@ -238,6 +264,6 @@ describe 'form', ->
         expect($wrapper.vm.resource).not.toBeNull()
         expect($wrapper.vm.resource.title).toBe 'Test'
 
-  
+
 
 
