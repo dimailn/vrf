@@ -3,9 +3,9 @@ import {
   mount
 } from '@vue/test-utils'
 
-import Vrf from '../../../src'
+import Vrf from '../../../../src'
 import Vue from 'vue'
-import capitalize from '../../../src/utils/capitalize'
+import capitalize from '../../../../src/utils/capitalize'
 
 Vue.use(Vrf)
 
@@ -59,7 +59,7 @@ describe 'form', ->
       it "doesn't call transform" , ->
         $input.setData($value: undefined)
 
-        await $wrapper.vm.$nextTick() 
+        await $wrapper.vm.$nextTick()
 
         expect($capitalize.mock.calls.length).toBe 0
 

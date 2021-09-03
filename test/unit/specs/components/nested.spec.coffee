@@ -2,7 +2,7 @@ import {
   mount
 } from '@vue/test-utils'
 
-import Vrf from '../../../src'
+import Vrf from '../../../../src'
 import Vue from 'vue'
 
 Vue.use(Vrf)
@@ -104,4 +104,3 @@ describe 'nested', ->
 
 
 
-    

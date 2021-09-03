@@ -2,7 +2,7 @@ import {
   mount
 } from '@vue/test-utils'
 
-import Vrf, {mutations} from '../../../src'
+import Vrf, {mutations} from '../../../../src'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
