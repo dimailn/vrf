@@ -13,8 +13,8 @@
     "build": "node build/build.js",
     "pub": "npm run build && npm publish",
     "analyze": "webpack --config build/webpack.prod.conf.js --json > stats.json",
-    "styleguide": "vue-styleguidist server",
-    "styleguide:build": "vue-styleguidist build"
+    "styleguide": "NODE_ENV=development vue-styleguidist server",
+    "styleguide:build": "NODE_ENV=production vue-styleguidist build"
   },
   "repository": {
     "type": "git",

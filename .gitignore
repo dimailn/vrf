@@ -17,4 +17,5 @@ lib/
 *.njsproj
 *.sln
 coverage/
+docs-dev
 

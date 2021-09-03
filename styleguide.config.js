@@ -15,7 +15,7 @@ module.exports = {
   getComponentPathLine(componentPath) {
     return ""
   },
-  styleguideDir: 'docs',
+  styleguideDir: process.env.NODE_ENV === 'development' ? 'docs-dev' : 'docs',
   updateDocs(docs) {
     docs.props = docs.props?.map((props) => ({...props, name: decamelize(props.name, { separator: '-' })}))
 
