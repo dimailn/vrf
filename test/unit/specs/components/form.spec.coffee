@@ -18,6 +18,10 @@ sharedExamplesFor "successful data showing", ->
 
     expect(input.vm.$value).toBe 'Test'
 
+sharedExamplesFor "non-auto mode warnings", ->
+  it "warns", ->
+    expect($warnSpy).toHaveBeenCalledWith("Reload methods is applicable only to auto-forms")
+
 describe 'form', ->
   beforeEach ->
     middlewares = [$middleware]
@@ -279,7 +283,6 @@ describe 'form', ->
             ]
           )
 
-  describe 'non-auto mode', ->
     describe 'vuex mode', ->
       def('store', ->
         new Vuex.Store(
@@ -316,5 +319,30 @@ describe 'form', ->
         expect($wrapper.vm.resource.title).toBe 'Test'
 
 
+  describe 'non-auto mode', ->
+    def('wrapper', ->
+      mount(
+        template: '''
+          <rf-form class="form" ref="form">
+            <rf-input name="title" />
+            <rf-submit class="submit" />
+          </rf-form>
+        '''
+      )
+    )
 
+    def('warnSpy', -> jest.spyOn console, 'warn')
 
+    describe "reloadResource", ->
+      beforeEach -> 
+        $warnSpy
+        $wrapper.vm.$refs.form.reloadResource()
+
+      itBehavesLike "non-auto mode warnings"
+
+    describe "reloadSources", ->
+      beforeEach -> 
+        $warnSpy
+        $wrapper.vm.$refs.form.reloadSources()
+
+      itBehavesLike "non-auto mode warnings"
