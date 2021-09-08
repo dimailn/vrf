@@ -1,11 +1,7 @@
+import './setup'
 import {
   mount
 } from '@vue/test-utils'
-
-import Vrf from '../../../../src'
-import Vue from 'vue'
-
-Vue.use(Vrf)
 
 describe 'checkbox', ->
   it "simple bitwise", ->

@@ -1,12 +1,14 @@
+import './setup'
+
 import {
   mount
 } from '@vue/test-utils'
 
-import Vrf, {mutations} from '../../../../src'
+import {mutations} from '../../../../src'
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vrf)
 Vue.use(Vuex)
 
 class Middleware

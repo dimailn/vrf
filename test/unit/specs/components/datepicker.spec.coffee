@@ -1,12 +1,10 @@
+import './setup'
+
 import {
   shallowMount
   mount
 } from '@vue/test-utils'
 
-import Vrf from '../../../../src'
-import Vue from 'vue'
-
-Vue.use(Vrf)
 
 describe 'datepicker', ->
   def('data', ->

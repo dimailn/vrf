@@ -1,13 +1,12 @@
+import './setup'
+
 import {
   shallowMount
   mount
 } from '@vue/test-utils'
 
-import Vrf from '../../../../src'
-import Vue from 'vue'
 import capitalize from '../../../../src/utils/capitalize'
 
-Vue.use(Vrf)
 
 
 describe 'form', ->
