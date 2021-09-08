@@ -495,6 +495,10 @@ export default {
       });
     },
     requireSource: function(name) {
+      if(this.isNested){
+        this.$emit('require-source', name)
+        return
+      }
       if (this.$sources && this.$sources[name]) {
         return this.$sources[name];
       }

@@ -112,6 +112,7 @@ describe 'form', ->
                 <template v-slot="props">
                   <rf-input name="status" class="statusInput" />
                   <rf-input name="number" class="numberInput" />
+                  <rf-select name="role" options="roles" class="roleInput" />
                 </template>
               </rf-nested>
             </rf-form>
@@ -131,6 +132,7 @@ describe 'form', ->
       def('input', -> $wrapper.find(".input"))
       def('numberInput', -> $wrapper.find(".numberInput"))
       def('statusInput', -> $wrapper.find(".statusInput"))
+      def('roleInput', -> $wrapper.find(".roleInput"))
 
       describe "resource changed on backend", ->
         beforeEach ->
@@ -158,6 +160,35 @@ describe 'form', ->
             expect($numberInput.vm.$value).toBe 1
             expect($statusInput.vm.$value).toBe "write"
             expect($input.vm.$value).toBe "Test"
+      describe "sources changed on backend", ->
+        beforeEach ->
+          $loadSources.mockImplementation(-> Promise.resolve(
+            {
+              roles: [
+                {
+                  id: 'admin'
+                  title: 'Admin'
+                }
+              ]
+            }
+          ))
+
+        describe "reloadSources()", ->
+          beforeEach -> 
+            $numberInput.vm.$form.reloadSources()
+            $wrapper.vm.$nextTick()
+
+          it 'reloads sources', ->
+            expect($roleInput.vm.$_options).toEqual(
+              [
+                {
+                  id: 'admin'
+                  title: 'Admin'
+                }
+              ]
+            )
+
+        
 
     describe 'vuex enabled', ->
       def('wrapper', ->
