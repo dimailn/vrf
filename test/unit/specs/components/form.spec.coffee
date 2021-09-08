@@ -11,18 +11,6 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-class Middleware
-  @accepts: -> true
-  constructor: (@name, @form) ->
-
-  load: ->
-    Promise.resolve({title: 'Test'})
-
-  loadSources: ->
-    Promise.resolve({})
-  save: ->
-    Promise.resolve()
-
 
 sharedExamplesFor "successful data showing", ->
   it 'show data in ui', ->
@@ -68,12 +56,16 @@ describe 'form', ->
       }
     ]
   ))
+  def('load', -> jest.fn -> Promise.resolve({title: 'Test'}))
   def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
-  def('middleware', -> class extends Middleware
+  def('middleware', -> class Middleware
+    constructor: (@name, @form) ->
+    @accepts: -> true
     save: $save
     loadSources: $loadSources
     loadSource: $loadSource
     executeAction: $executeAction
+    load: $load
   )
 
   def('wrapper', ->
@@ -105,6 +97,63 @@ describe 'form', ->
       await $wrapper.vm.$nextTick()
 
     itBehavesLike "successful data showing"
+
+    describe 'nested form ', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto class="form">
+              <rf-input name="title" class="input" />
+              <rf-nested name="attrs">
+                <template v-slot="props">
+                  <rf-input name="status" class="statusInput" />
+                  <rf-input name="number" class="numberInput" />
+                </template>
+              </rf-nested>
+            </rf-form>
+          '''
+        )
+      )
+
+      def('load', -> jest.fn -> Promise.resolve(
+        {
+          title: 'Test'
+          attrs:
+            status: 'readonly'
+            number: 1
+        }
+      ))
+
+      def('input', -> $wrapper.find(".input"))
+      def('numberInput', -> $wrapper.find(".numberInput"))
+      def('statusInput', -> $wrapper.find(".statusInput"))
+
+      describe "resource changed on backend", ->
+        beforeEach ->
+          $load.mockImplementation(-> Promise.resolve(
+            {
+              title: 'Test2'
+              attrs:
+                status: 'write'
+                number: 2
+            }
+          ))
+
+        describe "reloadResource()", ->
+          beforeEach -> $numberInput.vm.$form.reloadResource()
+
+          it 'reloads only child', ->
+            expect($numberInput.vm.$value).toBe 2
+            expect($statusInput.vm.$value).toBe "write"
+            expect($input.vm.$value).toBe "Test"
+
+        describe "reloadResource resource with current fields", ->
+          beforeEach -> $numberInput.vm.$form.reloadResource(['status'])
+
+          it 'reloads only child field', ->
+            expect($numberInput.vm.$value).toBe 1
+            expect($statusInput.vm.$value).toBe "write"
+            expect($input.vm.$value).toBe "Test"
 
     describe 'vuex enabled', ->
       def('wrapper', ->

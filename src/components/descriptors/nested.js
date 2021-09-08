@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     reloadResource: function(modifier) {
-      return this.form.reloadResource(modifier);
+      return this.$form.reloadResource(modifier);
     },
     reloadSources: function() {
       return this.form.reloadSources();
