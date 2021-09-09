@@ -251,9 +251,12 @@ export default {
     }
   },
   mounted: function() {
-    return this.forceReload({
+    this.forceReload({
       boot: true
-    });
+    })
+    if(this.vuex) {
+      this.$emit('update:resource', this.$resource)
+    }
   },
   computed: {
     tailPath: function() {

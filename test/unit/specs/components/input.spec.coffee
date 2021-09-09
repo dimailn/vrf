@@ -6,8 +6,11 @@ import {
 } from '@vue/test-utils'
 
 import capitalize from '../../../../src/utils/capitalize'
+import Vuex from 'vuex'
+import {mutations} from '../../../../src'
+import Vue from 'vue'
 
-
+Vue.use(Vuex)
 
 describe 'form', ->
   def('data', ->
@@ -30,9 +33,44 @@ describe 'form', ->
   def('capitalize', -> jest.fn capitalize)
   def('input', -> $wrapper.find('input'))
 
-  it 'simple input', ->
-    $input.setData($value: 'text')
-    expect($wrapper.vm.resource.title).toBe 'text'
+  describe 'state in form', ->
+    it 'simple input', ->
+      $input.setData($value: 'text')
+      expect($wrapper.vm.resource.title).toBe 'text'
+
+  describe 'state in vuex', ->
+    def('template', ->
+      '''
+        <rf-form name="Todo" :resource.sync="resource" vuex>
+          <rf-input name="title" />
+        </rf-form>
+      '''
+    )
+    def('store', ->
+      new Vuex.Store(
+        {
+          state: {
+            todo: {title: ''}
+          }
+          mutations
+        }
+      )
+    )
+    def('wrapper', ->
+      mount(
+        {
+          template: $template
+          data: ->
+            resource: null
+        }
+        {store: $store}
+      )
+    )
+    beforeEach -> $input.setData($value: 'text')
+
+    it 'state changes', -> 
+      expect($wrapper.vm.resource.title).toBe 'text'
+      expect($store.state.todo.title).toBe 'text'
 
   describe 'with transform', ->
     def('wrapper', ->

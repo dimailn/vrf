@@ -31,7 +31,7 @@ export default {
       set: function(value) {
         var store;
         if (this.vuex) {
-          store = this.VueResourceForm.store;
+          store = this.$store || this.VueResourceForm.store;
           if (!store) {
             return console.warn("Store for VueResourceForm is not defined");
           }
