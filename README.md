@@ -118,7 +118,7 @@ export default {
           title: ""
        },
        errors:{
-         title: 'Should not be empty'
+         title: ['Should not be empty']
        }
     }
   }
