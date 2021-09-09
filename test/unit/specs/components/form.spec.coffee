@@ -11,24 +11,16 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-class Middleware
-  @accepts: -> true
-  constructor: (@name, @form) ->
-
-  load: ->
-    Promise.resolve({title: 'Test'})
-
-  loadSources: ->
-    Promise.resolve({})
-  save: ->
-    Promise.resolve()
-
 
 sharedExamplesFor "successful data showing", ->
   it 'show data in ui', ->
     input = $wrapper.find('input')
 
     expect(input.vm.$value).toBe 'Test'
+
+sharedExamplesFor "non-auto mode warnings", ->
+  it "warns", ->
+    expect($warnSpy).toHaveBeenCalledWith("Reload methods is applicable only to auto-forms")
 
 describe 'form', ->
   beforeEach ->
@@ -68,12 +60,16 @@ describe 'form', ->
       }
     ]
   ))
+  def('load', -> jest.fn -> Promise.resolve({title: 'Test'}))
   def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
-  def('middleware', -> class extends Middleware
+  def('middleware', -> class Middleware
+    constructor: (@name, @form) ->
+    @accepts: -> true
     save: $save
     loadSources: $loadSources
     loadSource: $loadSource
     executeAction: $executeAction
+    load: $load
   )
 
   def('wrapper', ->
@@ -105,6 +101,94 @@ describe 'form', ->
       await $wrapper.vm.$nextTick()
 
     itBehavesLike "successful data showing"
+
+    describe 'nested form ', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto class="form">
+              <rf-input name="title" class="input" />
+              <rf-nested name="attrs">
+                <template v-slot="props">
+                  <rf-input name="status" class="statusInput" />
+                  <rf-input name="number" class="numberInput" />
+                  <rf-select name="role" options="roles" class="roleInput" />
+                </template>
+              </rf-nested>
+            </rf-form>
+          '''
+        )
+      )
+
+      def('load', -> jest.fn -> Promise.resolve(
+        {
+          title: 'Test'
+          attrs:
+            status: 'readonly'
+            number: 1
+        }
+      ))
+
+      def('input', -> $wrapper.find(".input"))
+      def('numberInput', -> $wrapper.find(".numberInput"))
+      def('statusInput', -> $wrapper.find(".statusInput"))
+      def('roleInput', -> $wrapper.find(".roleInput"))
+
+      describe "resource changed on backend", ->
+        beforeEach ->
+          $load.mockImplementation(-> Promise.resolve(
+            {
+              title: 'Test2'
+              attrs:
+                status: 'write'
+                number: 2
+            }
+          ))
+
+        describe "reloadResource()", ->
+          beforeEach -> $numberInput.vm.$form.reloadResource()
+
+          it 'reloads only child', ->
+            expect($numberInput.vm.$value).toBe 2
+            expect($statusInput.vm.$value).toBe "write"
+            expect($input.vm.$value).toBe "Test"
+
+        describe "reloadResource resource with current fields", ->
+          beforeEach -> $numberInput.vm.$form.reloadResource(['status'])
+
+          it 'reloads only child field', ->
+            expect($numberInput.vm.$value).toBe 1
+            expect($statusInput.vm.$value).toBe "write"
+            expect($input.vm.$value).toBe "Test"
+      describe "sources changed on backend", ->
+        beforeEach ->
+          $loadSources.mockImplementation(-> Promise.resolve(
+            {
+              roles: [
+                {
+                  id: 'admin'
+                  title: 'Admin'
+                }
+              ]
+            }
+          ))
+
+        describe "reloadSources()", ->
+          beforeEach -> 
+            $numberInput.vm.$form.reloadSources()
+            $wrapper.vm.$nextTick()
+
+          it 'reloads sources', ->
+            expect($roleInput.vm.$_options).toEqual(
+              [
+                {
+                  id: 'admin'
+                  title: 'Admin'
+                }
+              ]
+            )
+
+        
 
     describe 'vuex enabled', ->
       def('wrapper', ->
@@ -230,7 +314,6 @@ describe 'form', ->
             ]
           )
 
-  describe 'non-auto mode', ->
     describe 'vuex mode', ->
       def('store', ->
         new Vuex.Store(
@@ -267,5 +350,35 @@ describe 'form', ->
         expect($wrapper.vm.resource.title).toBe 'Test'
 
 
+  describe 'non-auto mode', ->
+    def('wrapper', ->
+      mount(
+        template: '''
+          <rf-form class="form" ref="form">
+            <rf-input name="title" />
+            <rf-submit class="submit" />
+          </rf-form>
+        '''
+      )
+    )
 
+    def('warnSpy', -> jest.spyOn(console, 'warn'))
 
+    describe "reloadResource", ->
+      beforeEach -> 
+        $warnSpy.mockImplementation()
+        $wrapper.vm.$refs.form.reloadResource()
+
+      afterEach ->
+        $warnSpy.mockRestore()
+
+      itBehavesLike "non-auto mode warnings"
+
+    describe "reloadSources", ->
+      beforeEach -> 
+        $warnSpy.mockImplementation()
+        $wrapper.vm.$refs.form.reloadSources()
+      afterEach ->
+        $warnSpy.mockRestore()
+
+      itBehavesLike "non-auto mode warnings"

@@ -91,11 +91,14 @@ describe 'nested', ->
         deadline: new Date
       }
     )
+    def('subtaskTitle', -> $wrapper.find('.subtask-title'))
+
+
+    it "has correct $rootResource", ->
+      expect($subtaskTitle.vm.$rootResource).toBe $resource
 
     it "renders nested object", ->
-      subtaskTitle = $wrapper.find('.subtask-title')
-
-      subtaskTitle.setData($value: 'Subtask title')
+      $subtaskTitle.setData($value: 'Subtask title')
 
       expect($wrapper.vm.resource.subtask.title).toBe 'Subtask title'
 

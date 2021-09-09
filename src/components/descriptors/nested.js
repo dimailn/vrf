@@ -73,13 +73,16 @@ export default {
   },
   methods: {
     reloadResource: function(modifier) {
-      return this.form.reloadResource(modifier);
+      return this.$form.reloadResource(modifier);
     },
     reloadSources: function() {
-      return this.form.reloadSources();
+      return this.$form.reloadSources();
     },
     reloadRootResource: function(modifier) {
-      return this.form.reloadRootResource(modifier);
+      return this.$form.reloadRootResource(modifier);
+    },
+    requireSource(name){
+      return this.$form.requireSource(name)
     },
     errorsFor: function(index) {
       var errors, prefix;

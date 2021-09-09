@@ -2,9 +2,10 @@ var PathService, nameMapper, propsFactory;
 
 import capitalizeFirst from '@/utils/capitalize-first';
 
-import pick from '@/utils/pick';
+import set from 'lodash.set';
 
-import set from '@/utils/set';
+import get from 'lodash.get';
+
 
 import toPath from '@/utils/to-path';
 
@@ -250,9 +251,12 @@ export default {
     }
   },
   mounted: function() {
-    return this.forceReload({
+    this.forceReload({
       boot: true
-    });
+    })
+    if(this.vuex) {
+      this.$emit('update:resource', this.$resource)
+    }
   },
   computed: {
     tailPath: function() {
@@ -390,7 +394,7 @@ export default {
           nestedPath = toPath(this.tailPath);
           modifier = modifier instanceof Array ? modifier.map(function(m) {
             return `${nestedPath}.${m}`;
-          }) : nestedPath;
+          }) : [nestedPath];
         }
         return this.$emit('reload-resource', modifier);
       }
@@ -413,8 +417,8 @@ export default {
           if (!(modifier instanceof Array)) {
             throw 'Modifier must be an array';
           }
-          // must be deep merge
-          this.innerResource = {...this.innerResource, ...pick(resource, modifier)};
+
+          modifier.forEach((path) => set(this.innerResource, path, get(resource, path)))
         }
         if (this.innerResource != null) {
           return this.$emit('update:resource', this.innerResource);
@@ -494,6 +498,10 @@ export default {
       });
     },
     requireSource: function(name) {
+      if(this.isNested){
+        this.$emit('require-source', name)
+        return
+      }
       if (this.$sources && this.$sources[name]) {
         return this.$sources[name];
       }

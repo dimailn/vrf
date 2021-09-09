@@ -1,8 +1,7 @@
 import Resource from '@/mixins/resource';
 
-import set from '@/utils/set';
-
-import get from '@/utils/get';
+import get from 'lodash.get'
+import set from 'lodash.set'
 
 import evalBoolProp from '@/utils/eval-bool-prop';
 
@@ -32,7 +31,7 @@ export default {
       set: function(value) {
         var store;
         if (this.vuex) {
-          store = this.VueResourceForm.store;
+          store = this.$store || this.VueResourceForm.store;
           if (!store) {
             return console.warn("Store for VueResourceForm is not defined");
           }

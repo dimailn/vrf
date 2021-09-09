@@ -1,8 +1,8 @@
 import Resource from '@/mixins/resource';
 
-import set from '@/utils/set';
+import set from 'lodash.set';
 
-import get from '@/utils/get';
+import get from 'lodash.get';
 
 import evalBoolProp from '@/utils/eval-bool-prop';
 
