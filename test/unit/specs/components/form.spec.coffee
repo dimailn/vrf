@@ -362,18 +362,23 @@ describe 'form', ->
       )
     )
 
-    def('warnSpy', -> jest.spyOn console, 'warn')
+    def('warnSpy', -> jest.spyOn(console, 'warn'))
 
     describe "reloadResource", ->
       beforeEach -> 
-        $warnSpy
+        $warnSpy.mockImplementation()
         $wrapper.vm.$refs.form.reloadResource()
+
+      afterEach ->
+        $warnSpy.mockRestore()
 
       itBehavesLike "non-auto mode warnings"
 
     describe "reloadSources", ->
       beforeEach -> 
-        $warnSpy
+        $warnSpy.mockImplementation()
         $wrapper.vm.$refs.form.reloadSources()
+      afterEach ->
+        $warnSpy.mockRestore()
 
       itBehavesLike "non-auto mode warnings"
