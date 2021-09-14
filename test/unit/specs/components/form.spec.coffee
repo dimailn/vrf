@@ -24,9 +24,7 @@ sharedExamplesFor "non-auto mode warnings", ->
 
 describe 'form', ->
   beforeEach ->
-    middlewares = [$middleware]
-
-    Vue::VueResourceForm.middlewares = middlewares
+    Vue::VueResourceForm.middlewares = [$middleware]
 
   def('save', => jest.fn -> Promise.resolve([true, null]))
   def('loadSources', -> jest.fn -> Promise.resolve({
@@ -174,7 +172,7 @@ describe 'form', ->
           ))
 
         describe "reloadSources()", ->
-          beforeEach -> 
+          beforeEach ->
             $numberInput.vm.$form.reloadSources()
             $wrapper.vm.$nextTick()
 
@@ -188,7 +186,7 @@ describe 'form', ->
               ]
             )
 
-        
+
 
     describe 'vuex enabled', ->
       def('wrapper', ->
@@ -365,7 +363,7 @@ describe 'form', ->
     def('warnSpy', -> jest.spyOn(console, 'warn'))
 
     describe "reloadResource", ->
-      beforeEach -> 
+      beforeEach ->
         $warnSpy.mockImplementation()
         $wrapper.vm.$refs.form.reloadResource()
 
@@ -375,7 +373,7 @@ describe 'form', ->
       itBehavesLike "non-auto mode warnings"
 
     describe "reloadSources", ->
-      beforeEach -> 
+      beforeEach ->
         $warnSpy.mockImplementation()
         $wrapper.vm.$refs.form.reloadSources()
       afterEach ->
