@@ -24,6 +24,19 @@ npm install
 npm start
 ```
 
+# Vrf installation
+
+```javascript
+import Vue from 'vue'
+import Vrf from 'vrf'
+import {translate} from './i18n' // we assume, that i18n file exports translate function with (property, modelName) => string signature
+
+Vue.use(Vrf, {
+  translate
+})
+
+```
+
 # Table of contents
 
 - [What is vrf?](#what-is-vrf)
