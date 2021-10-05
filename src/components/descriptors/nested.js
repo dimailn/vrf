@@ -9,7 +9,10 @@ export default {
   inject: ['vueResourceFormPath', 'vueResourceFormPathService'],
   mixins: [Resource],
   props: {
-    name: String,
+    name: {
+      type: String,
+      required: true
+    },
     translationName: String,
     index: Number,
     filter: Function,
