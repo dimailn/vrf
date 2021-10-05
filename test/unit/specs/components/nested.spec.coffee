@@ -3,6 +3,7 @@ import './setup'
 import {
   mount
 } from '@vue/test-utils'
+import Vue from 'vue'
 
 describe 'nested', ->
   def('errors', -> {})
@@ -58,6 +59,35 @@ describe 'nested', ->
           ]
         }
       )
+
+    describe "with translate function", ->
+      def('translate', -> jest.fn((property, modelName) -> property))
+      beforeEach ->
+        Vue.prototype.VueResourceForm.translate = $translate
+
+        $wrapper.find('.subtask-title').vm.humanName
+      describe "without translation-name passed", ->
+        it 'should pass proper modelName singular', ->
+          expect($translate).toHaveBeenCalledWith('title', 'subtask')
+
+      describe "with translation-name passed", ->
+        def('template', ->
+          '''
+            <rf-form :resource="resource" :errors="errors" ref="form">
+              <rf-input name="title" />
+              <rf-nested name="subtasks" translation-name="task">
+                <template slot-scope="props">
+                  <rf-input name="title" class="subtask-title" ref="input" />
+                  <rf-input name="deadline" />
+                </template>
+              </rf-nested>
+            </rf-form>
+          '''
+        )
+
+        it 'should pass proper modelName', ->
+          expect($translate).toHaveBeenCalledWith('title', 'task')
+
     describe "with errors", ->
       def('errors', ->
         {

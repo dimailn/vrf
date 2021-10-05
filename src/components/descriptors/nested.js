@@ -1,6 +1,7 @@
 import Resource from '@/mixins/resource';
 
 import base from '@/components/descriptors/base';
+import pluralize from 'pluralize'
 
 export default {
   name: 'rf-nested',
@@ -8,8 +9,11 @@ export default {
   inject: ['vueResourceFormPath', 'vueResourceFormPathService'],
   mixins: [Resource],
   props: {
-    name: String,
-    rfName: String,
+    name: {
+      type: String,
+      required: true
+    },
+    translationName: String,
     index: Number,
     filter: Function,
     schema: Array,
@@ -19,6 +23,13 @@ export default {
     }
   },
   computed: {
+    $translationName(){
+      if(this.translationName){
+        return this.translationName
+      }
+
+      return pluralize.singular(this.name)
+    },
     isCollection: function() {
       return this.nestedResource instanceof Array;
     },

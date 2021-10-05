@@ -27,6 +27,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
     "lodash.set": "^4.3.2",
+    "pluralize": "^8.0.0",
     "vue-provide-observable": "^3.0.2"
   },
   "devDependencies": {
