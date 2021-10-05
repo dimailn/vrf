@@ -2,8 +2,7 @@ name: Generate documentation
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
 
 
 jobs:
