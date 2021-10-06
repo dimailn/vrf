@@ -100,6 +100,18 @@ describe 'nested', ->
 
         expect(input.$firstError).toBe "Invalid property"
 
+    describe "with common errors", ->
+      def('errors', ->
+        {
+          "subtasks.title": ["Invalid property"]
+        }
+      )
+
+      it "renders error for nested entities", ->
+        input = $wrapper.vm.$refs.input
+
+        expect(input.$firstError).toBe "Invalid property"
+
   describe 'one object', ->
     def('template', ->
       '''

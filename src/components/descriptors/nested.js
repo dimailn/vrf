@@ -96,17 +96,25 @@ export default {
       return this.$form.requireSource(name)
     },
     errorsFor: function(index) {
-      var errors, prefix;
       if (!this.$errors) {
         return;
       }
-      prefix = this.name + `[${index}]`;
-      errors = Object.keys(this.$errors).filter(function(path) {
+      const prefix = this.name + `[${index}]`;
+      const errors = Object.keys(this.$errors).filter(function(path) {
         return path.substr(0, prefix.length) === prefix;
       }).reduce((ownErrors, path) => {
         ownErrors[path.slice(prefix.length + 1)] = this.$errors[path];
         return ownErrors;
       }, {});
+
+      Object.keys(this.$errors).forEach((path) => {
+        const commonPrefix = `${this.name}.`
+
+        if(path.includes(commonPrefix)){
+          errors[path.replace(commonPrefix, "")] = this.$errors[path]
+        }
+      })
+
       return errors;
     },
     pathFor: function(index) {
