@@ -11,22 +11,21 @@ import {
 export default function(components) {
   return {
     install: function(Vue, options) {
-      var base, component, installedComponentNames, name;
+      var base, component, name;
       if (process.env.NODE_ENV === 'development') {
         console.log(`[vrf] v.${__VERSION__}`);
       }
-      Vue.use(installer);
-      installedComponentNames = [];
-      if (((options != null ? options.adapters : void 0) != null) && options.adapters instanceof Array) {
+      Vue.use(installer)
+      const installedComponents = {}
+      if (options?.adapters && options.adapters instanceof Array) {
         options.adapters.forEach(function(adapter) {
-          var component, descriptor, name, ref, results;
+          var component, descriptor, name, results;
           if (typeof adapter.install === "function") {
             adapter.install(Vue);
           }
-          ref = adapter.components;
           results = [];
-          for (name in ref) {
-            component = ref[name];
+          for (name in adapter.components) {
+            component = adapter.components[name];
             if (!component.vrfParent) {
               console.warn(`[vrf] Component ${name} from ${adapter.name} has not vrfParent and will not initialized`);
               continue;
@@ -38,23 +37,33 @@ export default function(components) {
             }
             component.extends = descriptor;
             component.computed || (component.computed = {});
-            component.computed.$vrfParent = function() {
-              return components[name];
-            };
-            Vue.component(name, component);
-            results.push(installedComponentNames.push(name));
+
+            (function(name, previousComponent){
+              const vrfCoreParent = components[name]
+              component.computed.$vrfCoreParent = function() {
+                return vrfCoreParent
+              };
+
+              component.computed.$vrfParent = function(){
+                return previousComponent || vrfCoreParent
+              }
+            })(name, installedComponents[name])
+
+            installedComponents[name] = component
           }
           return results;
         });
       }
-      installedComponentNames = indexBy(installedComponentNames);
+
       for (name in components) {
-        component = components[name];
-        if (installedComponentNames[name]) {
-          continue;
+        if (!installedComponents[name]) {
+          installedComponents[name] = components[name]
         }
-        Vue.component(name, component);
       }
+
+      Object.keys(installedComponents).forEach(name => Vue.component(name, installedComponents[name]))
+
+      Vue.component(name, component);
       (base = Vue.prototype).VueResourceForm || (base.VueResourceForm = {});
       Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor;
       if (options == null) {
