@@ -1,5 +1,5 @@
 import get from 'lodash.get'
-import set from 'lodash.set'
+import set from '@/utils/set'
 
 export default function(object, keys) {
   return keys.reduce(function(obj, key) {

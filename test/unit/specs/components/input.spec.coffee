@@ -100,3 +100,24 @@ describe 'form', ->
 
         expect($capitalize.mock.calls.length).toBe 0
 
+  describe "input for value without field in resource", ->
+    def('watchTitle', -> jest.fn())
+    def('wrapper', ->
+      mount(
+        template: $template
+        data: -> {
+          resource: {}
+        }
+        watch:
+          'resource.title': $watchTitle
+      )
+    )
+
+    beforeEach ->
+      $input.setValue("Test")
+
+
+    it "calls watcher", ->
+      expect($watchTitle).toHaveBeenCalled()
+
+

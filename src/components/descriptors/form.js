@@ -2,7 +2,7 @@ var PathService, nameMapper, propsFactory;
 
 import capitalizeFirst from '@/utils/capitalize-first';
 
-import set from 'lodash.set';
+import set from '@/utils/set';
 
 import get from 'lodash.get';
 
