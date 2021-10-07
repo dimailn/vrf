@@ -79,3 +79,33 @@ describe 'installer', ->
     it 'installs core components', ->
       $subject
       expect(componentSpy).toHaveBeenCalledWith('RfInput', RfInput)
+
+  describe 'with defaultProps', ->
+    describe 'without adapter', ->
+      subject -> createLocalVue().use(Vrf, defaultProps: {
+        RfInput:
+          disabled: true
+          password: true
+      })
+
+      it "set default value for props", ->
+        $subject
+
+        expect(RfInput.props.disabled.default).toBe true
+        expect(RfInput.props.password.default).toBe true
+
+    describe "with adapter", ->
+      subject -> createLocalVue().use(Vrf, {
+        defaultProps: {
+          RfInput:
+            disabled: true
+            password: true
+        },
+        adapters: [$adapter]
+      })
+
+      it "set default value for props", ->
+        $subject
+
+        expect($RfInput.props.disabled.default).toBe true
+        expect($RfInput.props.password.default).toBe true

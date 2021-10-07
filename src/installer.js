@@ -92,6 +92,7 @@ export default function(components) {
         const component = installedComponents[name]
         if(!component) {
           console.warn(`[vrf] Component with name ${name} is not registered, but defaultProps passed`)
+          return
         }
         const componentDefaultProps = defaultProps[name]
         if (componentDefaultProps) {
