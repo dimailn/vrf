@@ -507,7 +507,7 @@ export default {
 
 ## Default props
 
-You may specify default props values for some input during vrf initialization. It allows you to set up common styles for ui framework if it uses props for customization.
+You may specify default props values for some inputs globally during vrf initialization. It allows you to set up common styles for ui framework if it uses props for customization.
 
 ```javascript
 Vue.use(Vrf, {
