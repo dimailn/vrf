@@ -1,13 +1,3 @@
-import Resource from '@/mixins/resource';
-
-import set from 'lodash.set';
-
-import get from 'lodash.get';
-
-import evalBoolProp from '@/utils/eval-bool-prop';
-
-import Translate from '@/mixins/translate';
-
 import Base from './base';
 
 export default {

@@ -1,7 +1,7 @@
 import Resource from '@/mixins/resource';
 
 import get from 'lodash.get'
-import set from 'lodash.set'
+import set from '@/utils/set'
 
 import evalBoolProp from '@/utils/eval-bool-prop';
 
@@ -41,7 +41,7 @@ export default {
             value
           });
         } else {
-          return set(this.$resource, this.$fieldName, value, this.$set);
+          set(this.$resource, this.$fieldName, value, this.$set);
         }
       }
     },
