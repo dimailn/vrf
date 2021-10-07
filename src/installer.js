@@ -8,14 +8,41 @@ import {
   installer
 } from 'vue-provide-observable';
 
+const collectComponentProps = (component) => {
+  let props = {}
+
+  if(component.props) {
+    props = {
+      ...component.props
+    }
+  }
+
+  let parent = component
+  while(parent = parent.extends) {
+    props = {
+      ...props,
+      ...parent.props
+    }
+  }
+
+  return props
+}
+
 export default function(components) {
   return {
-    install: function(Vue, options) {
+    install: function(Vue, options = {}) {
       var base, component, name;
       if (process.env.NODE_ENV === 'development') {
         console.log(`[vrf] v.${__VERSION__}`);
       }
       Vue.use(installer)
+
+      const defaultProps = options.defaultProps || {}
+
+      if(defaultProps === null || typeof defaultProps !== 'object') {
+        console.error('[vrf] The defaultProps property should be an object')
+      }
+
       const installedComponents = {}
       if (options?.adapters && options.adapters instanceof Array) {
         options.adapters.forEach(function(adapter) {
@@ -61,7 +88,34 @@ export default function(components) {
         }
       }
 
+      Object.keys(defaultProps).forEach((name) => {
+        const component = installedComponents[name]
+        if(!component) {
+          console.warn(`[vrf] Component with name ${name} is not registered, but defaultProps passed`)
+          return
+        }
+        const componentDefaultProps = defaultProps[name]
+        if (componentDefaultProps) {
+          component.props ||= {}
+          const componentCollectedProps = collectComponentProps(component)
+          const componentProps = component.props
+  
+          Object.entries(componentDefaultProps).forEach(([propName, propValue]) => {
+            if(typeof componentCollectedProps[propName] === 'function') {
+              componentProps[propName] = {
+                type: componentCollectedProps[propName]
+              }
+            } else {
+              componentProps[propName] = {...componentCollectedProps[propName]}
+            }
+
+            componentProps[propName].default = propValue
+          })
+        }
+      })
+
       Object.keys(installedComponents).forEach(name => Vue.component(name, installedComponents[name]))
+
 
       Vue.component(name, component);
       (base = Vue.prototype).VueResourceForm || (base.VueResourceForm = {});

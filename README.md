@@ -53,10 +53,12 @@ Vue.use(Vrf, {
   - [Actions](#actions)
     - [Run actions programmatically](#run-actions-programmatically)
   - [Bitwise fields](#bitwise-fields)
+  - [Default props](#default-props)
 - [Advanced](#advanced)
   - [Architecture](#architecture)
   - [Middleware API](#middleware-api)
   - [Adapter API](#adapter-api)
+
 
  
 
@@ -503,6 +505,22 @@ export default {
 
 ```
 
+## Default props
+
+You may specify default props values for some input during vrf initialization. It allows you to set up common styles for ui framework if it uses props for customization.
+
+```javascript
+Vue.use(Vrf, {
+  adapters: [
+    VrfVuetify
+  ],
+  defaultProps: {
+    RfInput: {
+      outlined: true
+    }
+  }
+})
+```
 
 # Advanced
 
@@ -642,6 +660,8 @@ export default {
 </script>
 
 ```
+
+
 
 
 # Adapters
