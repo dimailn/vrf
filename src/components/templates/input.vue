@@ -1,7 +1,7 @@
 <template>
 
 <input
-  :type="password ? 'password' : 'text'"
+  :type="$type"
   v-model="$value"
   :disabled="$disabled"
   :readonly="$readonly"

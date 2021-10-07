@@ -12,7 +12,11 @@ export default {
     /**
       *  Set transform that is applied after changing value. You may use it to implement masks.
       */
-    transform: [String, Function]
+    transform: [String, Function],
+    /**
+     * HTML input type
+     */
+    type: String
   },
   watch: {
     $value: function(value, prev) {
@@ -36,6 +40,15 @@ export default {
           return this.value = transform(value, prev);
         });
       }
+    }
+  },
+  computed: {
+    $type(){
+      if(this.password){
+        return 'password'
+      }
+
+      return this.type  || 'text'
     }
   }
 };
