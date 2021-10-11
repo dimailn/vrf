@@ -1,4 +1,4 @@
-var PathService, nameMapper, propsFactory;
+import Vue, {PropType} from 'vue'
 
 import capitalizeFirst from '@/utils/capitalize-first';
 
@@ -19,7 +19,9 @@ import {
 
 import VueProvideObservable from 'vue-provide-observable';
 
-propsFactory = function() {
+import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames} from '../../types/effect'
+
+const propsFactory = function() {
   return {
     resource: null,
     sources: null,
@@ -43,7 +45,7 @@ propsFactory = function() {
   };
 };
 
-nameMapper = function(name) {
+const nameMapper = function(name) {
   switch (name) {
     case 'resource':
       return '$resource';
@@ -69,7 +71,7 @@ nameMapper = function(name) {
 };
 
 // import set from 'lodash.set'
-PathService = class PathService {
+const PathService = class PathService {
   constructor() {
     this.root = {};
   }
@@ -86,7 +88,7 @@ PathService = class PathService {
 
 };
 
-export default {
+export default Vue.extend({
   name: 'rf-form',
   mixins: [VueProvideObservable('vrf', propsFactory, nameMapper)],
   provide: function() {
@@ -135,14 +137,24 @@ export default {
       */
     translationName: String,
     /**
-      * Activate action automation using middlewares
+      * Activate action automation using api effects
       */
     auto: {
       type: Boolean,
       default: false
     },
     /**
-      * It activate side effects in middleware, like redirection after new resource instance created
+     * Non-API effects activation(like redirection after new resource instance created). You may activate/disable all effects by passing true/false or apply current effects by enumerating names within array.
+     */
+    effects: {
+      type: [
+        Boolean,
+        Array
+      ] as PropType<boolean | Array<string>>
+    },
+    /**
+      * Boolean alias to effects
+      * @deprecated
       */
     implicit: {
       type: Boolean,
@@ -187,10 +199,13 @@ export default {
       default: false
     },
     /**
-      *Middleware identifier
+      * API effect identifier or custom effect implementation
     */
     api: {
-      type: String
+      type: [
+        String,
+        Object
+      ] as PropType<string | EffectExecutor>
     },
     /**
       * Namespace for API
@@ -257,6 +272,40 @@ export default {
     if(this.vuex) {
       this.$emit('update:resource', this.$resource)
     }
+
+    this.instantiatedEffects = this.effects.map(({effect, name, api}: Effect) => {
+      const instantiatedEffect : InstantiatedEffect = {
+        listeners: {
+          onExecuteAction: null,
+          onLoadSources: null,
+          onLoadSource: null,
+          onLoad: null,
+          onSave: null
+        },
+        api
+      }
+
+      effect({
+        onLoad(listener){
+          instantiatedEffect.listeners.onLoad = listener
+        },
+        onSave(listener){
+          instantiatedEffect.listeners.onSave = listener
+        },
+        onExecuteAction(listener){
+          instantiatedEffect.listeners.onExecuteAction = listener
+        },
+        onLoadSource(listener){
+          instantiatedEffect.listeners.onLoadSource = listener
+        },
+        onLoadSources(listener){
+          instantiatedEffect.listeners.onLoadSources = listener
+        },
+        form: this
+      })
+
+      return instantiatedEffect
+    })
   },
   computed: {
     tailPath: function() {
@@ -317,22 +366,26 @@ export default {
     $lastSaveFailed: function() {
       return this.innerLastSaveFailed;
     },
-    middleware: function() {
-      var middleware;
-      middleware = (this.VueResourceForm.middlewares || []).find((middleware) => {
-        return middleware.accepts({
-          name: this.name,
-          api: this.api,
-          namespace: this.namespace
-        });
-      });
-      if (!middleware) {
-        throw `Can't find middleware for ${this.name} resource`;
+    $effects() : Array<Effect> {
+      const effects : Array<Effect> = [...(this.VueResourceForm.effects || [])]
+        .filter((effect) => this.effects === true || this.effects.includes(effect.name))
+
+      if(typeof this.api === 'function') {
+        effects.unshift(this.api)
+      } else if(typeof this.api === 'string') {
+        const prioritizedEffectIndex = effects.findIndex((effect) => effect.name === this.api)
+        if(!prioritizedEffectIndex) {
+          throw `[vrf] Effect with name ${this.api} isn't registered`
+        }
+        const prioritizedEffect = effects[prioritizedEffectIndex]
+        effects.splice(prioritizedEffectIndex, 1)
+        effects.unshift(prioritizedEffect)
       }
-      return new middleware(this.rfName, this);
+
+      return effects
     },
     $pathService: function() {
-      return window.pathService = this.pathService || new PathService;
+      return this.pathService || new PathService;
     },
     isReloadPossible: function() {
       return this.auto || (this.path != null);
@@ -351,8 +404,8 @@ export default {
       if (!this.name) {
         throw "You must provide name for auto-forms.";
       }
-      if (!this.VueResourceForm.middlewares) {
-        throw "You must provide middlewares for auto-forms.";
+      if (!this.VueResourceForm.effects) {
+        throw "You must provide effects for auto-forms.";
       }
       if (this.noFetch && options.boot) {
         this.reloadSources();
@@ -377,21 +430,23 @@ export default {
       if (Object.keys(this.requiredSources).length === 0) {
         return;
       }
-      return this.middleware.loadSources(Object.keys(this.requiredSources)).then((sources) => {
+
+      const sourceNames = Object.keys(this.requiredSources)
+
+      return this.executeEffectAction('onLoadSources', true, [sourceNames]).then((sources) => {
         if (Object.keys(this.$sources).length > 0) {
           sources = {...this.$sources, ...sources};
         }
         return this.setSyncProp('sources', sources);
-      });
+      })
     },
     reloadResource: function(modifier) {
-      var nestedPath;
       if (!this.isReloadPossible) {
         return console.warn("Reload methods is applicable only to auto-forms");
       }
       if (this.isNested) {
         if (this.tailPath) {
-          nestedPath = toPath(this.tailPath);
+          const nestedPath = toPath(this.tailPath);
           modifier = modifier instanceof Array ? modifier.map(function(m) {
             return `${nestedPath}.${m}`;
           }) : [nestedPath];
@@ -404,7 +459,8 @@ export default {
       if (this.isNested) {
         return this.$emit('reload-root-resource', modifier);
       }
-      return this.middleware.load().then((resource) => {
+
+      return this.executeEffectAction('onLoad', true).then((resource) => {
         if (this.vuex) {
           this.$store.commit('vue-resource-form:set', {
             resourceName: this.name,
@@ -445,7 +501,8 @@ export default {
           return;
         }
         this.setSyncProp('saving', true);
-        return this.middleware.save(this.$resource).then(([ok, errors]) => {
+        
+        return this.executeEffectAction('onSave', true, [this.$resource]).then(([ok, errors]) => {
           this.innerLastSaveFailed = !ok;
           this.setSyncProp('saving', false);
           this.setSyncProp('errors', ok ? {} : errors);
@@ -470,10 +527,10 @@ export default {
       return this.setSyncProp('resource', resource);
     },
     executeAction: function(name, {params, data, method = 'post', url} = {}) {
-      var result;
+      let result = null
       this.setActionPending(name, true);
-      result = void 0;
-      return this.middleware.executeAction(name, {params, data, method, url}).then(({status, data}) => {
+  
+      return this.executeEffectAction('onExecuteAction', true, [name, {params, data, method, url}]).then(({status, data}) => {
         return result = {status, data};
       }).catch((e = {status, data}) => {
         if (!status) {
@@ -483,6 +540,30 @@ export default {
       }).finally(() => {
         return this.setActionResult(name, result);
       });
+    },
+    executeEffectAction(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
+      const effectPerformed = this.instantiatedEffects.reduce((result: Promise<any> | void, effect: InstantiatedEffect) =>  {
+        const listener : (...args) => any = effect.listeners[eventName]
+        const {api} = effect
+        
+        if(!api) {
+          listener(...args)
+        } else if(result === null) {
+          const currentListenerResult = listener(...args)
+
+          if(currentListenerResult instanceof Promise)
+            return currentListenerResult  
+        }
+
+        return result
+      }, null)
+
+
+      if(!(effectPerformed instanceof Promise) && api){
+        throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`
+      }
+
+      return effectPerformed
     },
     setActionResult: function(name, result) {
       this.setSyncProp('actionResults', {
@@ -506,7 +587,7 @@ export default {
         return this.$sources[name];
       }
       if (!this.requiredSources[name] && this.innerResource) {
-        this.middleware.loadSource(name).then((sourceCollection) => {
+        this.executeEffectAction('onLoadSource', true, [name]).then((sourceCollection) => {
           return this.form.addToSources(name, sourceCollection);
         });
       }
@@ -521,4 +602,4 @@ export default {
       return this.$set(this.innerSources, name, value);
     }
   }
-};
+});
