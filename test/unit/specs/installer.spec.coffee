@@ -95,17 +95,33 @@ describe 'installer', ->
         expect(RfInput.props.password.default).toBe true
 
     describe "with adapter", ->
-      subject -> createLocalVue().use(Vrf, {
-        defaultProps: {
-          RfInput:
-            disabled: true
-            password: true
-        },
-        adapters: [$adapter]
-      })
+      describe "default props", ->
+        subject -> createLocalVue().use(Vrf, {
+          defaultProps: {
+            RfInput:
+              disabled: true
+              password: true
+          },
+          adapters: [$adapter]
+        })
 
-      it "set default value for props", ->
-        $subject
+        it "set default value for props", ->
+          $subject
 
-        expect($RfInput.props.disabled.default).toBe true
-        expect($RfInput.props.password.default).toBe true
+          expect($RfInput.props.disabled.default).toBe true
+          expect($RfInput.props.password.default).toBe true
+
+      describe "default attribute", ->
+        subject -> createLocalVue().use(Vrf, {
+          defaultProps: {
+            RfInput:
+              outlined: true
+          },
+          adapters: [$adapter]
+        })
+
+        it "set default value for attribute", ->
+          $subject
+
+          expect($RfInput.defaultAttrs.outlined).toBe true
+

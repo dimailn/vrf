@@ -21,6 +21,18 @@ export default {
     }
   },
   computed: {
+    $attrsWithDefaults(){
+      const defaultAttrs = this.$options.defaultAttrs || {}
+
+      if(!Object.keys(defaultAttrs).length) {
+        return this.$attrs
+      }
+
+      return {
+        ...defaultAttrs,
+        ...this.$attrs
+      }
+    },
     $fieldName: function() {
       return this.name;
     },

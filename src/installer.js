@@ -97,19 +97,24 @@ export default function(components) {
         const componentDefaultProps = defaultProps[name]
         if (componentDefaultProps) {
           component.props ||= {}
+          component.defaultAttrs ||= {}
           const componentCollectedProps = collectComponentProps(component)
           const componentProps = component.props
-  
-          Object.entries(componentDefaultProps).forEach(([propName, propValue]) => {
-            if(typeof componentCollectedProps[propName] === 'function') {
-              componentProps[propName] = {
-                type: componentCollectedProps[propName]
-              }
-            } else {
-              componentProps[propName] = {...componentCollectedProps[propName]}
-            }
 
-            componentProps[propName].default = propValue
+          Object.entries(componentDefaultProps).forEach(([propName, propValue]) => {
+            const propDefinition = componentCollectedProps[propName]
+            if(propDefinition){
+              if(typeof propDefinition === 'function') {
+                componentProps[propName] = {
+                  type: componentCollectedProps[propName]
+                }
+              } else {
+                componentProps[propName] = {...componentCollectedProps[propName]}
+              }
+              componentProps[propName].default = propValue
+            } else {
+              component.defaultAttrs[propName] = propValue
+            }
           })
         }
       })
