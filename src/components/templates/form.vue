@@ -4,5 +4,5 @@
 </form>
 </template>
 
-<script src="../descriptors/form.ts" />
+<script src="../descriptors/form.ts" lang="ts" />
 

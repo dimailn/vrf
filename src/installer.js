@@ -128,7 +128,7 @@ export default function(components) {
       if (options == null) {
         return;
       }
-      return ['translate', 'middlewares', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale'].forEach(function(optionName) {
+      return ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale'].forEach(function(optionName) {
         if (options[optionName] != null) {
           return Vue.prototype.VueResourceForm[optionName] = options[optionName];
         }

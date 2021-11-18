@@ -6,7 +6,8 @@ module.exports = {
     'js',
     'json',
     'vue',
-    'coffee'
+    'coffee',
+    'ts'
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
@@ -14,7 +15,8 @@ module.exports = {
   transform: {
     '^.+\\.js$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest',
-    "^.+\\.coffee$": "coffee-jest"
+    "^.+\\.coffee$": "coffee-jest",
+    '^.+\\.ts$': 'ts-jest'
   },
   modulePaths: ['<rootDir>/src'],
   testPathIgnorePatterns: [
@@ -29,5 +31,10 @@ module.exports = {
   ],
   coveragePathIgnorePatterns: [
      "<rootDir>/src/components/descriptors"
-  ]
+  ],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
+    },
+  },
 }
