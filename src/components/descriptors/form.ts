@@ -265,15 +265,8 @@ export default Vue.extend({
       return this.innerResource = null;
     }
   },
-  mounted: function() {
-    this.forceReload({
-      boot: true
-    })
-    if(this.vuex) {
-      this.$emit('update:resource', this.$resource)
-    }
-
-    this.instantiatedEffects = this.effects.map(({effect, name, api}: Effect) => {
+  mounted() {
+    this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
       const instantiatedEffect : InstantiatedEffect = {
         listeners: {
           onExecuteAction: null,
@@ -306,6 +299,14 @@ export default Vue.extend({
 
       return instantiatedEffect
     })
+
+    this.forceReload({
+      boot: true
+    })
+
+    if(this.vuex) {
+      this.$emit('update:resource', this.$resource)
+    }
   },
   computed: {
     tailPath: function() {
@@ -368,7 +369,7 @@ export default Vue.extend({
     },
     $effects() : Array<Effect> {
       const effects : Array<Effect> = [...(this.VueResourceForm.effects || [])]
-        .filter((effect) => this.effects === true || this.effects.includes(effect.name))
+        .filter((effect) => (this.auto && effect.api) || this.effects === true || (this.effects instanceof Array && this.effects.includes(effect.name)))
 
       if(typeof this.api === 'function') {
         effects.unshift(this.api)
@@ -557,7 +558,6 @@ export default Vue.extend({
 
         return result
       }, null)
-
 
       if(!(effectPerformed instanceof Promise) && api){
         throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`

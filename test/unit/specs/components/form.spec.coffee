@@ -24,7 +24,7 @@ sharedExamplesFor "non-auto mode warnings", ->
 
 describe 'form', ->
   beforeEach ->
-    Vue::VueResourceForm.middlewares = [$middleware]
+    Vue::VueResourceForm.effects = $effects
 
   def('save', => jest.fn -> Promise.resolve([true, null]))
   def('loadSources', -> jest.fn -> Promise.resolve({
@@ -60,15 +60,22 @@ describe 'form', ->
   ))
   def('load', -> jest.fn -> Promise.resolve({title: 'Test'}))
   def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
-  def('middleware', -> class Middleware
-    constructor: (@name, @form) ->
-    @accepts: -> true
-    save: $save
-    loadSources: $loadSources
-    loadSource: $loadSource
-    executeAction: $executeAction
-    load: $load
+  def('effects', -> 
+    [
+      {
+        name: 'rest',
+        api: true,
+        effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction}) ->
+          onSave($save)
+          onLoadSource($loadSource)
+          onLoadSources($loadSources)
+          onLoad($load)
+          onExecuteAction($executeAction)
+      }
+    ]
   )
+  
+
 
   def('wrapper', ->
     mount(

@@ -123,14 +123,17 @@ export default function(components) {
 
 
       Vue.component(name, component);
-      (base = Vue.prototype).VueResourceForm || (base.VueResourceForm = {});
-      Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor;
+      Vue.prototype.VueResourceForm || (Vue.prototype.VueResourceForm = {})
+      Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor
+
       if (options == null) {
         return;
       }
-      return ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale'].forEach(function(optionName) {
-        if (options[optionName] != null) {
-          return Vue.prototype.VueResourceForm[optionName] = options[optionName];
+      
+      ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale'].forEach(function(optionName) {
+        if (options[optionName]) {
+          console.log(optionName)
+          Vue.prototype.VueResourceForm[optionName] = options[optionName]
         }
       });
     }
