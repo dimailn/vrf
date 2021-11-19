@@ -56,7 +56,7 @@ Vue.use(Vrf, {
   - [Default props](#default-props)
 - [Advanced](#advanced)
   - [Architecture](#architecture)
-  - [Middleware API](#middleware-api)
+  - [Effects API](#effects-api)
   - [Adapter API](#adapter-api)
 
 
@@ -538,49 +538,54 @@ Vrf is all about modularity, you may customize almost any part of it. The final 
 
 * Autocomplete providers - components containing autocompletes logic
 
-## Middleware API
+## Effects API
 
-Vrf creates an instance of middleware during form initialization. There are some middleware instance methods you neeed to implement:
+Vrf uses effects to deal with auto-forms lifecycle and side effects. There are two types of effects - API and non-API effects.
 
-* ```load``` - return Promise that resolves with resource
-* ```loadSources``` - this method is called when form is mounted and ready to eager load all sources for rendered components. It resolves with object where keys are source names and values are collections.
-* ```loadSource``` - it's called when some component need to require one source after eager loading and resolves with collection for this source
-* ```save``` - used to save form resource
+API effects:
+* activated by the ```auto``` property of the ```rf-form```
+* executed for each event in order of registration in ```Vue.use(Vrf, {effects: [...]})``` until some effect returns promise
+* it's possible to choose effect by specify its name in ```api``` property of the ```rf-form```
+* by passing ```EffectExecutor``` to ```api``` property of the ```rf-form``` you may customize autoform logic ad-hoc
 
-```javascript
+non-API effects:
+* activated by the ```effects``` property of the ```rf-form```
+* executed for each event in order of registration
+* it's possible to specify effects for current form by passing array of names to the ```effects``` property
+* 
 
-export default class FooMiddleware {
-  constructor(name, form){
-    this.name = name
-    this.form = form
+Vrf runs effect executors after ```rf-form``` is mounted. Effect executor may subscribe to the neccessary events only once.
+
+
+
+```typescript
+
+// effect.ts
+import {Effect} from 'vrf'
+
+export default {
+  name: 'effect-name',
+  effect({onLoad, onLoadSource, onLoadSources, onSave, }){
+    onLoad(() => Promise.resolve({}))
+    
+    onLoadSource((name) => Promise.resolve([]))
+    
+    onLoadSources((names) => Promise.resolve({}))
+    
+    onSave(() => Promise.resolve())
   }
+} as Effect
 
-  static accepts({name, api, namespace}){ // determines if middleware is applicable for a given form
-    return true
-  }
 
-  load(){
-    return Promise.resolve({})
-  }
+// initialization of vrf in project
 
-  loadSource(name) {
-    return Promise.resolve([])
-  }
-  
-  loadSources(names){
-    return Promise.resolve({})
-  }
-  
-  save(resource){
-    return Promise.resolve()
-  }
-}
+import Effect from './effect'
 
-const middlewares = [
-  FooMiddleware
+const effects = [
+  Effect
 ]
 
-Vue.use(Vrf, {middlewares})
+Vue.use(Vrf, {effects})
 
 ```
 
