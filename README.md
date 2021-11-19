@@ -552,7 +552,6 @@ non-API effects:
 * activated by the ```effects``` property of the ```rf-form```
 * executed for each event in order of registration
 * it's possible to specify effects for current form by passing array of names to the ```effects``` property
-* 
 
 Vrf runs effect executors after ```rf-form``` is mounted. Effect executor may subscribe to the neccessary events only once.
 
