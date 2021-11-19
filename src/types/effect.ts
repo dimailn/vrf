@@ -1,7 +1,11 @@
-import RfFormComponent from '../components/descriptors/form'
+// import RfFormComponent from '../components/descriptors/form'
 
-type RfForm = InstanceType<typeof RfFormComponent>
+// type RfForm = InstanceType<typeof RfFormComponent>
 
+
+type RfForm = {
+
+}
 type OnLoadResult = [boolean, object]
 
 interface ExecuteActionOptions {

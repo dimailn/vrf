@@ -1,4 +1,4 @@
-import Vue, {PropType} from 'vue'
+// import Vue, {PropType} from 'vue'
 
 import capitalizeFirst from '@/utils/capitalize-first';
 
@@ -88,7 +88,7 @@ const PathService = class PathService {
 
 };
 
-export default Vue.extend({
+export default {
   name: 'rf-form',
   mixins: [VueProvideObservable('vrf', propsFactory, nameMapper)],
   provide: function() {
@@ -150,7 +150,7 @@ export default Vue.extend({
       type: [
         Boolean,
         Array
-      ] as PropType<boolean | Array<string>>
+      ] // as PropType<boolean | Array<string>>
     },
     /**
       * Boolean alias to effects
@@ -205,7 +205,7 @@ export default Vue.extend({
       type: [
         String,
         Object
-      ] as PropType<string | EffectExecutor>
+      ] // as PropType<string | EffectExecutor>
     },
     /**
       * Namespace for API
@@ -602,4 +602,4 @@ export default Vue.extend({
       return this.$set(this.innerSources, name, value);
     }
   }
-});
+}

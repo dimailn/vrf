@@ -18,7 +18,7 @@ const babelLoader = {
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './playground/index.coffee',
+    app: './playground/index.ts',
     lib: './src/index.js'
   },
   output: {
