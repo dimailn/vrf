@@ -672,7 +672,7 @@ Vue.use(Vrf, {
     VrfAdapterName
   ]
 })
-
+```
 
 
 # Adapters
