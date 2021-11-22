@@ -661,6 +661,17 @@ export default {
 
 ```
 
+After all, add your adapter to vrf
+
+```javascript
+
+import VrfAdapterName from './vrf-adapter-name'
+
+Vue.use(Vrf, {
+  adapters: [
+    VrfAdapterName
+  ]
+})
 
 
 
