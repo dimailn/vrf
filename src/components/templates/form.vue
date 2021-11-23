@@ -1,6 +1,6 @@
 <template>
 <form @submit.prevent>
-  <slot />
+  <slot v-if="$resource" />
 </form>
 </template>
 
