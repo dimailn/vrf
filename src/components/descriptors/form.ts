@@ -24,26 +24,7 @@ import {
 import VueProvideObservable from 'vue-provide-observable';
 
 import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames} from '../../types/effect'
-
-
-class VrfEvent<T> {
-  eventName: string
-  payload: T
-  private __stopped: boolean = false
-  
-  constructor(eventName: string, payload: T){
-    this.eventName = eventName
-    this.payload = payload
-  }
-
-  stopPropagation = () => {
-    this.__stopped = true
-  }
-
-  isStopped = () => {
-    return this.__stopped
-  }
-}
+import VrfEvent from '../../types/vrf-event'
 
 
 const propsFactory = function() {
