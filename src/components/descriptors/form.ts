@@ -25,6 +25,7 @@ import VueProvideObservable from 'vue-provide-observable';
 
 import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames} from '../../types/effect'
 import VrfEvent from '../../types/vrf-event'
+import PathService from '../../types/path-service'
 
 
 const propsFactory = function() {
@@ -76,23 +77,6 @@ const nameMapper = function(name) {
   }
 };
 
-// import set from 'lodash.set'
-const PathService = class PathService {
-  constructor() {
-    this.root = {};
-  }
-
-  add(parentPath, name) {
-    if (parentPath) {
-      return set(this.root, parentPath, {
-        [`${name}`]: {}
-      });
-    } else {
-      return this.root[name] = {};
-    }
-  }
-
-};
 
 export default {
   name: 'rf-form',
