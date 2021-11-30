@@ -11,6 +11,10 @@ import toPath from '@/utils/to-path';
 
 import camelCase from '@/utils/camel-case';
 
+import {decamelize} from 'humps'
+
+import pluralize from 'pluralize'
+
 import cloneDeep from 'lodash.clonedeep';
 
 import {
@@ -20,6 +24,27 @@ import {
 import VueProvideObservable from 'vue-provide-observable';
 
 import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames} from '../../types/effect'
+
+
+class VrfEvent<T> {
+  eventName: string
+  payload: T
+  private __stopped: boolean = false
+  
+  constructor(eventName: string, payload: T){
+    this.eventName = eventName
+    this.payload = payload
+  }
+
+  stopPropagation = () => {
+    this.__stopped = true
+  }
+
+  isStopped = () => {
+    return this.__stopped
+  }
+}
+
 
 const propsFactory = function() {
   return {
@@ -266,34 +291,57 @@ export default {
     }
   },
   mounted() {
+    const listenerNames = [
+      'onLoad',
+      'onSave',
+      'onExecuteAction',
+      'onLoadSource',
+      'onLoadSources',
+      'onCreate',
+      'onCreated',
+      'onUpdate'
+    ]
+
     this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
       const instantiatedEffect : InstantiatedEffect = {
-        listeners: {
-          onExecuteAction: null,
-          onLoadSources: null,
-          onLoadSource: null,
-          onLoad: null,
-          onSave: null
-        },
+        listeners: listenerNames.reduce((listeners, eventName) => {
+          listeners[eventName] = null
+
+          return listeners
+        }, {} as Record<EffectListenerNames, (...args: any) => any>),
+        customEventListeners: {},
         api
       }
 
+      const resourceName  = () => camelCase(this.name.split("::")[0])
+      const urlResourceName = () => decamelize(this.name.split("::")[0])
+      const urlResourceCollectionName = () => pluralize(urlResourceName())
+
       effect({
-        onLoad(listener){
-          instantiatedEffect.listeners.onLoad = listener
+        ...listenerNames.reduce((setters, eventName) => {
+          setters[eventName] = (listener) => {
+            instantiatedEffect.listeners[eventName] = listener
+          }
+  
+          return setters
+        }, {} as Record<EffectListenerNames, (...args: any) => any>),
+        on(eventName, listener){
+          instantiatedEffect.customEventListeners[eventName] ||= []
+          instantiatedEffect.customEventListeners[eventName].push(listener)
         },
-        onSave(listener){
-          instantiatedEffect.listeners.onSave = listener
+        emit(eventName, payload){
+          const event = new VrfEvent(eventName, payload)
+
+          this.instantiatedEffects.find((instantiatedEffect) => instantiatedEffect.customEventListeners.find((listener) => {
+            listener(event)
+
+            return event.isStopped()
+          })
+          )
         },
-        onExecuteAction(listener){
-          instantiatedEffect.listeners.onExecuteAction = listener
-        },
-        onLoadSource(listener){
-          instantiatedEffect.listeners.onLoadSource = listener
-        },
-        onLoadSources(listener){
-          instantiatedEffect.listeners.onLoadSources = listener
-        },
+        resourceName,
+        urlResourceName,
+        urlResourceCollectionName,
         form: this
       })
 
@@ -370,6 +418,17 @@ export default {
     $effects() : Array<Effect> {
       const effects : Array<Effect> = [...(this.VueResourceForm.effects || [])]
         .filter((effect) => (this.auto && effect.api) || this.effects === true || (this.effects instanceof Array && this.effects.includes(effect.name)))
+
+      if(this.auto){
+        effects.push({
+          name: 'reload-on-create',
+          effect({onCreated}){
+            onCreated((event) => {
+              this.executeEffectAction('onLoad', true, [event.payload.id])
+            })
+          }
+        })
+      }
 
       if(typeof this.api === 'function') {
         effects.unshift(this.api)
@@ -461,7 +520,7 @@ export default {
         return this.$emit('reload-root-resource', modifier);
       }
 
-      return this.executeEffectAction('onLoad', true).then((resource) => {
+      return this.executeEffectAction('onLoad', true, [this.resourceId()]).then((resource) => {
         if (this.vuex) {
           this.$store.commit('vue-resource-form:set', {
             resourceName: this.name,
@@ -489,8 +548,23 @@ export default {
         return this.$emit("update:resources", value);
       }
     },
+    resourceId(){
+      if(this.rfId) {
+        return this.rfId
+      }
+
+      if(this.resource?.id){
+        return this.resource.id
+      }
+      const idFromRoute = this.VueResourceForm.idFromRoute || ((form) => form.$route?.params?.id)
+
+      return idFromRoute(this)
+    },
+    isNew(){
+      return this.single ? false : !this.resourceId()
+    },
     submit: function() {
-      // Даем отработать onChange
+      // let onChange inputs change the model
       return this.$nextTick(() => {
         this.$emit('before-submit', {
           resource: this.$resource
@@ -502,8 +576,24 @@ export default {
           return;
         }
         this.setSyncProp('saving', true);
+
+        let eventResult = this.executeEffectActionOptional('onSave', true, [this.$resource])
+
+        if(!(eventResult instanceof Promise)){
+          eventResult = this.isNew() ?
+            this.executeEffectAction('onCreate', true, [this.$resource])
+            .then(([ok, id]) => {
+              this.executeEffectAction('onCreated', false, [
+                new VrfEvent('onCreated', {id})
+              ])
+
+              return [ok, id]
+            })
+            :
+            this.executeEffectAction('onUpdate', true, [this.$resource])
+        }
         
-        return this.executeEffectAction('onSave', true, [this.$resource]).then(([ok, errors]) => {
+        return eventResult.then(([ok, errors]) => {
           this.innerLastSaveFailed = !ok;
           this.setSyncProp('saving', false);
           this.setSyncProp('errors', ok ? {} : errors);
@@ -543,9 +633,23 @@ export default {
       });
     },
     executeEffectAction(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
+      const effectPerformed = this.executeEffectActionOptional(eventName, api, args)
+
+      if(!(effectPerformed instanceof Promise) && api){
+        throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`
+      }
+
+      return effectPerformed
+    },
+    executeEffectActionOptional(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
       const effectPerformed = this.instantiatedEffects.reduce((result: Promise<any> | void, effect: InstantiatedEffect) =>  {
-        const listener : (...args) => any = effect.listeners[eventName]
+        const listener : (...args: any) => any = effect.listeners[eventName]
+
         const {api} = effect
+        
+        if(!listener) {
+          return result
+        }
         
         if(!api) {
           listener(...args)
@@ -558,10 +662,6 @@ export default {
 
         return result
       }, null)
-
-      if(!(effectPerformed instanceof Promise) && api){
-        throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`
-      }
 
       return effectPerformed
     },
