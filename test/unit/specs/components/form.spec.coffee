@@ -25,7 +25,9 @@ sharedExamplesFor "non-auto mode warnings", ->
 describe 'form', ->
   beforeEach ->
     Vue::VueResourceForm.effects = $effects
+    Vue::VueResourceForm.idFromRoute = $idFromRoute
 
+  def('idFromRoute', -> -> 1)
   def('save', => jest.fn -> Promise.resolve([true, null]))
   def('loadSources', -> jest.fn -> Promise.resolve({
       roles: [
@@ -58,19 +60,29 @@ describe 'form', ->
       }
     ]
   ))
-  def('load', -> jest.fn -> Promise.resolve({title: 'Test'}))
+  def('load', -> jest.fn -> Promise.resolve({id: 1, title: 'Test'}))
   def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
+
+
+
+  def('create', -> jest.fn -> ->)
+  def('update', -> jest.fn -> ->)
+  def('created', -> jest.fn -> ->)
+
   def('effects', -> 
     [
       {
         name: 'rest',
         api: true,
-        effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction}) ->
+        effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction, onCreate, onCreated, onUpdate}) ->
+          onCreate($create)
+          onUpdate($update)
           onSave($save)
           onLoadSource($loadSource)
           onLoadSources($loadSources)
           onLoad($load)
           onExecuteAction($executeAction)
+          onCreated($created)
       }
     ]
   )
@@ -217,13 +229,48 @@ describe 'form', ->
         )
 
 
-    it 'saves resource', ->
-      submit = $wrapper.find('.submit')
-      submit.trigger('click')
+    describe 'submit click', ->
+      beforeEach ->
+        submit = $wrapper.find('.submit')
+        submit.trigger('click')
 
-      await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
 
-      expect($save.mock.calls.length).toBe(1)
+      it 'saves resource', ->
+        expect($save.mock.calls.length).toBe(1)
+
+      describe 'no onSave', ->
+        def('save', -> null)
+        def('create', -> jest.fn -> Promise.resolve([true, 1]))
+        def('update', -> jest.fn -> Promise.resolve([true, null]))
+
+
+        describe 'onUpdate', ->
+          def('idFromRoute', -> -> 1)
+
+          it "updates", ->
+            expect($load.mock.calls.length).toBe 1 # data loading
+            expect($update.mock.calls.length).toBe(1)
+            expect($create.mock.calls.length).toBe(0)
+
+        describe 'onCreate without onCreated capture', ->
+          def('idFromRoute', -> -> null)
+
+          it "creates", ->
+            expect($load.mock.calls.length).toBe 1 # loading after create
+            expect($update.mock.calls.length).toBe(0)
+            expect($create.mock.calls.length).toBe(1)
+
+        describe "onCreate with onCreated capture", ->
+          def('idFromRoute', -> -> null)
+          def('created', -> jest.fn (e) ->  e.stopPropagation())
+
+          it "creates and doesn't reload", ->
+            expect($load.mock.calls.length).toBe 0
+            expect($update.mock.calls.length).toBe(0)
+            expect($create.mock.calls.length).toBe(1)
+
+
 
     it 'executes action', ->
       form = $wrapper.vm.$children[0]

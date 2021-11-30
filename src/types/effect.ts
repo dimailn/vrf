@@ -27,7 +27,7 @@ export interface EffectContextBuiltinListeners {
   onSave: (listener: () =>  Promise<object> | void) => void
   onCreate: (listener: () => Promise<[boolean, Id]> | void) => void
   onCreated: (listener: (event: Event<{id: Id}>) => void) => void
-  onUpdate: (listener: () => Promise<[boolean, void]> | void) => void
+  onUpdate: (listener: () => Promise<[boolean, void | object]> | void) => void
   onLoadSource: (listener: (sourceName: string) => Promise<object> | void) => void
   onLoadSources: (listener: (sourceNames: Array<string>) => Promise<object> | void) => void
   onExecuteAction: (listener: (actionName: string, options: ExecuteActionOptions) => Promise<any> | void) => void

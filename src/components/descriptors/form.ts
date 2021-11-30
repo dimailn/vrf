@@ -422,7 +422,7 @@ export default {
       if(this.auto){
         effects.push({
           name: 'reload-on-create',
-          effect({onCreated}){
+          effect: ({onCreated}) => {
             onCreated((event) => {
               this.executeEffectAction('onLoad', true, [event.payload.id])
             })
@@ -520,6 +520,10 @@ export default {
         return this.$emit('reload-root-resource', modifier);
       }
 
+      if(this.isNew()){
+        return
+      }
+
       return this.executeEffectAction('onLoad', true, [this.resourceId()]).then((resource) => {
         if (this.vuex) {
           this.$store.commit('vue-resource-form:set', {
@@ -549,13 +553,14 @@ export default {
       }
     },
     resourceId(){
-      if(this.rfId) {
+      if(this.rfId !== undefined) {
         return this.rfId
       }
 
-      if(this.resource?.id){
-        return this.resource.id
+      if(this.$resource?.id){
+        return this.$resource.id
       }
+
       const idFromRoute = this.VueResourceForm.idFromRoute || ((form) => form.$route?.params?.id)
 
       return idFromRoute(this)
@@ -647,10 +652,10 @@ export default {
 
         const {api} = effect
         
-        if(!listener) {
+        if(!listener || args[0] instanceof VrfEvent && args[0].isStopped()) {
           return result
         }
-        
+
         if(!api) {
           listener(...args)
         } else if(result === null) {
