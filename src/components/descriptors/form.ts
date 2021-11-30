@@ -588,6 +588,10 @@ export default {
           eventResult = this.isNew() ?
             this.executeEffectAction('onCreate', true, [this.$resource])
             .then(([ok, id]) => {
+              if(ok && !id){
+                throw '[vrf] onCreate handler must return id of created resource when it succeed'
+              }
+
               this.executeEffectAction('onCreated', false, [
                 new VrfEvent('onCreated', {id})
               ])
