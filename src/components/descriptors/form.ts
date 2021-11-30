@@ -158,6 +158,13 @@ export default {
       default: false
     },
     /**
+     * Enable fetching for new resources(without an id)
+     */
+    fetchAlways: {
+      type: Boolean,
+      default: false
+    },
+    /**
       *  Validation errors
       */
     errors: {
@@ -489,7 +496,7 @@ export default {
         return this.$emit('reload-root-resource', modifier);
       }
 
-      if(this.isNew()){
+      if(this.isNew() && !this.fetchAlways){
         return
       }
 
