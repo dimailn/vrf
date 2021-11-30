@@ -381,6 +381,10 @@ export default {
       return this.innerLastSaveFailed;
     },
     $effects() : Array<Effect> {
+      if(this.implicit) {
+        console.warn('[vrf] Property `implicit` on rf-form was deprecated in favor of using `effects` property from Effects API.')
+      }
+
       const effects : Array<Effect> = [...(this.VueResourceForm.effects || [])]
         .filter((effect) => (this.auto && effect.api) || this.effects === true || (this.effects instanceof Array && this.effects.includes(effect.name)) || this.implicit === true)
 
