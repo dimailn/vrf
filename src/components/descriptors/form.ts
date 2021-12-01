@@ -263,62 +263,11 @@ export default {
     }
   },
   mounted() {
-    const listenerNames = [
-      'onLoad',
-      'onSave',
-      'onExecuteAction',
-      'onLoadSource',
-      'onLoadSources',
-      'onCreate',
-      'onCreated',
-      'onUpdate'
-    ]
+    this.mountEffects()
 
-    this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
-      const instantiatedEffect : InstantiatedEffect = {
-        listeners: listenerNames.reduce((listeners, eventName) => {
-          listeners[eventName] = null
-
-          return listeners
-        }, {} as Record<EffectListenerNames, (...args: any) => any>),
-        customEventListeners: {},
-        api
-      }
-
-      const resourceName  = () => camelCase(this.name.split("::")[0])
-      const urlResourceName = () => decamelize(this.name.split("::")[0])
-      const urlResourceCollectionName = () => pluralize(urlResourceName())
-
-      effect({
-        ...listenerNames.reduce((setters, eventName) => {
-          setters[eventName] = (listener) => {
-            instantiatedEffect.listeners[eventName] = listener
-          }
-  
-          return setters
-        }, {} as Record<EffectListenerNames, (...args: any) => any>),
-        on(eventName, listener){
-          instantiatedEffect.customEventListeners[eventName] ||= []
-          instantiatedEffect.customEventListeners[eventName].push(listener)
-        },
-        emit(eventName, payload){
-          const event = new VrfEvent(eventName, payload)
-
-          this.instantiatedEffects.find((instantiatedEffect) => instantiatedEffect.customEventListeners.find((listener) => {
-            listener(event)
-
-            return event.isStopped()
-          })
-          )
-        },
-        resourceName,
-        urlResourceName,
-        urlResourceCollectionName,
-        form: this
-      })
-
-      return instantiatedEffect
-    })
+    if(this.auto && !this.resourceId() && !this.$resource){
+      this.innerResource = {}
+    }
 
     this.forceReload({
       boot: true
@@ -329,7 +278,7 @@ export default {
     }
   },
   computed: {
-    tailPath: function() {
+    tailPath() {
       var lastElement;
       if (!this.path) {
         return;
@@ -341,50 +290,50 @@ export default {
         return [lastElement];
       }
     },
-    form: function() {
+    form() {
       return this;
     },
-    rfName: function() {
+    rfName() {
       return this.name;
     },
-    $translationName: function() {
+    $translationName() {
       return this.translationName || this.name;
     },
-    $$resource: function() {
+    $$resource() {
       return this.resource;
     },
-    $resource: function() {
+    $resource() {
       if (this.vuex) {
         return this.$store.state[camelCase(this.name)];
       }
       return this.innerResource || this.resource;
     },
-    $sources: function() {
+    $sources() {
       return this.innerSources || this.sources || this.$resourcesDeprecated || {};
     },
-    $resourcesDeprecated: function() {
+    $resourcesDeprecated() {
       if (!this.resources) {
         return;
       }
       console.warn('[vrf] Prop "resources" was deprecated and will be removed in next version. Please, use "sources" instead.');
       return this.resources;
     },
-    $errors: function() {
+    $errors() {
       return this.innerErrors || this.errors;
     },
-    $fetching: function() {
+    $fetching() {
       return this.innerFetching || this.fetching;
     },
-    $saving: function() {
+    $saving() {
       return this.innerSaving || this.saving;
     },
-    $actionResults: function() {
+    $actionResults() {
       return this.innerActionResults || this.actionResults;
     },
-    $actionPendings: function() {
+    $actionPendings() {
       return this.innerActionPendings || this.actionPendings;
     },
-    $lastSaveFailed: function() {
+    $lastSaveFailed() {
       return this.innerLastSaveFailed;
     },
     $effects() : Array<Effect> {
@@ -420,18 +369,18 @@ export default {
 
       return effects
     },
-    $pathService: function() {
+    $pathService() {
       return this.pathService || new PathService;
     },
-    isReloadPossible: function() {
+    isReloadPossible() {
       return this.auto || (this.path != null);
     },
-    isNested: function() {
+    isNested() {
       return !!this.path;
     }
   },
   methods: {
-    forceReload: function(options = {
+    forceReload(options = {
         boot: false
       }) {
       if (!this.auto) {
@@ -447,16 +396,21 @@ export default {
         this.reloadSources();
         return;
       }
-      this.$emit('before-load');
-      this.setSyncProp('fetching', true);
-      return Promise.all([this.reloadSources(), this.reloadResource()]).then(() => {
-        return this.$emit('after-load-success');
-      }).finally(() => {
-        this.setSyncProp('errors', {});
-        return this.setSyncProp('fetching', false);
-      });
+      this.$emit('before-load')
+      this.setSyncProp('fetching', true)
+
+      Promise.all([this.reloadResource()])
+        .then(() => this.$nextTick())
+        .then(this.reloadSources)
+        .then(() => this.$emit('after-load-success'))
+        .finally(() => {
+          this.setSyncProp('errors', {});
+          this.setSyncProp('fetching', false);
+        })
     },
-    reloadSources: function() {
+    reloadSources() {
+      console.log('reloadSources', this.requiredSources)
+
       if (!this.isReloadPossible) {
         return console.warn("Reload methods is applicable only to auto-forms");
       }
@@ -464,7 +418,7 @@ export default {
         return this.$emit('reload-sources');
       }
       if (Object.keys(this.requiredSources).length === 0) {
-        return;
+        return
       }
 
       const sourceNames = Object.keys(this.requiredSources)
@@ -476,22 +430,20 @@ export default {
         return this.setSyncProp('sources', sources);
       })
     },
-    reloadResource: function(modifier) {
+    reloadResource(modifier) {
       if (!this.isReloadPossible) {
         return console.warn("Reload methods is applicable only to auto-forms");
       }
       if (this.isNested) {
         if (this.tailPath) {
           const nestedPath = toPath(this.tailPath);
-          modifier = modifier instanceof Array ? modifier.map(function(m) {
-            return `${nestedPath}.${m}`;
-          }) : [nestedPath];
+          modifier = modifier instanceof Array ? modifier.map(m => `${nestedPath}.${m}`) : [nestedPath]
         }
         return this.$emit('reload-resource', modifier);
       }
-      return this.reloadRootResource(modifier);
+      return this.reloadRootResource(modifier)
     },
-    reloadRootResource: function(modifier) {
+    reloadRootResource(modifier) {
       if (this.isNested) {
         return this.$emit('reload-root-resource', modifier);
       }
@@ -521,7 +473,7 @@ export default {
         }
       });
     },
-    setSyncProp: function(name, value) {
+    setSyncProp(name, value) {
       this[`inner${capitalizeFirst(camelize(name))}`] = value;
       this.$emit(`update:${name}`, value);
       if (name === 'sources') { // for deprecated prop sources sync
@@ -544,7 +496,7 @@ export default {
     isNew(){
       return this.single ? false : !this.resourceId()
     },
-    submit: function() {
+    submit() {
       // let onChange inputs change the model
       return this.$nextTick(() => {
         this.$emit('before-submit', {
@@ -587,7 +539,7 @@ export default {
         }).catch(console.error);
       });
     },
-    preserialize: function() {
+    preserialize() {
       var children, name, ref, resource;
       resource = cloneDeep(this.$resource);
       ref = this.form.$pathService.root;
@@ -598,11 +550,11 @@ export default {
       }
       return resource;
     },
-    deserialize: function(json) {},
-    setResource: function(resource) {
+    deserialize(json) {},
+    setResource(resource) {
       return this.setSyncProp('resource', resource);
     },
-    executeAction: function(name, {params, data, method = 'post', url} = {}) {
+    executeAction(name, {params, data, method = 'post', url} = {}) {
       let result = null
       this.setActionPending(name, true);
   
@@ -650,20 +602,22 @@ export default {
 
       return effectPerformed
     },
-    setActionResult: function(name, result) {
+    setActionResult(name, result) {
       this.setSyncProp('actionResults', {
         ...this.$actionResults,
         [name]: result
       });
       return this.setActionPending(name, false);
     },
-    setActionPending: function(name, inProgress) {
+    setActionPending(name, inProgress) {
       return this.setSyncProp('actionPendings', {
         ...this.$actionPendings,
         [name]: inProgress
       });
     },
-    requireSource: function(name) {
+    requireSource(name) {
+      console.log('requireSource')
+
       if(this.isNested){
         this.$emit('require-source', name)
         return
@@ -671,20 +625,81 @@ export default {
       if (this.$sources && this.$sources[name]) {
         return this.$sources[name];
       }
-      if (!this.requiredSources[name] && this.innerResource) {
+
+      console.log(this.innerResource)
+
+      if (!this.requiredSources[name] && this.innerSources) {
         this.executeEffectAction('onLoadSource', true, [name]).then((sourceCollection) => {
           return this.form.addToSources(name, sourceCollection);
         });
       }
       return this.requiredSources[name] = true;
     },
-    addToSources: function(name, value) {
+    addToSources(name, value) {
       if (!this.innerSources) {
         return this.setSyncProp('sources', {
           [`${name}`]: value
         });
       }
       return this.$set(this.innerSources, name, value);
+    },
+    mountEffects(){
+      const listenerNames = [
+        'onLoad',
+        'onSave',
+        'onExecuteAction',
+        'onLoadSource',
+        'onLoadSources',
+        'onCreate',
+        'onCreated',
+        'onUpdate'
+      ]
+  
+      this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
+        const instantiatedEffect : InstantiatedEffect = {
+          listeners: listenerNames.reduce((listeners, eventName) => {
+            listeners[eventName] = null
+  
+            return listeners
+          }, {} as Record<EffectListenerNames, (...args: any) => any>),
+          customEventListeners: {},
+          api
+        }
+  
+        const resourceName  = () => camelCase(this.name.split("::")[0])
+        const urlResourceName = () => decamelize(this.name.split("::")[0])
+        const urlResourceCollectionName = () => pluralize(urlResourceName())
+  
+        effect({
+          ...listenerNames.reduce((setters, eventName) => {
+            setters[eventName] = (listener) => {
+              instantiatedEffect.listeners[eventName] = listener
+            }
+    
+            return setters
+          }, {} as Record<EffectListenerNames, (...args: any) => any>),
+          on(eventName, listener){
+            instantiatedEffect.customEventListeners[eventName] ||= []
+            instantiatedEffect.customEventListeners[eventName].push(listener)
+          },
+          emit(eventName, payload){
+            const event = new VrfEvent(eventName, payload)
+  
+            this.instantiatedEffects.find((instantiatedEffect) => instantiatedEffect.customEventListeners.find((listener) => {
+              listener(event)
+  
+              return event.isStopped()
+            })
+            )
+          },
+          resourceName,
+          urlResourceName,
+          urlResourceCollectionName,
+          form: this
+        })
+  
+        return instantiatedEffect
+      })
     }
   }
 }

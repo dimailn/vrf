@@ -29,7 +29,8 @@ describe 'form', ->
 
   def('idFromRoute', -> -> 1)
   def('save', => jest.fn -> Promise.resolve([true, null]))
-  def('loadSources', -> jest.fn -> Promise.resolve({
+  def('sources', -> 
+    {
       roles: [
         {
           id: 'admin'
@@ -46,20 +47,30 @@ describe 'form', ->
           title: 'Some type'
         }
       ]
-    })
+      categories: [
+        {
+          id: 1
+          title: 'Category 1'
+        }
+        {
+          id: 2
+          title: 'Category 2'
+        }
+      ]
+    }
   )
-  def('loadSource', -> jest.fn -> Promise.resolve(
-    [
-      {
-        id: 1
-        title: 'Category 1'
-      }
-      {
-        id: 2
-        title: 'Category 2'
-      }
-    ]
-  ))
+  def('loadSources', -> jest.fn (names) -> 
+    Promise.resolve(
+      Object.entries($sources)
+        .filter(([name, options]) -> names.includes(name))
+        .reduce(
+          (sources, [name, options]) -> sources[name] = options; sources
+          {}  
+        )
+    )
+  )
+  def('loadSource', (name) -> jest.fn (name) -> Promise.resolve($sources[name]))
+
   def('load', -> jest.fn -> Promise.resolve({id: 1, title: 'Test'}))
   def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
 
@@ -324,7 +335,6 @@ describe 'form', ->
         expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
 
         formSources = $wrapper.vm.$children[0].$sources
-
         expect(formSources.roles.length).toBe 2
         expect(formSources.types.length).toBe 1
 
