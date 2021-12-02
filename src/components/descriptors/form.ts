@@ -529,9 +529,11 @@ export default {
                 throw '[vrf] onCreate handler must return id of created resource when it succeed'
               }
 
-              this.executeEffectAction('onCreated', false, [
-                new VrfEvent('onCreated', {id})
-              ])
+              if(ok) {
+                this.executeEffectAction('onCreated', false, [
+                  new VrfEvent('onCreated', {id})
+                ])
+              }
 
               return [ok, id]
             })
