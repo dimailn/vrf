@@ -32,6 +32,9 @@ export default function(components) {
   return {
     install: function(Vue, options = {}) {
       var base, component, name;
+      
+      Vue.prototype.VueResourceForm || (Vue.prototype.VueResourceForm = {})
+
       if (process.env.NODE_ENV === 'development') {
         console.log(`[vrf] v.${__VERSION__}`);
       }
@@ -122,8 +125,7 @@ export default function(components) {
       Object.keys(installedComponents).forEach(name => Vue.component(name, installedComponents[name]))
 
 
-      Vue.component(name, component);
-      Vue.prototype.VueResourceForm || (Vue.prototype.VueResourceForm = {})
+      Vue.component(name, component)
       Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor
 
       if (options == null) {
