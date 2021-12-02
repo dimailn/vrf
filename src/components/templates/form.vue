@@ -1,7 +1,14 @@
 <template>
 <form @submit.prevent>
-  <slot v-if="!$scopedSlots.default" />
-  <slot :$resource="resource" v-else-if="$resource" />
+  <component :is="$loader" v-if="(auto && $fetching || !$resource) && $loader" />
+
+  <slot v-if="!$scopedSlots.default && $resource" v-show="$resource && !$fetching" />
+
+  <slot 
+    :$resource="$resource" 
+    v-else-if="$resource" 
+    v-show="$resource && !$fetching" 
+  />
 </form>
 </template>
 

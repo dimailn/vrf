@@ -130,12 +130,11 @@ export default function(components) {
         return;
       }
       
-      ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale'].forEach(function(optionName) {
+      ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale', 'loader'].forEach((optionName) => {
         if (options[optionName]) {
-          console.log(optionName)
           Vue.prototype.VueResourceForm[optionName] = options[optionName]
         }
-      });
+      })
     }
-  };
-};
+  }
+}

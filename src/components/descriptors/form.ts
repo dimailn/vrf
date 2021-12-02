@@ -377,6 +377,9 @@ export default {
     },
     isNested() {
       return !!this.path;
+    },
+    $loader(){
+      return this.VueResourceForm.loader
     }
   },
   methods: {
@@ -416,6 +419,7 @@ export default {
         return this.$emit('reload-sources');
       }
       if (Object.keys(this.requiredSources).length === 0) {
+        this.setSyncProp('sources', {})
         return
       }
 
