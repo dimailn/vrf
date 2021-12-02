@@ -409,8 +409,6 @@ export default {
         })
     },
     reloadSources() {
-      console.log('reloadSources', this.requiredSources)
-
       if (!this.isReloadPossible) {
         return console.warn("Reload methods is applicable only to auto-forms");
       }
@@ -491,7 +489,14 @@ export default {
 
       const idFromRoute = this.VueResourceForm.idFromRoute || ((form) => form.$route?.params?.id)
 
-      return idFromRoute(this)
+      const id = idFromRoute(this)
+
+
+      if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
+        console.warn('[vrf] Resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly.')
+      }
+
+      return id
     },
     isNew(){
       return this.single ? false : !this.resourceId()
@@ -616,8 +621,6 @@ export default {
       });
     },
     requireSource(name) {
-      console.log('requireSource')
-
       if(this.isNested){
         this.$emit('require-source', name)
         return
@@ -625,8 +628,6 @@ export default {
       if (this.$sources && this.$sources[name]) {
         return this.$sources[name];
       }
-
-      console.log(this.innerResource)
 
       if (!this.requiredSources[name] && this.innerSources) {
         this.executeEffectAction('onLoadSource', true, [name]).then((sourceCollection) => {
