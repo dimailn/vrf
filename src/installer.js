@@ -132,7 +132,7 @@ export default function(components) {
         return;
       }
       
-      ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale', 'loader'].forEach((optionName) => {
+      ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale', 'loader', 'idFromRoute'].forEach((optionName) => {
         if (options[optionName]) {
           Vue.prototype.VueResourceForm[optionName] = options[optionName]
         }
