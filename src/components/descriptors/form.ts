@@ -487,17 +487,13 @@ export default {
         return this.rfId
       }
 
-      if(this.$resource?.id){
-        return this.$resource.id
-      }
-
       const idFromRoute = this.VueResourceForm.idFromRoute || ((form) => form.$route?.params?.id)
 
       const id = idFromRoute(this)
 
 
       if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
-        console.warn('[vrf] Resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly.')
+        console.warn('[vrf] You don\'t specify rf-id prop. In this case vrf use idFromRouter helper, but resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly.')
       }
 
       return id
