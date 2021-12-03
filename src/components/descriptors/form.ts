@@ -23,7 +23,7 @@ import {
 
 import VueProvideObservable from 'vue-provide-observable';
 
-import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames} from '../../types/effect'
+import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames, Event, Message} from '../../types/effect'
 import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
 
@@ -676,32 +676,42 @@ export default {
         const resourceName  = () => camelCase(this.name.split("::")[0])
         const urlResourceName = () => decamelize(this.name.split("::")[0])
         const urlResourceCollectionName = () => pluralize(urlResourceName())
+
+        const on = (eventName, listener) => {
+          instantiatedEffect.customEventListeners[eventName] ||= []
+          instantiatedEffect.customEventListeners[eventName].push(listener)
+        }
+
+        const emit = (eventName, payload) => {
+          const event = new VrfEvent(eventName, payload)
+
+          this.instantiatedEffects.find((instantiatedEffect) => instantiatedEffect.customEventListeners.find((listener) => {
+            listener(event)
+
+            return event.isStopped()
+          })
+          )
+        }
+
+        const showMessage = (message: Message) => emit('message', message)
+        const onShowMessage = (listener: (listener: Event<Message>) => void) => on('message', listener)
   
         effect({
           ...listenerNames.reduce((setters, eventName) => {
             setters[eventName] = (listener) => {
               instantiatedEffect.listeners[eventName] = listener
             }
-    
+  
             return setters
           }, {} as Record<EffectListenerNames, (...args: any) => any>),
-          on(eventName, listener){
-            instantiatedEffect.customEventListeners[eventName] ||= []
-            instantiatedEffect.customEventListeners[eventName].push(listener)
+          
+          strings: {
+            resourceName,
+            urlResourceName,
+            urlResourceCollectionName,
           },
-          emit(eventName, payload){
-            const event = new VrfEvent(eventName, payload)
-  
-            this.instantiatedEffects.find((instantiatedEffect) => instantiatedEffect.customEventListeners.find((listener) => {
-              listener(event)
-  
-              return event.isStopped()
-            })
-            )
-          },
-          resourceName,
-          urlResourceName,
-          urlResourceCollectionName,
+          showMessage,
+          onShowMessage,
           form: this
         })
   

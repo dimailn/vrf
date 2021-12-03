@@ -12,7 +12,7 @@ interface ExecuteActionOptions {
     url?: string
 }
 
-interface Event<T> {
+export interface Event<T> {
   payload: T
   eventName: string
   stopPropagation: () => void
@@ -21,6 +21,11 @@ interface Event<T> {
 type EffectCustomEvent = Event<any>
 
 type Id = number | string
+
+export interface Message {
+  text: string
+  type?: 'success' | 'error' | 'info'
+}
 
 export interface EffectContextBuiltinListeners {
   onLoad: (listener: (id: Id) => Promise<OnLoadResult> | void) => void
@@ -31,15 +36,17 @@ export interface EffectContextBuiltinListeners {
   onLoadSource: (listener: (sourceName: string) => Promise<object> | void) => void
   onLoadSources: (listener: (sourceNames: Array<string>) => Promise<object> | void) => void
   onExecuteAction: (listener: (actionName: string, options: ExecuteActionOptions) => Promise<any> | void) => void
+  onShowMessage: (listener: (event: Event<Message>) => void) => void
 }
 
 type EffectContext = {
-    on: (eventName: string, listener: (event: EffectCustomEvent) => void) => void
-    emit: (eventName: string, payload: any) => void
+  strings: {
     resourceName:  () => string
     urlResourceName: () => string
     urlResourceCollectionName: () => string
-    form: any
+  }
+  form: any
+  showMessage: (message: Message) => void
 } & EffectContextBuiltinListeners
 
 export type EffectExecutor = (context: EffectContext) => void
