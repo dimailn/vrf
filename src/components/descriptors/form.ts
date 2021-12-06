@@ -760,7 +760,7 @@ export default {
         const emit = (eventName, payload) => {
           const event = new VrfEvent(eventName, payload)
 
-          this.instantiatedEffects.find((instantiatedEffect) => instantiatedEffect.customEventListeners.find((listener) => {
+          this.instantiatedEffects.find((instantiatedEffect) => instantiatedEffect.customEventListeners[eventName]?.find((listener) => {
             listener(event)
 
             return event.isStopped()
