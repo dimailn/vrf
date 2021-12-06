@@ -364,7 +364,8 @@ describe 'form', ->
         )
         def('select', -> $wrapper.find("select"))
 
-        beforeEach -> $wrapper.vm.options = 'types'
+        beforeEach ->
+          $wrapper.vm.options = 'types'
 
         it 'contains types', ->
           expect($select.vm.$_options).toEqual(

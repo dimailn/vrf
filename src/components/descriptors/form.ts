@@ -246,7 +246,8 @@ export default {
       innerActionResults: {},
       innerActionPendings: {},
       innerLastSaveFailed: false,
-      requiredSources: {}
+      requiredSources: {},
+      sourcesLoaded: false
     };
   },
   watch: {
@@ -263,7 +264,7 @@ export default {
     },
     $effects(){
       console.log('$effects changed, mount effects...')
-      
+
       this.executeEffectActionOptional('onUnmounted', false, [])
 
       this.mountEffects()
@@ -427,6 +428,7 @@ export default {
       }
       if (Object.keys(this.requiredSources).length === 0) {
         this.setSyncProp('sources', {})
+        this.sourcesLoaded = true
         return
       }
 
@@ -436,7 +438,8 @@ export default {
         if (Object.keys(this.$sources).length > 0) {
           sources = {...this.$sources, ...sources};
         }
-        return this.setSyncProp('sources', sources);
+        this.setSyncProp('sources', sources)
+        this.sourcesLoaded = true
       })
     },
     reloadResource(modifier) {
@@ -638,9 +641,11 @@ export default {
         return this.$sources[name];
       }
 
-      if (!this.requiredSources[name] && this.innerSources) {
+      this.addToSources(name, [])
+
+      if (!this.requiredSources[name] && this.sourcesLoaded) {
         this.executeEffectAction('onLoadSource', true, [name]).then((sourceCollection) => {
-          return this.form.addToSources(name, sourceCollection);
+          return this.addToSources(name, sourceCollection);
         });
       }
       return this.requiredSources[name] = true;
