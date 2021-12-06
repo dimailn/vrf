@@ -427,7 +427,8 @@ export default {
         return this.$emit('reload-sources');
       }
       if (Object.keys(this.requiredSources).length === 0) {
-        this.setSyncProp('sources', {})
+        !this.$sources && this.setSyncProp('sources', {})
+        
         this.sourcesLoaded = true
         return
       }
