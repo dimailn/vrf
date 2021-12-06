@@ -260,6 +260,13 @@ export default {
         return;
       }
       return this.innerResource = null;
+    },
+    $effects(){
+      console.log('$effects changed, mount effects...')
+      
+      this.executeEffectActionOptional('onUnmounted', false, [])
+
+      this.mountEffects()
     }
   },
   mounted() {
@@ -655,7 +662,9 @@ export default {
         'onLoadSources',
         'onCreate',
         'onCreated',
-        'onUpdate'
+        'onUpdate',
+        'onMounted',
+        'onUnmounted'
       ]
   
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
@@ -713,6 +722,8 @@ export default {
   
         return instantiatedEffect
       })
+
+      this.executeEffectActionOptional('onMounted', false, [])
     }
   }
 }

@@ -37,6 +37,8 @@ export interface EffectContextBuiltinListeners {
   onLoadSources: (listener: (sourceNames: Array<string>) => Promise<object> | void) => void
   onExecuteAction: (listener: (actionName: string, options: ExecuteActionOptions) => Promise<any> | void) => void
   onShowMessage: (listener: (event: Event<Message>) => void) => void
+  onMounted: (listener: () => void) => void
+  onUnmounted: (listener: () => void) => void
 }
 
 type EffectContext = {
