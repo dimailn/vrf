@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-import Vrf, {Effect} from '..//'
+import Vrf from '../src'
 import sources from './sources'
 
 Vue.config.productionTip = false
