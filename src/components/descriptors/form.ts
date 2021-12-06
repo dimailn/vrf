@@ -270,6 +270,9 @@ export default {
       this.mountEffects()
     }
   },
+  beforeDestroy(){
+    this.executeEffectActionOptional('onUnmounted', false, [])
+  },
   render(h){
     const genForm = (children?: any) => h(
       'form', {
