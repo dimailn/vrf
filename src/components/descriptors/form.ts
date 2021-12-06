@@ -270,6 +270,67 @@ export default {
       this.mountEffects()
     }
   },
+  render(h){
+    const genForm = (children?: any) => h(
+      'form', {
+        on: { submit: (e) => e.preventDefault() }
+      },
+      children
+    )
+
+    if(this.isNested){
+      if(this.$slots.default.length > 1) {
+        genForm(this.$slots.default)
+      } else {
+        return this.$slots.default 
+      }
+    }
+
+    if(!this.$resource){
+      return genForm()
+    }
+
+    const show = !this.$fetching
+    const options =           {
+      directives: [
+        {
+          name: 'show',
+          value: show
+        }
+      ]
+    }
+
+    const children = []
+
+    if((this.auto && this.$fetching || !this.$resource) && this.$loader){
+      children.push(
+        h(
+          this.$loader,
+          {}
+        )
+      )
+    }
+    
+    if(this.$scopedSlots.default){
+      children.push(
+        h(
+          'div', 
+          options,
+          this.$scopedSlots.default({$resource: this.$resource})
+        )
+      )
+    } else {
+      children.push(
+        h(
+          'div',
+          options,
+          this.$slots.default
+        )
+      )
+    }
+
+    return genForm(children)
+  },
   mounted() {
     this.mountEffects()
 
