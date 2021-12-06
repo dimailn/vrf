@@ -7,7 +7,7 @@ export default {
       return this.vrf.wrapper.resource;
     },
     $sources: function() {
-      return this.vrf.wrapper.sources;
+      return this.$form.$sources
     },
     resource: function() {
       console.warn('[vrf] Field resource in Resource mixin deprecated, use $resource instead.');
