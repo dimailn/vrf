@@ -25,7 +25,7 @@ export default {
       default: 'title'
     }
   },
-  mounted: function() {
+  created: function() {
     if (this.sourceMustBeRequired) {
       return this.$requireSource(this.options);
     }
@@ -72,9 +72,8 @@ export default {
         input: this.onChange
       };
     },
-    sourceMustBeRequired: function() {
-      var ref;
-      return typeof this.options === 'string' && !((ref = this.VueResourceForm.sources) != null ? ref[this.options] : void 0);
+    sourceMustBeRequired() {
+      return typeof this.options === 'string' && !(this.VueResourceForm.sources || {})[this.options]
     }
   },
   methods: {
