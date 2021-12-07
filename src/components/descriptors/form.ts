@@ -265,13 +265,13 @@ export default {
     $effects(){
       console.log('$effects changed, mount effects...')
 
-      this.executeEffectActionOptional('onUnmounted', false, [])
+      this.executeEffectEventOptional('onUnmounted', false, [])
 
       this.mountEffects()
     }
   },
   beforeDestroy(){
-    this.executeEffectActionOptional('onUnmounted', false, [])
+    this.executeEffectEventOptional('onUnmounted', false, [])
   },
   render(h){
     const genForm = (children?: any) => h(
@@ -421,11 +421,20 @@ export default {
           name: 'reload-on-create',
           effect: ({onCreated}) => {
             onCreated((event) => {
-              this.executeEffectAction('onLoad', true, [event.payload.id])
+              this.executeEffectEvent('onLoad', true, [event.payload.id])
             })
           }
         })
       }
+
+      effects.push({
+        name: 'message-trap',
+        effect: ({onShowMessage}) => {
+          onShowMessage(({payload: {text}}) => {
+            console.warn(`[vrf] Message "${text}" was emitted for form ${this.name}, but there is no effect to handle it. Probably, you should add effect to show messages.`)
+          })
+        }
+      })
 
       if(typeof this.api === 'function') {
         effects.unshift(this.api)
@@ -499,7 +508,7 @@ export default {
 
       const sourceNames = Object.keys(this.requiredSources)
 
-      return this.executeEffectAction('onLoadSources', true, [sourceNames]).then((sources) => {
+      return this.executeEffectEvent('onLoadSources', true, [sourceNames]).then((sources) => {
         if (Object.keys(this.$sources).length > 0) {
           sources = {...this.$sources, ...sources};
         }
@@ -529,7 +538,14 @@ export default {
         return
       }
 
-      return this.executeEffectAction('onLoad', true, [this.resourceId()]).then((resource) => {
+      return this.executeEffectEvent('onLoad', true, [this.resourceId()])
+      .then((resource) => {
+        resource = this.executeEffectEventFold('onAfterLoad', 'resource', resource)
+
+        if(!(resource && typeof resource === 'object')){
+          throw `[vrf] onAfterLoad handlers should return an object, but result is ${resource}`
+        }
+
         if (this.vuex) {
           this.$store.commit('vue-resource-form:set', {
             resourceName: this.name,
@@ -590,18 +606,24 @@ export default {
         }
         this.setSyncProp('saving', true);
 
-        let eventResult = this.executeEffectActionOptional('onSave', true, [this.$resource])
+        const resource = this.executeEffectEventFold('onBeforeSave', 'resource', this.preserialize())
+
+        if(!resource || typeof resource !== 'object') {
+          throw `[vrf] onBeforeSave handlers should return an object, but result is ${resource}`
+        }
+
+        let eventResult = this.executeEffectEventOptional('onSave', true, [resource])
 
         if(!(eventResult instanceof Promise)){
           eventResult = this.isNew() ?
-            this.executeEffectAction('onCreate', true, [this.$resource])
+            this.executeEffectEvent('onCreate', true, [resource])
             .then(([ok, id]) => {
               if(ok && !id){
                 throw '[vrf] onCreate handler must return id of created resource when it succeed'
               }
 
               if(ok) {
-                this.executeEffectAction('onCreated', false, [
+                this.executeEffectEvent('onCreated', false, [
                   new VrfEvent('onCreated', {id})
                 ])
               }
@@ -609,7 +631,7 @@ export default {
               return [ok, id]
             })
             :
-            this.executeEffectAction('onUpdate', true, [this.$resource])
+            this.executeEffectEvent('onUpdate', true, [resource])
         }
         
         return eventResult.then(([ok, errors]) => {
@@ -640,7 +662,7 @@ export default {
       let result = null
       this.setActionPending(name, true);
   
-      return this.executeEffectAction('onExecuteAction', true, [name, {params, data, method, url}]).then(({status, data}) => {
+      return this.executeEffectEvent('onExecuteAction', true, [name, {params, data, method, url}]).then(({status, data}) => {
         return result = {status, data};
       }).catch((e = {status, data}) => {
         if (!status) {
@@ -651,22 +673,28 @@ export default {
         return this.setActionResult(name, result);
       });
     },
-    executeEffectAction(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
-      const effectPerformed = this.executeEffectActionOptional(eventName, api, args)
+    executeEffectEvent(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
+      const effectResult = this.executeEffectEventOptional(eventName, api, args)
 
-      if(!(effectPerformed instanceof Promise) && api){
+      if(!(effectResult instanceof Promise) && api){
         throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`
       }
 
-      return effectPerformed
+      return effectResult
     },
-    executeEffectActionOptional(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
-      const effectPerformed = this.instantiatedEffects.reduce((result: Promise<any> | void, effect: InstantiatedEffect) =>  {
+    executeEffectEventOptional(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
+      return this.executeEffectEventAbstract((result, effect, stop) => {
+        const {api} = effect
         const listener : (...args: any) => any = effect.listeners[eventName]
 
-        const {api} = effect
+
+        if(args[0] instanceof VrfEvent && args[0].isStopped()){
+          stop()
+
+          return result
+        }
         
-        if(!listener || args[0] instanceof VrfEvent && args[0].isStopped()) {
+        if(!listener) {
           return result
         }
 
@@ -680,9 +708,48 @@ export default {
         }
 
         return result
-      }, null)
+      })
+    },
+    executeEffectEventFold(eventName: EffectListenerNames, payloadKey: string, payload){
+      return this.executeEffectEventAbstract((result, effect, stop) => {
+        const listener : (...args: any) => any = effect.listeners[eventName]
 
-      return effectPerformed
+        if(!listener) {
+          return result
+        }
+
+        const event = new VrfEvent(eventName, {[payloadKey]: result})
+        result = listener(event)
+
+        if(event.isStopped()){
+          stop()
+        }
+
+        return result
+      }, payload)
+    },
+    executeEffectEventAbstract(
+      lambda: (
+        result: Promise<any> | any,
+        effect: InstantiatedEffect,
+        stop: () => void
+      ) => any,
+      initialValue = null
+    ){
+      let result = initialValue
+      let stopped = false
+
+      const stop = () => stopped = true
+
+      for(let effect of this.instantiatedEffects){
+        result = lambda(result, effect, stop)
+
+        if(stopped){
+          break
+        }
+      }
+
+      return result
     },
     setActionResult(name, result) {
       this.setSyncProp('actionResults', {
@@ -709,7 +776,7 @@ export default {
       this.addToSources(name, [])
 
       if (!this.requiredSources[name] && this.sourcesLoaded) {
-        this.executeEffectAction('onLoadSource', true, [name]).then((sourceCollection) => {
+        this.executeEffectEvent('onLoadSource', true, [name]).then((sourceCollection) => {
           return this.addToSources(name, sourceCollection);
         });
       }
@@ -734,7 +801,9 @@ export default {
         'onCreated',
         'onUpdate',
         'onMounted',
-        'onUnmounted'
+        'onUnmounted',
+        'onAfterLoad',
+        'onBeforeSave'
       ]
   
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
@@ -793,7 +862,7 @@ export default {
         return instantiatedEffect
       })
 
-      this.executeEffectActionOptional('onMounted', false, [])
+      this.executeEffectEventOptional('onMounted', false, [])
     }
   }
 }

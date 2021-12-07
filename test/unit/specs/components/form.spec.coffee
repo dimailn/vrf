@@ -338,7 +338,7 @@ describe 'form', ->
         expect(formSources.roles.length).toBe 2
         expect(formSources.types.length).toBe 1
 
-      it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
+      it 'requireSource after form initial data loading loads one source through effect.loadSource', ->
         expect($loadSource.mock.calls.length).toBe 0
 
         form = $wrapper.vm.$children[0]
