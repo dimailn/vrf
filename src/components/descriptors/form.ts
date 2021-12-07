@@ -562,7 +562,7 @@ export default {
         return this.rfId
       }
 
-      const idFromRoute = this.VueResourceForm.idFromRoute || ((form) => form.$route?.params?.id)
+      const {idFromRoute} = this.VueResourceForm
 
       const id = idFromRoute(this)
 

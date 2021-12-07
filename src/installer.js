@@ -8,6 +8,9 @@ import {
   installer
 } from 'vue-provide-observable';
 
+import pluralize from 'pluralize'
+import {decamelize} from 'humps'
+
 const collectComponentProps = (component) => {
   let props = {}
 
@@ -128,6 +131,17 @@ export default function(components) {
       Vue.component(name, component)
       Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor
 
+      Vue.prototype.VueResourceForm.idFromRoute = (form) => {
+        const matches = location.pathname.match(RegExp((decamelize(pluralize(form.name.split("::")[0]))) + "\\/(\\d+)"))
+
+        const id = parseInt(matches && matches[1])
+        
+        if (isNaN(id)) {
+          return null
+        }
+        
+        return id
+      }
       if (options == null) {
         return;
       }
@@ -137,6 +151,8 @@ export default function(components) {
           Vue.prototype.VueResourceForm[optionName] = options[optionName]
         }
       })
+
+
     }
   }
 }
