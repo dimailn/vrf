@@ -509,6 +509,14 @@ export default {
       const sourceNames = Object.keys(this.requiredSources)
 
       return this.executeEffectEvent('onLoadSources', true, [sourceNames]).then((sources) => {
+        sources = Object.keys(sources).reduce((convertedSources, key) => {
+          const collection = sources[key]
+
+          convertedSources[key] = collection.map(this.executeOnAfterLoad)
+
+          return convertedSources
+        }, sources)
+
         if (Object.keys(this.$sources).length > 0) {
           sources = {...this.$sources, ...sources};
         }
@@ -540,11 +548,8 @@ export default {
 
       return this.executeEffectEvent('onLoad', true, [this.resourceId()])
       .then((resource) => {
-        resource = this.executeEffectEventFold('onAfterLoad', 'resource', resource)
+        resource = this.executeOnAfterLoad(resource)
 
-        if(!(resource && typeof resource === 'object')){
-          throw `[vrf] onAfterLoad handlers should return an object, but result is ${resource}`
-        }
 
         if (this.vuex) {
           this.$store.commit('vue-resource-form:set', {
@@ -750,6 +755,15 @@ export default {
       }
 
       return result
+    },
+    executeOnAfterLoad(resource: object){
+      resource = this.executeEffectEventFold('onAfterLoad', 'resource', resource)
+
+      if(!(resource && typeof resource === 'object')){
+        throw `[vrf] onAfterLoad handlers should return an object, but result is ${resource}`
+      }
+
+      return resource
     },
     setActionResult(name, result) {
       this.setSyncProp('actionResults', {
