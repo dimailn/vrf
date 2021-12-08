@@ -127,10 +127,16 @@ export default {
       */
     translationName: String,
     /**
-      * Activate action automation using api effects
+      * Activate action automation using api effects.
+      * You may specify the name of api effect to prioritize current effect.
+      * Also it's possible to pass current effect implementation ad hoc.
       */
     auto: {
-      type: Boolean,
+      type: [
+        Boolean,
+        String,
+        Function
+      ], // as PropType<boolean | string | EffectExecutor>,
       default: false
     },
     /**
@@ -194,15 +200,6 @@ export default {
     single: {
       type: Boolean,
       default: false
-    },
-    /**
-      * API effect identifier or custom effect implementation
-    */
-    api: {
-      type: [
-        String,
-        Object
-      ] // as PropType<string | EffectExecutor>
     },
     /**
       * Namespace for API
@@ -436,12 +433,12 @@ export default {
         }
       })
 
-      if(typeof this.api === 'function') {
-        effects.unshift(this.api)
-      } else if(typeof this.api === 'string') {
-        const prioritizedEffectIndex = effects.findIndex((effect) => effect.name === this.api)
+      if(typeof this.auto === 'function') {
+        effects.unshift(this.auto)
+      } else if(typeof this.auto === 'string') {
+        const prioritizedEffectIndex = effects.findIndex((effect) => effect.name === this.auto)
         if(!prioritizedEffectIndex) {
-          throw `[vrf] Effect with name ${this.api} isn't registered`
+          throw `[vrf] Effect with name ${this.auto} isn't registered`
         }
         const prioritizedEffect = effects[prioritizedEffectIndex]
         effects.splice(prioritizedEffectIndex, 1)
