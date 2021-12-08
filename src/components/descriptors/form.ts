@@ -435,9 +435,9 @@ export default {
 
       if(typeof this.auto === 'function') {
         effects.unshift(this.auto)
-      } else if(typeof this.auto === 'string') {
+      } else if(typeof this.auto === 'string' && this.auto !== '') {
         const prioritizedEffectIndex = effects.findIndex((effect) => effect.name === this.auto)
-        if(!prioritizedEffectIndex) {
+        if(prioritizedEffectIndex === -1) {
           throw `[vrf] Effect with name ${this.auto} isn't registered`
         }
         const prioritizedEffect = effects[prioritizedEffectIndex]
