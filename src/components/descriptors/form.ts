@@ -418,7 +418,7 @@ export default {
           name: 'reload-on-create',
           effect: ({onCreated}) => {
             onCreated((event) => {
-              this.executeEffectEvent('onLoad', true, [event.payload.id])
+              this.executeOnLoad()
             })
           }
         })
@@ -543,6 +543,9 @@ export default {
         return
       }
 
+      return this.executeOnLoad(modifier)
+    },
+    executeOnLoad(modifier){
       return this.executeEffectEvent('onLoad', true, [this.resourceId()])
       .then((resource) => {
         resource = this.executeOnAfterLoad(resource)
