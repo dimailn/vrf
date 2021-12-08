@@ -679,7 +679,7 @@ export default {
       const effectResult = this.executeEffectEventOptional(eventName, api, args)
 
 
-      if(!(effectResult instanceof Promise || effectResult === undefined)){
+      if(!(effectResult instanceof Promise || effectResult === undefined) && api){
         throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but effect's handler returned unexpected value. It should be a Promise or undefined, but ${effectResult} was returned.`
       }
 
