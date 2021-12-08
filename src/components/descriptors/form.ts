@@ -678,6 +678,11 @@ export default {
     executeEffectEvent(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
       const effectResult = this.executeEffectEventOptional(eventName, api, args)
 
+
+      if(!(effectResult instanceof Promise || effectResult === undefined)){
+        throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but effect's handler returned unexpected value. It should be a Promise or undefined, but ${effectResult} was returned.`
+      }
+
       if(!(effectResult instanceof Promise) && api){
         throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`
       }
