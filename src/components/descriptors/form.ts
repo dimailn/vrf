@@ -418,7 +418,7 @@ export default {
           name: 'reload-on-create',
           effect: ({onCreated}) => {
             onCreated((event) => {
-              this.executeOnLoad(event.payload.id)
+              return this.executeOnLoad(event.payload.id)
             })
           }
         })
@@ -628,9 +628,8 @@ export default {
               }
 
               if(ok) {
-                this.executeEffectEvent('onCreated', false, [
-                  new VrfEvent('onCreated', {id})
-                ])
+                this.setSyncProp('rfId', id)
+                return Promise.all(this.executeEffectEventMap('onCreated', {id})).then(() => [ok, id])
               }
 
               return [ok, id]
@@ -640,13 +639,13 @@ export default {
         }
         
         return eventResult.then(([ok, errors]) => {
-          this.innerLastSaveFailed = !ok;
-          this.setSyncProp('saving', false);
-          this.setSyncProp('errors', ok ? {} : errors);
-          this.$emit('after-submit');
-          return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure');
-        }).catch(console.error);
-      });
+          this.innerLastSaveFailed = !ok
+          this.setSyncProp('saving', false)
+          this.setSyncProp('errors', ok ? {} : errors)
+          this.$emit('after-submit')
+          return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
+        }).catch(console.error)
+      })
     },
     preserialize() {
       var children, name, ref, resource;
@@ -719,6 +718,29 @@ export default {
 
         return result
       })
+    },
+    executeEffectEventMap(eventName: EffectListenerNames, payload){
+      return this.executeEffectEventAbstract((result, effect, stop) => {
+        const listener : (...args: any) => any = effect.listeners[eventName]
+
+        if(!listener) {
+          return result
+        }
+
+
+        const event = new VrfEvent(eventName, payload)
+
+        const currentResult = listener(event)
+
+        result.push(currentResult)
+
+        if(event.isStopped()){
+          stop()
+        }
+
+        return result
+
+      }, [])
     },
     executeEffectEventFold(eventName: EffectListenerNames, payloadKey: string, payload){
       return this.executeEffectEventAbstract((result, effect, stop) => {
