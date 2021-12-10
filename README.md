@@ -309,10 +309,7 @@ export default {
 
 Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
 
-The logic of autoforms is in the middlewares, which are supplied separately from the vrf. Due to this, it is possible to realize the work of autoforms for the specifics of any project. You can use ready-made middleware or implement your own.
-
-
-Middlewares are set during initialization of forms, and there may be several of them. The form will use the first suitable middleware, the static ```accepts``` method is used to determine applicability. The form has a special prop ```transport``` that allows you to specify the preferred middleware (which should respond to a specific value of the prop ```transport```).
+Autoforms powered by Effects API which allows to create plugins in modular way. Due to this, it is possible to implement the flow of autoforms for the specifics of any project. You may use ready-made plugins or implement your own.
 
 
 ## Data loading control
@@ -546,15 +543,17 @@ API effects:
 * activated by the ```auto``` property of the ```rf-form```
 * executed for each event in order of registration in ```Vue.use(Vrf, {effects: [...]})``` until some effect returns promise
 * it's possible to choose effect by specify its name in ```api``` property of the ```rf-form```
-* by passing ```EffectExecutor``` to ```api``` property of the ```rf-form``` you may customize autoform logic ad-hoc
+* by passing ```EffectExecutor``` to ```auto``` property you may customize autoform logic ad-hoc
 
 non-API effects:
 * activated by the ```effects``` property of the ```rf-form```
 * executed for each event in order of registration
 * it's possible to specify effects for current form by passing array of names to the ```effects``` property
 
-Vrf runs effect executors after ```rf-form``` is mounted. Effect executor may subscribe to the neccessary events only once.
 
+### Lifecycle
+
+Effects are mounted after ```auto```/```effects``` props changing and initially after form mounting. Each remounting leads to ```onUnmounted``` effect event which may(and should) be used to clear some stuff, for example subscriptions.
 
 
 ```typescript
