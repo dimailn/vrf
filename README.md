@@ -617,6 +617,10 @@ You may implement data convertation after receiving resource from api effect and
 
 The listeners of these events are just mappers, which get object and return modified object. It's possible to use many converters in your application, they will be executed in the order of registrations in ```effects``` section.
 
+### User notifications
+
+There is a standard way to provide user notification customization using ```onShowMessage``` subscription. So, you may use ```showMessage``` helper to emit message from any effect using type definitions from vrf, and any notifications effect which uses ```onShowMessage``` subscription will be able to show this notifications.
+
 
 ## Adapter API
 
