@@ -605,7 +605,7 @@ There are some subscriptions for api effects:
 * ```onSave``` - is fired when form is submitted. It is optional subscription, instead you may use more convenient ```onCreate``` and ```onUpdate``` subscriptions.
 * ```onCreate``` - is fired when form creates new resource
 * ```onUpdate``` - is fire when form updates new resource
-* ```onCreated``` - is fired when ```onCreate``` returned an id of new created resource. There is default trap for this event, which reloads form data, but it's possible to override this behaviour by using ```event.stopPropagation()```
+* ```onCreated``` - is fired when ```onCreate``` returned an id of new created resource. There is a default trap for this event, which reloads form data, but it's possible to override this behaviour by using ```event.stopPropagation()```
 
 
 ### Data converters
