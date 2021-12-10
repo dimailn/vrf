@@ -6,7 +6,7 @@
 
     <h1> Simple form </h1>
     <div style="display: flex">
-      <rf-form :resource="todo" class="form">
+      <rf-form :resource="todo" class="form" v-slot="{}">
         <rf-input name="title" />
         <rf-checkbox name="status" />
         <rf-switch name="status" />

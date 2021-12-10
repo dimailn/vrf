@@ -1,8 +1,2 @@
-<template>
-<form @submit.prevent>
-  <slot v-if="$resource" />
-</form>
-</template>
-
-<script src="../descriptors/form.js" />
+<script src="../descriptors/form.ts" lang="ts" />
 

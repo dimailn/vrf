@@ -1,5 +1,3 @@
-var components;
-
 import RfCheckbox from './components/templates/checkbox';
 
 import RfInput from './components/templates/input';
@@ -38,7 +36,8 @@ import Resource from './mixins/resource';
 
 import installer from './installer';
 
-components = {
+
+const components = {
   RfCheckbox,
   RfSwitch: RfCheckbox,
   RfInput,

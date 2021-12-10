@@ -25,7 +25,7 @@ export default {
       default: 'title'
     }
   },
-  mounted: function() {
+  created: function() {
     if (this.sourceMustBeRequired) {
       return this.$requireSource(this.options);
     }
@@ -45,9 +45,19 @@ export default {
       return this.$originalDisabled;
     },
     $_options: function() {
-      var ref, ref1, ref2;
       if (typeof this.options === 'string') {
-        return this.$sources[this.options] || ((ref = this.$resource) != null ? ref[this.options] : void 0) instanceof Array && ((ref1 = this.$resource) != null ? ref1[this.options] : void 0) || ((ref2 = this.VueResourceForm.sources) != null ? ref2[this.options] : void 0);
+        const options = this.$sources[this.options] ||
+          this.$resource && this.$resource[this.options] instanceof Array && this.$resource[this.options] ||
+          this.VueResourceForm.sources && this.VueResourceForm.sources[this.options]
+
+        if(!options){
+          console.error(`[vrf] Can't resolve options "${this.options} for ${this.$form.name || 'Anonymous form'} -> ${this.name}".`)
+
+          return []
+        }
+
+        return options
+
       } else {
         return this.options;
       }
@@ -62,9 +72,8 @@ export default {
         input: this.onChange
       };
     },
-    sourceMustBeRequired: function() {
-      var ref;
-      return typeof this.options === 'string' && !((ref = this.VueResourceForm.sources) != null ? ref[this.options] : void 0);
+    sourceMustBeRequired() {
+      return typeof this.options === 'string' && !(this.VueResourceForm.sources || {})[this.options]
     }
   },
   methods: {

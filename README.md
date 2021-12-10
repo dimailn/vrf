@@ -56,7 +56,7 @@ Vue.use(Vrf, {
   - [Default props](#default-props)
 - [Advanced](#advanced)
   - [Architecture](#architecture)
-  - [Middleware API](#middleware-api)
+  - [Effects API](#effects-api)
   - [Adapter API](#adapter-api)
 
 
@@ -309,10 +309,7 @@ export default {
 
 Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
 
-The logic of autoforms is in the middlewares, which are supplied separately from the vrf. Due to this, it is possible to realize the work of autoforms for the specifics of any project. You can use ready-made middleware or implement your own.
-
-
-Middlewares are set during initialization of forms, and there may be several of them. The form will use the first suitable middleware, the static ```accepts``` method is used to determine applicability. The form has a special prop ```transport``` that allows you to specify the preferred middleware (which should respond to a specific value of the prop ```transport```).
+Autoforms powered by Effects API which allows to create plugins in modular way. Due to this, it is possible to implement the flow of autoforms for the specifics of any project. You may use ready-made effects or implement your own.
 
 
 ## Data loading control
@@ -538,51 +535,92 @@ Vrf is all about modularity, you may customize almost any part of it. The final 
 
 * Autocomplete providers - components containing autocompletes logic
 
-## Middleware API
+## Effects API
 
-Vrf creates an instance of middleware during form initialization. There are some middleware instance methods you neeed to implement:
+Vrf uses effects to deal with auto-forms lifecycle and side effects. There are two types of effects - API and non-API effects.
 
-* ```load``` - return Promise that resolves with resource
-* ```loadSources``` - this method is called when form is mounted and ready to eager load all sources for rendered components. It resolves with object where keys are source names and values are collections.
-* ```loadSource``` - it's called when some component need to require one source after eager loading and resolves with collection for this source
-* ```save``` - used to save form resource
+API effects:
+* activated by the ```auto``` property of the ```rf-form```
+* executed for each event in order of registration in ```Vue.use(Vrf, {effects: [...]})``` until some effect returns promise(this mechanic works only on ```onLoad```, ```onLoadSources```, ```onLoadSource```, ```onSave```, ```onCreate``` and ```onUpdate``` subscriptions)
+* it's possible to choose effect by specify its name in ```auto``` property of the ```rf-form```
+* by passing ```EffectExecutor``` to ```auto``` property you may customize autoform logic ad-hoc
 
-```javascript
+non-API effects:
+* activated by the ```effects``` property of the ```rf-form```
+* executed for each event in order of registration
+* it's possible to specify effects for current form by passing array of names to the ```effects``` property
 
-export default class FooMiddleware {
-  constructor(name, form){
-    this.name = name
-    this.form = form
-  }
+### Effect definition and using
 
-  static accepts({name, api, namespace}){ // determines if middleware is applicable for a given form
-    return true
-  }
+There are type definitions for more convenient developing effects. If you create a plugin, you should export an effect factory with default options to provide simple way to add new options in the future.
 
-  load(){
-    return Promise.resolve({})
-  }
+```typescript
 
-  loadSource(name) {
-    return Promise.resolve([])
-  }
-  
-  loadSources(names){
-    return Promise.resolve({})
-  }
-  
-  save(resource){
-    return Promise.resolve()
+// effect.ts
+import {Effect} from 'vrf'
+
+export default (options = {}) : Effect => {
+  return{
+    name: 'effect-name',
+    api: true,
+    effect({onLoad, onLoadSource, onLoadSources, onSave, }){
+      onLoad((id) => Promise.resolve({}))
+
+      onLoadSource((name) => Promise.resolve([]))
+
+      onLoadSources((names) => Promise.resolve({}))
+
+      onSave((resource) => Promise.resolve())
+    }
   }
 }
 
-const middlewares = [
-  FooMiddleware
+
+// initialization of vrf in project
+
+import Effect from './effect'
+
+const effects = [
+  Effect
 ]
 
-Vue.use(Vrf, {middlewares})
+Vue.use(Vrf, {effects})
 
 ```
+
+### Lifecycle
+
+Effects are mounted after ```auto```/```effects``` props changing and initially after form mounting. There are two effect lifecycle events:
+
+* ```onMounted``` - is fired on each effect mounting
+* ```onUnmounted``` - is fired on each effect unmounting(when managing props are changed or form is destroyed). This subscription should be used to clear some stuff, for example some side event listeners.
+
+### API effects
+
+There are some subscriptions for api effects:
+
+* ```onLoad``` - is fired when form loads the resource
+* ```onLoadSources``` - is fired when form loads the sources in eager way
+* ```onLoadSource``` - is fired when form loads only one source because of ```form.requireSource``` execution. It happens for example if ```rf-select``` appeared as a result of condition rendering
+* ```onSave``` - is fired when form is submitted. It is optional subscription, instead you may use more convenient ```onCreate``` and ```onUpdate``` subscriptions.
+* ```onCreate``` - is fired when form creates new resource
+* ```onUpdate``` - is fire when form updates new resource
+* ```onCreated``` - is fired when ```onCreate``` returned an id of new created resource. There is a default trap for this event, which reloads form data, but it's possible to override this behaviour by using ```event.stopPropagation()```
+
+
+### Data converters
+
+You may implement data convertation after receiving resource from api effect and before sending. For this purpose Effects API has two subscriptions:
+
+* ```onAfterLoad``` - is fired each time when vrf received entities from api effect(for resource and for each entity of sources)
+* ```onBeforeSave``` - is fired before resource will be saved
+
+The listeners of these events are just mappers, which get object and return modified object. It's possible to use many converters in your application, they will be executed in the order of registrations in ```effects``` section.
+
+### User notifications
+
+There is a standard way to provide user notification customization using ```onShowMessage``` subscription. So, you may use ```showMessage``` helper to emit message from any effect using type definitions from vrf, and any notifications effect which uses ```onShowMessage``` subscription will be able to show this notification.
+
 
 ## Adapter API
 

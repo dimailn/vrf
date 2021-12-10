@@ -18,7 +18,7 @@ const babelLoader = {
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './playground/index.coffee',
+    app: './playground/index.ts',
     lib: './src/index.js'
   },
   output: {
@@ -29,7 +29,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json', '.coffee', '.js'],
+    extensions: ['.js', '.vue', '.json', '.coffee', '.js', '.ts'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
@@ -76,6 +76,15 @@ module.exports = {
         options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /\.ts?$/,
+        use: {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true
+          }
         }
       }
     ]

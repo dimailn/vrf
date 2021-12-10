@@ -1,6 +1,6 @@
 {
   "name": "vrf",
-  "version": "0.50.0",
+  "version": "0.50.1-effects.22",
   "description": "",
   "author": "Dmitry Sadovsky <dimailn9@gmail.com>",
   "scripts": {
@@ -10,7 +10,8 @@
     "cov": "jest --config test/unit/jest.conf.js --coverage --no-cache",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit",
-    "build": "node build/build.js",
+    "build": "node build/build.js && npm run build:types",
+    "build:types": "tsc ./src/index.ts --outDir dist/static -d --emitDeclarationOnly",
     "pub": "npm run build && npm publish",
     "analyze": "webpack --config build/webpack.prod.conf.js --json > stats.json",
     "styleguide": "NODE_ENV=development vue-styleguidist server",
@@ -21,6 +22,7 @@
     "url": "git+https://github.com/dimailn/vrf"
   },
   "main": "dist/static/lib.js",
+  "types": "dist/static/index.d.ts",
   "dependencies": {
     "humps": "^2.0.1",
     "lodash.clonedeep": "^4.5.0",
@@ -68,6 +70,9 @@
     "selenium-server": "^3.0.1",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
+    "ts-jest": "^24.3.0",
+    "ts-loader": "^8.3.0",
+    "typescript": "^4.4.4",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue": "^2.6.11",

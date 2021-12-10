@@ -8,6 +8,9 @@ import {
   installer
 } from 'vue-provide-observable';
 
+import pluralize from 'pluralize'
+import {decamelize} from 'humps'
+
 const collectComponentProps = (component) => {
   let props = {}
 
@@ -32,6 +35,9 @@ export default function(components) {
   return {
     install: function(Vue, options = {}) {
       var base, component, name;
+      
+      Vue.prototype.VueResourceForm || (Vue.prototype.VueResourceForm = {})
+
       if (process.env.NODE_ENV === 'development') {
         console.log(`[vrf] v.${__VERSION__}`);
       }
@@ -122,17 +128,31 @@ export default function(components) {
       Object.keys(installedComponents).forEach(name => Vue.component(name, installedComponents[name]))
 
 
-      Vue.component(name, component);
-      (base = Vue.prototype).VueResourceForm || (base.VueResourceForm = {});
-      Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor;
+      Vue.component(name, component)
+      Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor
+
+      Vue.prototype.VueResourceForm.idFromRoute = (form) => {
+        const matches = location.pathname.match(RegExp((decamelize(pluralize(form.name.split("::")[0]))) + "\\/(\\d+)"))
+
+        const id = parseInt(matches && matches[1])
+        
+        if (isNaN(id)) {
+          return null
+        }
+        
+        return id
+      }
       if (options == null) {
         return;
       }
-      return ['translate', 'middlewares', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale'].forEach(function(optionName) {
-        if (options[optionName] != null) {
-          return Vue.prototype.VueResourceForm[optionName] = options[optionName];
+      
+      ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale', 'loader', 'idFromRoute'].forEach((optionName) => {
+        if (options[optionName]) {
+          Vue.prototype.VueResourceForm[optionName] = options[optionName]
         }
-      });
+      })
+
+
     }
-  };
-};
+  }
+}

@@ -24,10 +24,13 @@ sharedExamplesFor "non-auto mode warnings", ->
 
 describe 'form', ->
   beforeEach ->
-    Vue::VueResourceForm.middlewares = [$middleware]
+    Vue::VueResourceForm.effects = $effects
+    Vue::VueResourceForm.idFromRoute = $idFromRoute
 
+  def('idFromRoute', -> -> 1)
   def('save', => jest.fn -> Promise.resolve([true, null]))
-  def('loadSources', -> jest.fn -> Promise.resolve({
+  def('sources', -> 
+    {
       roles: [
         {
           id: 'admin'
@@ -44,31 +47,58 @@ describe 'form', ->
           title: 'Some type'
         }
       ]
-    })
+      categories: [
+        {
+          id: 1
+          title: 'Category 1'
+        }
+        {
+          id: 2
+          title: 'Category 2'
+        }
+      ]
+    }
   )
-  def('loadSource', -> jest.fn -> Promise.resolve(
+  def('loadSources', -> jest.fn (names) -> 
+    Promise.resolve(
+      Object.entries($sources)
+        .filter(([name, options]) -> names.includes(name))
+        .reduce(
+          (sources, [name, options]) -> sources[name] = options; sources
+          {}  
+        )
+    )
+  )
+  def('loadSource', (name) -> jest.fn (name) -> Promise.resolve($sources[name]))
+
+  def('load', -> jest.fn -> Promise.resolve({id: 1, title: 'Test'}))
+  def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
+
+
+
+  def('create', -> jest.fn -> ->)
+  def('update', -> jest.fn -> ->)
+  def('created', -> jest.fn -> ->)
+
+  def('effects', -> 
     [
       {
-        id: 1
-        title: 'Category 1'
-      }
-      {
-        id: 2
-        title: 'Category 2'
+        name: 'rest',
+        api: true,
+        effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction, onCreate, onCreated, onUpdate}) ->
+          onCreate($create)
+          onUpdate($update)
+          onSave($save)
+          onLoadSource($loadSource)
+          onLoadSources($loadSources)
+          onLoad($load)
+          onExecuteAction($executeAction)
+          onCreated($created)
       }
     ]
-  ))
-  def('load', -> jest.fn -> Promise.resolve({title: 'Test'}))
-  def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
-  def('middleware', -> class Middleware
-    constructor: (@name, @form) ->
-    @accepts: -> true
-    save: $save
-    loadSources: $loadSources
-    loadSource: $loadSource
-    executeAction: $executeAction
-    load: $load
   )
+  
+
 
   def('wrapper', ->
     mount(
@@ -210,13 +240,48 @@ describe 'form', ->
         )
 
 
-    it 'saves resource', ->
-      submit = $wrapper.find('.submit')
-      submit.trigger('click')
+    describe 'submit click', ->
+      beforeEach ->
+        submit = $wrapper.find('.submit')
+        submit.trigger('click')
 
-      await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
 
-      expect($save.mock.calls.length).toBe(1)
+      it 'saves resource', ->
+        expect($save.mock.calls.length).toBe(1)
+
+      describe 'no onSave', ->
+        def('save', -> null)
+        def('create', -> jest.fn -> Promise.resolve([true, 1]))
+        def('update', -> jest.fn -> Promise.resolve([true, null]))
+
+
+        describe 'onUpdate', ->
+          def('idFromRoute', -> -> 1)
+
+          it "updates", ->
+            expect($load.mock.calls.length).toBe 1 # data loading
+            expect($update.mock.calls.length).toBe(1)
+            expect($create.mock.calls.length).toBe(0)
+
+        describe 'onCreate without onCreated capture', ->
+          def('idFromRoute', -> -> null)
+
+          it "creates", ->
+            expect($load.mock.calls.length).toBe 1 # loading after create
+            expect($update.mock.calls.length).toBe(0)
+            expect($create.mock.calls.length).toBe(1)
+
+        describe "onCreate with onCreated capture", ->
+          def('idFromRoute', -> -> null)
+          def('created', -> jest.fn (e) ->  e.stopPropagation())
+
+          it "creates and doesn't reload", ->
+            expect($load.mock.calls.length).toBe 0
+            expect($update.mock.calls.length).toBe(0)
+            expect($create.mock.calls.length).toBe(1)
+
+
 
     it 'executes action', ->
       form = $wrapper.vm.$children[0]
@@ -270,11 +335,10 @@ describe 'form', ->
         expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
 
         formSources = $wrapper.vm.$children[0].$sources
-
         expect(formSources.roles.length).toBe 2
         expect(formSources.types.length).toBe 1
 
-      it 'requireSource after form initial data loading loads one source through middleware.loadSource', ->
+      it 'requireSource after form initial data loading loads one source through effect.loadSource', ->
         expect($loadSource.mock.calls.length).toBe 0
 
         form = $wrapper.vm.$children[0]
@@ -300,7 +364,8 @@ describe 'form', ->
         )
         def('select', -> $wrapper.find("select"))
 
-        beforeEach -> $wrapper.vm.options = 'types'
+        beforeEach ->
+          $wrapper.vm.options = 'types'
 
         it 'contains types', ->
           expect($select.vm.$_options).toEqual(
