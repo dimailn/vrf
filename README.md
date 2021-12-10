@@ -578,10 +578,10 @@ export default (options = {}) : Effect => {
 
 // initialization of vrf in project
 
-import Effect from './effect'
+import effect from './effect'
 
 const effects = [
-  Effect
+  effect()
 ]
 
 Vue.use(Vrf, {effects})
