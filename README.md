@@ -619,7 +619,7 @@ The listeners of these events are just mappers, which get object and return modi
 
 ### User notifications
 
-There is a standard way to provide user notification customization using ```onShowMessage``` subscription. So, you may use ```showMessage``` helper to emit message from any effect using type definitions from vrf, and any notifications effect which uses ```onShowMessage``` subscription will be able to show this notifications.
+There is a standard way to provide user notification customization using ```onShowMessage``` subscription. So, you may use ```showMessage``` helper to emit message from any effect using type definitions from vrf, and any notifications effect which uses ```onShowMessage``` subscription will be able to show this notification.
 
 
 ## Adapter API
