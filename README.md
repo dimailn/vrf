@@ -564,13 +564,13 @@ export default (options = {}) : Effect => {
     name: 'effect-name',
     api: true,
     effect({onLoad, onLoadSource, onLoadSources, onSave, }){
-      onLoad(() => Promise.resolve({}))
+      onLoad((id) => Promise.resolve({}))
 
       onLoadSource((name) => Promise.resolve([]))
 
       onLoadSources((names) => Promise.resolve({}))
 
-      onSave(() => Promise.resolve())
+      onSave((resource) => Promise.resolve())
     }
   }
 }
