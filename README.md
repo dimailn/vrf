@@ -562,6 +562,7 @@ import {Effect} from 'vrf'
 export default (options = {}) : Effect => {
   return{
     name: 'effect-name',
+    api: true,
     effect({onLoad, onLoadSource, onLoadSources, onSave, }){
       onLoad(() => Promise.resolve({}))
 
