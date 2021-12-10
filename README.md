@@ -541,8 +541,8 @@ Vrf uses effects to deal with auto-forms lifecycle and side effects. There are t
 
 API effects:
 * activated by the ```auto``` property of the ```rf-form```
-* executed for each event in order of registration in ```Vue.use(Vrf, {effects: [...]})``` until some effect returns promise
-* it's possible to choose effect by specify its name in ```api``` property of the ```rf-form```
+* executed for each event in order of registration in ```Vue.use(Vrf, {effects: [...]})``` until some effect returns promise(this mechanic works only on ```onLoad```, ```onLoadSources```, ```onLoadSource```, ```onSave```, ```onCreate``` and ```onUpdate``` subscriptions)
+* it's possible to choose effect by specify its name in ```auto``` property of the ```rf-form```
 * by passing ```EffectExecutor``` to ```auto``` property you may customize autoform logic ad-hoc
 
 non-API effects:
@@ -550,29 +550,29 @@ non-API effects:
 * executed for each event in order of registration
 * it's possible to specify effects for current form by passing array of names to the ```effects``` property
 
+### Effect definition and using
 
-### Lifecycle
-
-Effects are mounted after ```auto```/```effects``` props changing and initially after form mounting. Each remounting leads to ```onUnmounted``` effect event which may(and should) be used to clear some stuff, for example subscriptions.
-
+There are type definitions for more convenient developing effects. If you create a plugin, you should export an effect factory with default options to provide simple way to add new options in the future.
 
 ```typescript
 
 // effect.ts
 import {Effect} from 'vrf'
 
-export default {
-  name: 'effect-name',
-  effect({onLoad, onLoadSource, onLoadSources, onSave, }){
-    onLoad(() => Promise.resolve({}))
-    
-    onLoadSource((name) => Promise.resolve([]))
-    
-    onLoadSources((names) => Promise.resolve({}))
-    
-    onSave(() => Promise.resolve())
+export default (options = {}) : Effect => {
+  return{
+    name: 'effect-name',
+    effect({onLoad, onLoadSource, onLoadSources, onSave, }){
+      onLoad(() => Promise.resolve({}))
+
+      onLoadSource((name) => Promise.resolve([]))
+
+      onLoadSources((names) => Promise.resolve({}))
+
+      onSave(() => Promise.resolve())
+    }
   }
-} as Effect
+}
 
 
 // initialization of vrf in project
@@ -586,6 +586,36 @@ const effects = [
 Vue.use(Vrf, {effects})
 
 ```
+
+### Lifecycle
+
+Effects are mounted after ```auto```/```effects``` props changing and initially after form mounting. There are two effect lifecycle events:
+
+* ```onMounted``` - is fired on each effect mounting
+* ```onUnmounted``` - is fired on each effect unmounting(when managing props are changed or form is destroyed). This subscription should be used to clear some stuff, for example some side event listeners.
+
+### API effects
+
+There are some subscriptions for api effects:
+
+* ```onLoad``` - is fired when form loads the resource
+* ```onLoadSources``` - is fired when form loads the sources in eager way
+* ```onLoadSource``` - is fired when form loads only one source because of ```form.requireSource``` execution. It happens for example if ```rf-select``` appeared as a result of condition rendering
+* ```onSave``` - is fired when form is submitted. It is optional subscription, instead you may use more convenient ```onCreate``` and ```onUpdate``` subscriptions.
+* ```onCreate``` - is fired when form creates new resource
+* ```onUpdate``` - is fire when form updates new resource
+* ```onCreated``` - is fired when ```onCreate``` returned an id of new created resource. There is default trap for this event, which reloads form data, but it's possible to override this behaviour by using ```event.stopPropagation()```
+
+
+### Data converters
+
+You may implement data convertation after receiving resource from api effect and before sending. For this purpose Effects API has two subscriptions:
+
+* ```onAfterLoad``` - is fired each time when vrf received entities from api effect(for resource and for each entity of sources)
+* ```onBeforeSave``` - is fired before resource will be saved
+
+The listeners of these events are just mappers, which get object and return modified object. It's possible to use many converters in your application, they will be executed in the order of registrations in ```effects``` section.
+
 
 ## Adapter API
 
