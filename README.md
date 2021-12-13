@@ -531,7 +531,7 @@ Vrf is all about modularity, you may customize almost any part of it. The final 
 
 * Translate lambda - function with ```(modelProperty, modelName) -> translation``` signature, used for translations
 
-* Middlewares - components containing autoforms logic
+* Effects - autoforms logic and side effects
 
 * Autocomplete providers - components containing autocompletes logic
 
