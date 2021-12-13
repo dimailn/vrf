@@ -46,6 +46,7 @@ Vue.use(Vrf, {
   - [Object binding](#object-binding)
   - [Access to the resource](#access-to-the-resource)
   - [Where is the resource?](#where-is-the-resource)
+  - [Conditional rendering](#conditional-rendering)
   - [Sources](#sources)
   - [Nested entities](#nested-entities)
   - [Autoforms](#autoforms)
@@ -214,6 +215,28 @@ The resource can be in three places:
 * in the state of the parent component for the form
 * in the state of form(this happens in autoforms, or for example if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
 * in vuex
+
+## Conditional rendering
+
+Vrf doesn't have it's own mechanics to handle conditional rendering(some old things are deprecated and will be removed soon). It uses natural Vue conditional rendering mechanics instead, because they are universal and don't limit standard Vue functionality - you may use them on any element/any prop.
+
+The standard way is using scoped slot on ```rf-form``` in main form file
+
+```vue
+
+<rf-form
+  name="Todo"
+  v-slot="{$resource}"
+>
+  <rf-input name="title" :disabled="$resource.id" />
+</rf-form>
+
+```
+
+It won't fail if ```$resource``` is not loaded yet, because scoped slot is rendered only after ```$resource``` is loaded. All required sources are initialized using empty arrays, so using ```$sources``` reference is safe as well.
+
+If your form is splitted into files and you need conditional rendering in the file without ```rf-form``` - you should use ```rf-resource``` component to access the resource.
+
 
 
 ## Sources
