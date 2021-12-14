@@ -638,7 +638,7 @@ You may implement data convertation after receiving resource from api effect and
 * ```onAfterLoad``` - is fired each time when vrf received entities from api effect(for resource and for each entity of sources)
 * ```onBeforeSave``` - is fired before resource will be saved
 
-The listeners of these events are just mappers, which get object and return modified object. It's possible to use many converters in your application, they will be executed in the order of registrations in ```effects``` section.
+The listeners of these events are just mappers, which get object and return modified object. It's possible to use many converters in your application, they will be executed in the order of registrations in ```effects``` section. Converters should use ```api: true``` flag, because they should be executed always when ```auto``` is enabled.
 
 ### User notifications
 
