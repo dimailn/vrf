@@ -76,7 +76,7 @@ Vrf doesn't depends on current I18n, validation and network interaction librarie
 
 # Ideology
 
-Vrf puts form at the forefront of your application, but at the same time all high-level features are provided unobtrusively and their activation is implemented explicitly.  The main thesis of vrf is to stay simple while it is possible.  This means, for example, that you can make the most of the built-in autoforming capabilities and not write any code, but if one day you need a more complex flow than middleware can offer, you can simply turn off the auto mode and manually manipulate the form, while still taking the other advantages that  gives vrf.
+Vrf puts form at the forefront of your application, but at the same time all high-level features are provided unobtrusively and their activation is implemented explicitly.  The main thesis of vrf is to stay simple while it is possible.  This means, for example, that you can make the most of the built-in autoforming capabilities and not write any code, but if one day you need a more complex flow than effects can offer, you can simply turn off the auto mode and manually manipulate the form, while still taking the other advantages that  gives vrf.
 
 In other words, the complex things have the right to be complex, but simple must remain simple.
 
@@ -97,7 +97,7 @@ It allows you to write forms in this way:
 ```
 
 
-Such form will load and save data without a single line of Javascript code. This is possible due to the use of the middleware, which describes the general logic of working with entities in your project. If some form required very specific logic, the form can be used in a lower level mode(without "auto" flag).
+Such form will load and save data without a single line of Javascript code. This is possible due to the use of the effects, which describes the general logic of working with entities in your project. If some form required very specific logic, the form can be used in a lower level mode(without "auto" flag).
 
 ## Features
 
@@ -282,7 +282,7 @@ export default {
 ```
 Instead of a string with the name of the options, you may also pass directly an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and autoforms can load sources by name).
 
-When you use a source name with autoforms, form uses a middleware to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
+When you use a source name with autoforms, form uses effects to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
 
 
 ## Nested entities
@@ -373,7 +373,7 @@ export default {
 
 ## Actions
 
-Vrf provides its own way to create simple buttons that activate async requests. These requests are served by middleware and the received data stored in the context of the form(by analogy with a resource).
+Vrf provides its own way to create simple buttons that activate async requests. These requests are served by effects and the received data stored in the context of the form(by analogy with a resource).
 
 For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
 ```vue
@@ -432,7 +432,7 @@ If you need reload resource on result, you may use prop ```reload-on-result```
 
 ```
 
-If your action must show toast in UI by result, this can be done in the middleware. For example, in REST middleware $message field will be processed by middleware as a message for user and it will be shown by ```showErrorMessage``` / ```showSuccessMessage``` functions(passed on vrf initialization).
+If your action must show toast in UI by result, this can be done in the effects. For example, in REST effect $message field will be processed by effect as a message for user and it will be emitted by ```showMessage```.
 
 
 ### Run actions programmatically
