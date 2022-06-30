@@ -470,7 +470,7 @@ export default {
       if (!this.name) {
         throw "You must provide name for auto-forms.";
       }
-      if (!this.VueResourceForm.effects) {
+      if (!this.VueResourceForm.effects && typeof this.auto !== 'function') {
         throw "You must provide effects for auto-forms.";
       }
       if (this.noFetch && options.boot) {
