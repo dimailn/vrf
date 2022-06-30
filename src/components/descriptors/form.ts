@@ -434,7 +434,7 @@ export default {
       })
 
       if(typeof this.auto === 'function') {
-        effects.unshift(this.auto)
+        effects.unshift({effect: this.auto, api: true})
       } else if(typeof this.auto === 'string' && this.auto !== '') {
         const prioritizedEffectIndex = effects.findIndex((effect) => effect.name === this.auto)
         if(prioritizedEffectIndex === -1) {
@@ -880,7 +880,7 @@ export default {
 
         const showMessage = (message: Message) => emit('message', message)
         const onShowMessage = (listener: (listener: Event<Message>) => void) => on('message', listener)
-  
+
         effect({
           ...listenerNames.reduce((setters, eventName) => {
             setters[eventName] = (listener) => {
