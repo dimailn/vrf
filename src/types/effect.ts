@@ -3,7 +3,7 @@
 // type RfForm = InstanceType<typeof RfFormComponent>
 
 
-type OnLoadResult = [boolean, object]
+type OnLoadResult = any
 
 interface ExecuteActionOptions {
     params?: object
@@ -29,18 +29,18 @@ export interface Message {
 
 export interface EffectContextBuiltinListeners {
   onLoad: (listener: (id: Id) => Promise<OnLoadResult> | void) => void
-  onSave: (listener: (resource: object) =>  Promise<object> | void) => void
-  onCreate: (listener: (resource: object) => Promise<[boolean, Id]> | void) => void
+  onSave: (listener: (resource: any) =>  Promise<object> | void) => void
+  onCreate: (listener: (resource: any) => Promise<[boolean, Id]> | void) => void
   onCreated: (listener: (event: Event<{id: Id}>) => void) => void
-  onUpdate: (listener: (resource: object) => Promise<[boolean, void | object]> | void) => void
+  onUpdate: (listener: (resource: any) => Promise<[boolean, void | object]> | void) => void
   onLoadSource: (listener: (sourceName: string) => Promise<object> | void) => void
   onLoadSources: (listener: (sourceNames: Array<string>) => Promise<object> | void) => void
   onExecuteAction: (listener: (actionName: string, options: ExecuteActionOptions) => Promise<any> | void) => void
   onShowMessage: (listener: (event: Event<Message>) => void) => void
   onMounted: (listener: () => void) => void
   onUnmounted: (listener: () => void) => void
-  onAfterLoad: (listener: (event: Event<{resource: object}>) => object) => void
-  onBeforeSave: (listener: (event: Event<{resource: object}>) => object) => void
+  onAfterLoad: (listener: (event: Event<{resource: any}>) => object) => void
+  onBeforeSave: (listener: (event: Event<{resource: any}>) => object) => void
 }
 
 type EffectContext = {
