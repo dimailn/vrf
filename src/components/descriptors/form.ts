@@ -408,7 +408,7 @@ export default {
       return this.innerActionPendings || this.actionPendings;
     },
     $lastSaveFailed() {
-      return this.innerLastSaveFailed;
+      return this.innerLastSaveFailed || this.lastSaveFailed;
     },
     $effects() : Array<Effect> {
       if(this.implicit) {
