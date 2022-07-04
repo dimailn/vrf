@@ -188,6 +188,11 @@ export default {
       */
     saving: Boolean,
     /**
+     * Flag indicates last save failed
+     */
+    lastSaveFailed: Boolean,
+
+    /**
       * If it's true, resource store is stored in vuex(mutation installation required)
       */
     vuex: {
