@@ -35,7 +35,7 @@ export default function(components) {
   return {
     install: function(Vue, options = {}) {
       var base, component, name;
-      
+
       Vue.prototype.VueResourceForm || (Vue.prototype.VueResourceForm = {})
 
       if (process.env.NODE_ENV === 'development') {
@@ -132,20 +132,24 @@ export default function(components) {
       Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor
 
       Vue.prototype.VueResourceForm.idFromRoute = (form) => {
-        const matches = location.pathname.match(RegExp((decamelize(pluralize(form.name.split("::")[0]))) + "\\/(\\d+)"))
+        const matches = location.pathname.match(RegExp((decamelize(pluralize(form.name.split("::")[0]))) + "\\/(\\d+)|(new)"))
 
-        const id = parseInt(matches && matches[1])
-        
+        if(!matches) {
+          return
+        }
+
+        const id = parseInt(matches[1])
+
         if (isNaN(id)) {
           return null
         }
-        
+
         return id
       }
       if (options == null) {
         return;
       }
-      
+
       ['translate', 'effects', 'store', 'autocompletes', 'partials', 'sources', 'dateInterceptor', 'transforms', 'locale', 'loader', 'idFromRoute'].forEach((optionName) => {
         if (options[optionName]) {
           Vue.prototype.VueResourceForm[optionName] = options[optionName]

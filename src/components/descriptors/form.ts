@@ -282,7 +282,7 @@ export default {
       if(this.$slots.default.length > 1) {
         genForm(this.$slots.default)
       } else {
-        return this.$slots.default 
+        return this.$slots.default
       }
     }
 
@@ -310,11 +310,11 @@ export default {
         )
       )
     }
-    
+
     if(this.$scopedSlots.default){
       children.push(
         h(
-          'div', 
+          'div',
           options,
           this.$scopedSlots.default({$resource: this.$resource})
         )
@@ -498,7 +498,7 @@ export default {
       }
       if (Object.keys(this.requiredSources).length === 0) {
         !this.$sources && this.setSyncProp('sources', {})
-        
+
         this.sourcesLoaded = true
         return
       }
@@ -589,7 +589,7 @@ export default {
 
 
       if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
-        console.warn('[vrf] You don\'t specify rf-id prop. In this case vrf use idFromRouter helper, but resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly.')
+        console.warn(`[vrf] You haven\'t specified rf-id prop for form ${this.name}, in this case vrf use idFromRouter helper. However, resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly, or you forgot to pass id of the resource.`)
       }
 
       return id
@@ -637,7 +637,7 @@ export default {
             :
             this.executeEffectEvent('onUpdate', true, [resource])
         }
-        
+
         return eventResult.then(([ok, errors]) => {
           this.innerLastSaveFailed = !ok
           this.setSyncProp('saving', false)
@@ -665,7 +665,7 @@ export default {
     executeAction(name, {params, data, method = 'post', url} = {}) {
       let result = null
       this.setActionPending(name, true);
-  
+
       return this.executeEffectEvent('onExecuteAction', true, [name, {params, data, method, url}]).then(({status, data}) => {
         return result = {status, data};
       }).catch((e = {status, data}) => {
@@ -702,7 +702,7 @@ export default {
 
           return result
         }
-        
+
         if(!listener) {
           return result
         }
@@ -713,7 +713,7 @@ export default {
           const currentListenerResult = listener(...args)
 
           if(currentListenerResult instanceof Promise)
-            return currentListenerResult  
+            return currentListenerResult
         }
 
         return result
@@ -846,18 +846,18 @@ export default {
         'onAfterLoad',
         'onBeforeSave'
       ]
-  
+
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
         const instantiatedEffect : InstantiatedEffect = {
           listeners: listenerNames.reduce((listeners, eventName) => {
             listeners[eventName] = null
-  
+
             return listeners
           }, {} as Record<EffectListenerNames, (...args: any) => any>),
           customEventListeners: {},
           api
         }
-  
+
         const resourceName  = () => camelCase(this.name.split("::")[0])
         const urlResourceName = () => decamelize(this.name.split("::")[0])
         const urlResourceCollectionName = () => pluralize(urlResourceName())
@@ -886,10 +886,10 @@ export default {
             setters[eventName] = (listener) => {
               instantiatedEffect.listeners[eventName] = listener
             }
-  
+
             return setters
           }, {} as Record<EffectListenerNames, (...args: any) => any>),
-          
+
           strings: {
             resourceName,
             urlResourceName,
@@ -899,7 +899,7 @@ export default {
           onShowMessage,
           form: this
         })
-  
+
         return instantiatedEffect
       })
 
