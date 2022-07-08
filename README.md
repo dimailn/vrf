@@ -55,6 +55,7 @@ Vue.use(Vrf, {
     - [Run actions programmatically](#run-actions-programmatically)
   - [Bitwise fields](#bitwise-fields)
   - [Default props](#default-props)
+  - [v-model](#v-model)
 - [Advanced](#advanced)
   - [Architecture](#architecture)
   - [Effects API](#effects-api)
@@ -540,6 +541,36 @@ Vue.use(Vrf, {
     }
   }
 })
+```
+
+## v-model
+
+In some cases you may want to use ```rf-``` controls outside of form, if you don't need form functionality, but still want to use the same elements without separating by vrf/non-vrf inputs. Regarding to this vrf inputs support ```v-model``` directive, allowing to use them in seamless way
+
+```vue
+<template>
+
+<div>
+  <p>Enter your first name</p>
+  <rf-input v-model="firstName" />
+</div>
+
+</template>
+
+
+<script>
+
+export default {
+  data(){
+    return {
+      firstName: ''
+    }
+  }
+}
+
+</script>
+
+
 ```
 
 # Advanced
