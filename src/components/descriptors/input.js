@@ -33,11 +33,10 @@ export default {
   },
   methods: {
     applyTransform: function(value, prev) {
-      var transform;
-      transform = typeof this.transform === 'string' ? this.VueResourceForm.transforms[this.transform] : this.transform;
+      const transform = typeof this.transform === 'string' ? this.VueResourceForm.transforms[this.transform] : this.transform;
       if (transform != null) {
         return this.$nextTick(() => {
-          return this.value = transform(value, prev);
+          return this.$value = transform(value, prev)
         });
       }
     }

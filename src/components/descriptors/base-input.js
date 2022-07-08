@@ -1,11 +1,20 @@
 import Base from './base';
 
+const validateProps = function(){
+  if(!this.name && this.value === undefined){
+    console.warn("[vrf] Name or value must be specified for vrf input")
+  }
+}
+
 export default {
   extends: Base,
   props: {
     name: {
-      type: String,
-      required: true
+      type: String
+    },
+    value: {
+      type: undefined,
+      default: undefined
     },
     disabled: {
       type: [Boolean, String],
@@ -24,5 +33,7 @@ export default {
     noLabel: Boolean,
     label: String,
     required: Boolean
-  }
+  },
+  created: validateProps,
+  updated: validateProps
 };

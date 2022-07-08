@@ -75,10 +75,5 @@ export default {
     sourceMustBeRequired() {
       return typeof this.options === 'string' && !(this.VueResourceForm.sources || {})[this.options]
     }
-  },
-  methods: {
-    onChange: function() {
-      return this.$emit('input', this.$value);
-    }
   }
 };

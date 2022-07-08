@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     onInput: function(e) {
-      return this.$value = this.VueResourceForm.dateInterceptor.in(e.target.value);
+      this.$value = this.VueResourceForm.dateInterceptor.in(e.target.value)
     }
   }
 };

@@ -1,7 +1,13 @@
 import evalBoolProp from '@/utils/eval-bool-prop';
 
 export default {
-  inject: ['vrf'],
+  inject: {
+    vrf: {
+      default: {
+        wrapper: {}
+      }
+    }
+  },
   computed: {
     $resource: function() {
       return this.vrf.wrapper.resource;
