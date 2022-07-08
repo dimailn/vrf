@@ -4,7 +4,6 @@
   :disabled="$disabled"
   :readonly="$readonly"
   :name="name"
-  @input="onInput"
   @change="onChange"
   @blur="onBlur"
 />

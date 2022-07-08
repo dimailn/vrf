@@ -10,9 +10,6 @@ import Translate from '@/mixins/translate';
 export default {
   mixins: [Resource, Translate],
   methods: {
-    onInput: function(e) {
-      return this.$emit('input', e);
-    },
     onBlur: function(e) {
       return this.$emit('blur', e);
     },
@@ -36,14 +33,26 @@ export default {
     $fieldName: function() {
       return this.name;
     },
+    $valuePropSpecified() {
+      return this.value !== undefined
+    },
     $originalValue: {
       get: function() {
+        if(this.$valuePropSpecified){
+          return this.value
+        }
+
         return get(this.$resource, this.$fieldName);
       },
       set: function(value) {
-        var store;
+        if(this.$valuePropSpecified){
+          this.$emit('input', value)
+
+          return
+        }
+
         if (this.vuex) {
-          store = this.$store || this.VueResourceForm.store;
+          const store = this.$store || this.VueResourceForm.store;
           if (!store) {
             return console.warn("Store for VueResourceForm is not defined");
           }
@@ -63,16 +72,6 @@ export default {
       },
       set: function(value) {
         return this.$originalValue = value;
-      }
-    },
-    value: {
-      get: function() {
-        console.warn('[vrf] Value computed prop is deprecated, use $value instead');
-        return this.$value;
-      },
-      set: function(value) {
-        console.warn('[vrf] Value computed prop is deprecated, use $value instead');
-        return this.$value = value;
       }
     },
     $originalDisabled: function() {

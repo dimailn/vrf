@@ -3,7 +3,6 @@
     <!-- <img src="./assets/logo.png"> -->
 
     VRF playground
-
     <h1> Simple form </h1>
     <div style="display: flex">
       <rf-form :resource="todo" class="form" v-slot="{}">
@@ -36,6 +35,17 @@
         {{todo}}
       </div>
     </div>
+
+    <h1>v-model</h1>
+
+    <form>
+      <rf-input />
+      <rf-checkbox v-model="todo.status" />
+      <rf-switch v-model="todo.status" />
+      <rf-datepicker v-model="todo.finishTill" />
+      <rf-select v-model="todo.importance" :options="importanceOptions" />
+      <rf-textarea v-model="todo.description" />
+    </form>
 
     <h1> Nested form </h1>
     <div style="display: flex">
