@@ -643,11 +643,14 @@ export default {
             this.executeEffectEvent('onUpdate', true, [resource])
         }
 
-        return eventResult.then(([ok, errors]) => {
+        return eventResult.then(([ok, dataOrErrors]) => {
           this.innerLastSaveFailed = !ok
           this.setSyncProp('saving', false)
-          this.setSyncProp('errors', ok ? {} : errors)
+          this.setSyncProp('errors', ok ? {} : dataOrErrors)
           this.$emit('after-submit')
+          if(ok && typeof dataOrErrors === 'object'){
+            this.setSyncProp('resource', dataOrErrors)
+          }
           return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
         }).catch(console.error)
       })
