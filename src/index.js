@@ -26,6 +26,8 @@ import RfAction from './components/templates/action';
 
 import RfActionResult from './components/templates/action-result';
 
+import RfFile from './components/templates/file'
+
 import descriptors from './components/descriptors';
 
 import mutations from './vuex/mutations';
@@ -52,7 +54,8 @@ const components = {
   RfSpan,
   RfBitwise,
   RfAction,
-  RfActionResult
+  RfActionResult,
+  RfFile
 };
 
 export default installer(components);
