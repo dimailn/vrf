@@ -76,61 +76,74 @@
   </div>
 </template>
 
-<script lang="coffee">
+<script>
+
 export default {
-  data: ->
-    todo: null
-    user:
-      todos: [
-        {
-          title: 'First'
-          status: false
-          finishTill: null
-          importance: null
-          description: ''
-          owner: 'User #1'
-        }
-        {
-          title: 'Second'
-          status: false
-          finishTill: null
-          importance: null
-          description: ''
-          owner: 'User #1'
-        }
-      ]
+  data() {
+    return {
+      todo: null,
+      user: {
+        todos: [
+          {
+            title: 'First',
+            status: false,
+            finishTill: null,
+            importance: null,
+            description: '',
+            owner: 'User #1'
+          },
+          {
+            title: 'Second',
+            status: false,
+            finishTill: null,
+            importance: null,
+            description: '',
+            owner: 'User #1'
+          }
+        ]
+      }
+    }
+  },
+
+  created(){
+    this.todo = this.blank()
+  },
+
+  methods: {
+    add(){
+      this.user.todos.push(this.todo)
+
+      this.todo = this.blank()
+
+      // this.user.todos.push(this.blank())
+    },
 
 
-  created: ->
-    @todo = @blank()
-
-  methods:
-    add: ->
-      @user.todos.push(@todo)
-
-      @todo = @blank()
-
-      # @user.todos.push(@blank())
-
-    blank: ->
-      title: ''
-      status: false
-      finishTill: null
-      importance: null
-      description: ''
-      owner: 'User #1'
-      flags: 0
-
-  computed:
-    importanceOptions: ->
-      [
+    blank() {
+      return {
+        title: '',
+        status: false,
+        finishTill: null,
+        importance: null,
+        description: '',
+        owner: 'User #1',
+        flags: 0,
+        testFile: null
+      }
+    }
+  },
+  computed: {
+    importanceOptions(){
+      return [
         {
           id: 1, title: 'Low'
-        }
+        },
         {
           id: 2, title: 'High'
         }
       ]
+    }
+  }
 }
 </script>
 

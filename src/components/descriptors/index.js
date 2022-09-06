@@ -28,4 +28,6 @@ import action from './action';
 
 import actionResult from './action-result';
 
-export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult};
+import file from './file'
+
+export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file};
