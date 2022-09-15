@@ -77,7 +77,7 @@ Vrf doesn't depends on current I18n, validation and network interaction librarie
 
 # Ideology
 
-Vrf puts form at the forefront of your application, but at the same time all high-level features are provided unobtrusively and their activation is implemented explicitly.  The main thesis of vrf is to stay simple while it is possible.  This means, for example, that you can make the most of the built-in autoforming capabilities and not write any code, but if one day you need a more complex flow than effects can offer, you can simply turn off the auto mode and manually manipulate the form, while still taking the other advantages that  gives vrf.
+Vrf puts form at the forefront of your application, but at the same time all high-level features are provided unobtrusively and their activation is implemented explicitly.  The main thesis of vrf is to stay simple while it is possible.  This means, for example, that you can make the most of the built-in autoforming capabilities and not write any code, but if one day you need a more complex flow than effects can offer, you can simply turn off the auto mode and manually manipulate the form, while still taking the other advantages that  vrf gives.
 
 In other words, the complex things have the right to be complex, but simple must remain simple.
 
