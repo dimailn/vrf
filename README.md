@@ -778,7 +778,6 @@ Vue.use(Vrf, {
 
 ## Planned
 
-* ```rf-radio```
 * Clientside validations
 >
 
