@@ -236,7 +236,11 @@ export default {
     /**
      * @ignore
      */
-    rootResource: Object
+    rootResource: Object,
+    /**
+     * @ignore
+     */
+    rootElement: String
   },
   data: function() {
     return {
@@ -276,6 +280,10 @@ export default {
     this.executeEffectEventOptional('onUnmounted', false, [])
   },
   render(h){
+    if(this.rootElement){
+      return h(this.rootElement, {}, this.$slots.default)
+    }
+
     const genForm = (children?: any) => h(
       'form', {
         on: { submit: (e) => e.preventDefault() }

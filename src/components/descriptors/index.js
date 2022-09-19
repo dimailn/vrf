@@ -30,4 +30,8 @@ import actionResult from './action-result';
 
 import file from './file'
 
-export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file};
+import radioGroup from './radio-group'
+
+import radio from './radio'
+
+export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file, radioGroup, radio};

@@ -28,6 +28,10 @@ import RfActionResult from './components/templates/action-result';
 
 import RfFile from './components/templates/file'
 
+import RfRadioGroup from './components/templates/radio-group'
+
+import RfRadio from './components/templates/radio'
+
 import descriptors from './components/descriptors';
 
 import mutations from './vuex/mutations';
@@ -55,7 +59,9 @@ const components = {
   RfBitwise,
   RfAction,
   RfActionResult,
-  RfFile
+  RfFile,
+  RfRadioGroup,
+  RfRadio
 };
 
 export default installer(components);

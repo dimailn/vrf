@@ -29,6 +29,15 @@
           inverted
         />
 
+        <h4>Radio Group</h4>
+
+        <rf-radio-group name="radio">
+          <rf-radio value="Alaska FM" label="Alaska FM" />
+          <rf-radio value="BBC" label="BBC" />
+        </rf-radio-group>
+
+        <rf-radio-group name="radio" :options="[{id: 'Alaska FM', title: 'Alaska FM'}, {id: 'BBC', title: 'BBC'}]" />
+
         <button @click="add">Add</button>
       </rf-form>
       <div style="flex: 1">
