@@ -659,6 +659,9 @@ export default {
           if(ok && typeof dataOrErrors === 'object'){
             this.setSyncProp('resource', dataOrErrors)
           }
+          if(!ok){
+            this.executeEffectEventOptional('onFailure', false, [new VrfEvent('onFailure', {errors: dataOrErrors})])
+          }
           return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
         }).catch(console.error)
       })
@@ -860,7 +863,8 @@ export default {
         'onMounted',
         'onUnmounted',
         'onAfterLoad',
-        'onBeforeSave'
+        'onBeforeSave',
+        'onFailure'
       ]
 
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {

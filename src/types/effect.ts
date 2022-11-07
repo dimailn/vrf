@@ -41,6 +41,7 @@ export interface EffectContextBuiltinListeners {
   onUnmounted: (listener: () => void) => void
   onAfterLoad: (listener: (event: Event<{resource: any}>) => object) => void
   onBeforeSave: (listener: (event: Event<{resource: any}>) => object) => void
+  onFailure: (listener: (event: Event<{errors: any}>) => object) => void
 }
 
 type EffectContext = {
@@ -78,6 +79,6 @@ const effect : EffectExecutor = ({
     form
 }) => {
     onExecuteAction((actionName, options) => {
-        
+
     })
 }
