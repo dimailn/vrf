@@ -310,7 +310,10 @@ export default {
           name: 'show',
           value: show
         }
-      ]
+      ],
+      attrs: {
+        class: 'vrf__root-wrapper'
+      }
     }
 
     const children = []
