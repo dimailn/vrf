@@ -499,7 +499,10 @@ export default {
       Promise.all([this.reloadResource()])
         .then(() => this.$nextTick())
         .then(this.reloadSources)
-        .then(() => this.$emit('after-load-success'))
+        .then(() => {
+          this.$emit('after-load-success')
+          this.executeEffectEventOptional('onLoaded', false, [])
+        })
         .finally(() => {
           this.setSyncProp('errors', {});
           this.setSyncProp('fetching', false);
@@ -870,7 +873,8 @@ export default {
         'onAfterLoad',
         'onBeforeSave',
         'onFailure',
-        'onSuccess'
+        'onSuccess',
+        'onLoaded'
       ]
 
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
