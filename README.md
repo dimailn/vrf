@@ -660,6 +660,9 @@ There are some subscriptions for api effects:
 * ```onCreate``` - is fired when form creates new resource
 * ```onUpdate``` - is fire when form updates new resource
 * ```onCreated``` - is fired when ```onCreate``` returned an id of new created resource. There is a default trap for this event, which reloads form data, but it's possible to override this behaviour by using ```event.stopPropagation()```
+* ```onLoaded``` - is fired when data is received from backend, the same like ```after-load-success``` on the form
+* ```onSuccess``` - is fired when resource is saved successfully
+* ```onFailure``` - is fired when resource wasn't saved due to errors
 
 
 ### Data converters
