@@ -664,6 +664,8 @@ export default {
           }
           if(!ok){
             this.executeEffectEventOptional('onFailure', false, [new VrfEvent('onFailure', {errors: dataOrErrors})])
+          } else {
+            this.executeEffectEventOptional('onSuccess', false, [])
           }
           return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
         }).catch(console.error)
@@ -867,7 +869,8 @@ export default {
         'onUnmounted',
         'onAfterLoad',
         'onBeforeSave',
-        'onFailure'
+        'onFailure',
+        'onSuccess'
       ]
 
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
