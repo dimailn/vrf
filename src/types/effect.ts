@@ -42,6 +42,7 @@ export interface EffectContextBuiltinListeners {
   onAfterLoad: (listener: (event: Event<{resource: any}>) => object) => void
   onBeforeSave: (listener: (event: Event<{resource: any}>) => object) => void
   onFailure: (listener: (event: Event<{errors: any}>) => object) => void
+  onSuccess: (listener: () => void) => void
 }
 
 type EffectContext = {
