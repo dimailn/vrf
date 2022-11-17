@@ -29,7 +29,7 @@ describe 'form', ->
 
   def('idFromRoute', -> -> 1)
   def('save', => jest.fn -> Promise.resolve([true, null]))
-  def('sources', -> 
+  def('sources', ->
     {
       roles: [
         {
@@ -59,13 +59,13 @@ describe 'form', ->
       ]
     }
   )
-  def('loadSources', -> jest.fn (names) -> 
+  def('loadSources', -> jest.fn (names) ->
     Promise.resolve(
       Object.entries($sources)
         .filter(([name, options]) -> names.includes(name))
         .reduce(
           (sources, [name, options]) -> sources[name] = options; sources
-          {}  
+          {}
         )
     )
   )
@@ -80,7 +80,7 @@ describe 'form', ->
   def('update', -> jest.fn -> ->)
   def('created', -> jest.fn -> ->)
 
-  def('effects', -> 
+  def('effects', ->
     [
       {
         name: 'rest',
@@ -97,7 +97,7 @@ describe 'form', ->
       }
     ]
   )
-  
+
 
 
   def('wrapper', ->
@@ -376,6 +376,46 @@ describe 'form', ->
               }
             ]
           )
+
+      describe 'rf-require', ->
+        describe 'static', ->
+          def('wrapper', ->
+            mount(
+              template: '''
+                <rf-form name="User" auto ref="test">
+                  <rf-require name="roles" />
+                  <rf-require name="types" />
+                </rf-form>
+              '''
+            )
+          )
+
+          it 'is loaded eager', ->
+            expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
+
+            formSources = $wrapper.vm.$children[0].$sources
+            expect(formSources.roles.length).toBe 2
+            expect(formSources.types.length).toBe 1
+
+        describe 'dynamic', ->
+          def('wrapper', ->
+            mount(
+              template: '''
+                <rf-form name="User" auto>
+                  <rf-require :name="name" />
+                </rf-form>
+              '''
+              data: ->
+                name: 'roles'
+            )
+          )
+
+          beforeEach ->
+            $wrapper.vm.name = 'types'
+
+          it 'invokes loadSource after loadSources', ->
+            expect($loadSources.mock.calls[0][0]).toEqual(['roles'])
+            expect($loadSource.mock.calls[0][0]).toEqual('types')
 
     describe 'vuex mode', ->
       def('store', ->
