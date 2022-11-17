@@ -36,4 +36,6 @@ import radio from './radio'
 
 import require from './require'
 
-export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file, radioGroup, radio, require};
+import scope from './scope'
+
+export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file, radioGroup, radio, require, scope};

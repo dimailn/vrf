@@ -5,10 +5,14 @@
     VRF playground
     <h1> Simple form </h1>
     <div style="display: flex">
-      <rf-form :resource="todo" class="form" v-slot="{}">
-        <rf-input name="title" />
-        <rf-checkbox name="status" />
-        <rf-switch name="status" />
+      <rf-form :resource="todo" class="form" v-slot="{$resource}">
+        <rf-scope :disabled="$resource.title.length > 5">
+          <rf-input name="title" />
+
+          <rf-checkbox name="status" />
+          <rf-switch name="status" />
+        </rf-scope>
+
         <rf-datepicker name="finishTill" />
         <rf-select name="importance" :options="importanceOptions" />
         <rf-textarea name="description" />

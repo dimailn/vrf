@@ -28,7 +28,7 @@ import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
 
 
-const propsFactory = function() {
+export const propsFactory = function() {
   return {
     resource: null,
     sources: null,
@@ -50,7 +50,7 @@ const propsFactory = function() {
   };
 };
 
-const nameMapper = function(name) {
+export const nameMapper = function(name) {
   switch (name) {
     case 'resource':
       return '$resource';

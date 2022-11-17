@@ -34,6 +34,8 @@ import RfRadio from './components/templates/radio'
 
 import RfRequire from './components/templates/require'
 
+import RfScope from './components/templates/scope'
+
 import descriptors from './components/descriptors';
 
 import mutations from './vuex/mutations';
@@ -64,7 +66,8 @@ const components = {
   RfFile,
   RfRadioGroup,
   RfRadio,
-  RfRequire
+  RfRequire,
+  RfScope
 };
 
 export default installer(components);
@@ -85,6 +88,7 @@ export {
   RfAction,
   RfActionResult,
   RfRequire,
+  RfScope,
   descriptors,
   mutations,
   components,
