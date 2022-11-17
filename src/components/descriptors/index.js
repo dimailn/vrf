@@ -34,4 +34,6 @@ import radioGroup from './radio-group'
 
 import radio from './radio'
 
-export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file, radioGroup, radio};
+import require from './require'
+
+export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file, radioGroup, radio, require};
