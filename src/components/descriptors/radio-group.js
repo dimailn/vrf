@@ -4,6 +4,10 @@ export default {
   name: 'rf-radio-group',
   vrfParent: 'Base',
   extends: Select,
+  props: {
+    options: [String, Array],
+    required: false
+  },
   data: function() {
     return {
       wrapper: {
