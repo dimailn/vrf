@@ -382,7 +382,7 @@ describe 'form', ->
           def('wrapper', ->
             mount(
               template: '''
-                <rf-form name="User" auto ref="test">
+                <rf-form name="User" auto>
                   <rf-require name="roles" />
                   <rf-require name="types" />
                 </rf-form>
