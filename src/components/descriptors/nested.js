@@ -3,6 +3,8 @@ import Resource from '@/mixins/resource';
 import base from '@/components/descriptors/base';
 import pluralize from 'pluralize'
 
+import capitalizeFirst from '@/utils/capitalize-first'
+
 export default {
   name: 'rf-nested',
   extends: base,
@@ -28,7 +30,7 @@ export default {
         return this.translationName
       }
 
-      return pluralize.singular(this.name)
+      return capitalizeFirst(pluralize.singular(this.name))
     },
     isCollection: function() {
       return this.nestedResource instanceof Array;
