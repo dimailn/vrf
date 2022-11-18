@@ -327,7 +327,7 @@ export default {
       )
     }
 
-    if(this.$scopedSlots.default){
+    if(this.$scopedSlots.default && this.$resource){
       children.push(
         h(
           'div',
