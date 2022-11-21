@@ -657,7 +657,15 @@ export default {
             this.executeEffectEvent('onUpdate', true, [resource])
         }
 
-        return eventResult.then(([ok, dataOrErrors]) => {
+        return eventResult.then((result) => {
+          if (!(result instanceof Array) || result.length !== 2 || typeof result[0] !== 'boolean') {
+
+            console.error('[vrf] Handlers of onSave/onCreate/onUpdate must return an array with boolean status as first element and resource/errors as second.')
+            return
+          }
+
+          const [ok, dataOrErrors] = result
+
           this.innerLastSaveFailed = !ok
           this.setSyncProp('saving', false)
           this.setSyncProp('errors', ok ? {} : dataOrErrors)
