@@ -68,7 +68,7 @@ describe 'nested', ->
         $wrapper.find('.subtask-title').vm.humanName
       describe "without translation-name passed", ->
         it 'should pass proper modelName singular', ->
-          expect($translate).toHaveBeenCalledWith('title', 'subtask')
+          expect($translate).toHaveBeenCalledWith('title', 'Subtask')
 
       describe "with translation-name passed", ->
         def('template', ->
