@@ -381,15 +381,22 @@ export default {
     rfName() {
       return this.name;
     },
+    $name() {
+      if (!this.name) {
+        return
+      }
+
+      return this.name.split("#")[0]
+    },
     $translationName() {
-      return this.translationName || this.name;
+      return this.translationName || this.$name;
     },
     $$resource() {
       return this.resource;
     },
     $resource() {
       if (this.vuex) {
-        return this.$store.state[camelCase(this.name)];
+        return this.$store.state[camelCase(this.$name)];
       }
       return this.innerResource || this.resource;
     },
@@ -572,7 +579,7 @@ export default {
 
         if (this.vuex) {
           this.$store.commit('vue-resource-form:set', {
-            resourceName: this.name,
+            resourceName: this.$name,
             payload: resource
           });
         }
@@ -608,7 +615,7 @@ export default {
 
 
       if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
-        console.warn(`[vrf] You haven\'t specified rf-id prop for form ${this.name}, in this case vrf use idFromRouter helper. However, resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly, or you forgot to pass id of the resource.`)
+        console.warn(`[vrf] You haven\'t specified rf-id prop for form ${this.$name}, in this case vrf use idFromRouter helper. However, resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly, or you forgot to pass id of the resource.`)
       }
 
       return id
@@ -660,7 +667,7 @@ export default {
         return eventResult.then((result) => {
           if (!(result instanceof Array) || result.length !== 2 || typeof result[0] !== 'boolean') {
 
-            console.error('[vrf] Handlers of onSave/onCreate/onUpdate must return an array with boolean status as first element and resource/errors as second.')
+            console.error('[vrf] Handlers of onSave/onCreate/onUpdate events must return an array with boolean status as first element and id/resource/errors/ as second.')
             return
           }
 
@@ -715,13 +722,12 @@ export default {
     executeEffectEvent(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
       const effectResult = this.executeEffectEventOptional(eventName, api, args)
 
-
-      if(!(effectResult instanceof Promise || effectResult === undefined) && api){
-        throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but effect's handler returned unexpected value. It should be a Promise or undefined, but ${effectResult} was returned.`
+      if(effectResult === null && api){
+        throw `[vrf] API call ${eventName} on resource ${this.$name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`
       }
 
-      if(!(effectResult instanceof Promise) && api){
-        throw `[vrf] API call ${eventName} on resource ${this.name} was executed, but there is no effect to handle it. Make sure that you have an API effect which handles this event and returns Promise.`
+      if(!(effectResult instanceof Promise || effectResult === undefined) && api){
+        throw `[vrf] API call ${eventName} on resource ${this.$name} was executed, but effect's handler returned unexpected value. It should be a Promise or undefined, but ${effectResult} was returned.`
       }
 
       return effectResult
@@ -896,8 +902,8 @@ export default {
           api
         }
 
-        const resourceName  = () => camelCase(this.name.split("::")[0])
-        const urlResourceName = () => decamelize(this.name.split("::")[0])
+        const resourceName  = () => camelCase(this.$name.split("::")[0])
+        const urlResourceName = () => decamelize(this.$name.split("::")[0])
         const urlResourceCollectionName = () => pluralize(urlResourceName())
 
         const on = (eventName, listener) => {

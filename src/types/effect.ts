@@ -29,7 +29,7 @@ export interface Message {
 
 export interface EffectContextBuiltinListeners {
   onLoad: (listener: (id: Id) => Promise<OnLoadResult> | void) => void
-  onSave: (listener: (resource: any) =>  Promise<object> | void) => void
+  onSave: (listener: (resource: any) =>  Promise<[boolean, any]> | void) => void
   onCreate: (listener: (resource: any) => Promise<[boolean, Id]> | void) => void
   onCreated: (listener: (event: Event<{id: Id}>) => void) => void
   onUpdate: (listener: (resource: any) => Promise<[boolean, void | object]> | void) => void
