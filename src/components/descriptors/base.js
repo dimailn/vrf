@@ -3,8 +3,6 @@ import Resource from '@/mixins/resource';
 import get from 'lodash.get'
 import set from '@/utils/set'
 
-import evalBoolProp from '@/utils/eval-bool-prop';
-
 import Translate from '@/mixins/translate';
 
 export default {
@@ -78,7 +76,7 @@ export default {
       if (this.disabled == null) {
         return this.$formDisabled;
       }
-      return evalBoolProp(this.disabled, this);
+      return this.disabled
     },
     $disabled: function() {
       return this.$originalDisabled;
@@ -87,7 +85,7 @@ export default {
       if (this.readonly == null) {
         return this.$formReadonly;
       }
-      return evalBoolProp(this.readonly, this);
+      return this.readonly
     },
     $readonly: function() {
       return this.$originalReadonly;

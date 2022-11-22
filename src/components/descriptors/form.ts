@@ -32,17 +32,15 @@ const propsFactory = function() {
   return {
     resource: null,
     sources: null,
-    $$resource: null,
-    disabled: false,
-    readonly: false,
+    formDisabled: false,
+    formReadonly: false,
     rfName: '',
     errors: {},
     submit: null,
     fetching: false,
     saving: false,
     vuex: false,
-    pathService: void 0,
-    rootResource: void 0,
+    rootResource: undefined,
     form: null,
     actionResults: {},
     actionPendings: {},
@@ -72,6 +70,12 @@ const nameMapper = function(name) {
       return '$lastSaveFailed';
     case 'translationName':
       return '$translationName';
+    case 'formDisabled':
+      return 'disabled';
+    case 'formReadonly':
+      return 'readonly';
+    case 'rootResource':
+      return '$rootResource';
     default:
       return name;
   }
@@ -105,11 +109,11 @@ export default {
     /**
       * Make the whole form disabled
       */
-    disabled: [Boolean, String],
+    disabled: Boolean,
     /**
       * Make the whole form readonly
       */
-    readonly: [Boolean, String],
+    readonly: Boolean,
     /**
       * Name of the resource. This property is used for loading data and for translations
       */
@@ -481,6 +485,9 @@ export default {
     },
     $loader(){
       return this.VueResourceForm.loader
+    },
+    $rootResource() {
+      return this.rootResource || this.$resource
     }
   },
   methods: {

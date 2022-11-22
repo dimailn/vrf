@@ -303,7 +303,7 @@ describe 'form', ->
       def('wrapper', ->
         mount(
           template: '''
-            <rf-form :resource="resource" disabled="$resource.disabled">
+            <rf-form :resource="resource" :disabled="disabled">
               <rf-input name="title" />
             </rf-form>
           '''
@@ -311,7 +311,7 @@ describe 'form', ->
           data: ->
             resource:
               title: ''
-              disabled: true
+            disabled: true
         )
       )
 
