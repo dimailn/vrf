@@ -6,6 +6,14 @@ export default {
   render: function() {
     var props, ref, ref1;
     props = {
+      $resource: this.$resource,
+      $sources: this.$sources,
+      $errors: this.$errors,
+      $rootResource: this.$rootResource,
+      $disabled: this.$formDisabled,
+      $actionResults: this.$actionResults,
+      $actionPendings: this.$actionPendings,
+      // deprecated section
       resource: this.$resource,
       resources: this.$sources,
       rootResource: this.$rootResource,
