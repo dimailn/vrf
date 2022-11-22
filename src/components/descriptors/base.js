@@ -49,7 +49,7 @@ export default {
           return
         }
 
-        if (this.vuex) {
+        if (this.$vuex) {
           const store = this.$store || this.VueResourceForm.store;
           if (!store) {
             return console.warn("Store for VueResourceForm is not defined");
