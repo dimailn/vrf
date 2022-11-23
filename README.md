@@ -46,7 +46,7 @@ Vue.use(Vrf, {
   - [Object binding](#object-binding)
   - [Access to the resource](#access-to-the-resource)
   - [Where is the resource?](#where-is-the-resource)
-  - [Conditional rendering](#conditional-rendering)
+  - [Expressions](#expressions)
   - [Sources](#sources)
   - [Nested entities](#nested-entities)
   - [Autoforms](#autoforms)
@@ -215,11 +215,9 @@ The resource can be in three places:
 * in the state of form(this happens in autoforms, or for example if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
 * in vuex
 
-## Conditional rendering
+## Expressions
 
-Vrf doesn't have it's own mechanics to handle conditional rendering(some old things are deprecated and will be removed soon). It uses natural Vue conditional rendering mechanics instead, because they are universal and don't limit standard Vue functionality - you may use them on any element/any prop.
-
-The standard way is using scoped slot on ```rf-form``` in main form file
+The standard way of writing expressions that depdends on resource is using ```$resource``` variable from scoped slot on ```rf-form``` in main form file
 
 ```vue
 
