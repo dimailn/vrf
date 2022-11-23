@@ -154,10 +154,8 @@ There are several ways to access the resource:
 * use rf-resource component
 
 ```vue
-<rf-resource>
-  <template v-slot="props">
-    <div>{{props.resource}}</div>
-  </template>
+<rf-resource v-slot="{$resource}">
+  <div>{{$resource}}</div>
 </rf-resource>
 ```
 
