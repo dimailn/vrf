@@ -16,24 +16,11 @@ export default {
       resource: this.$resource,
       resources: this.$sources,
       rootResource: this.$rootResource,
-      rootResources: this.$rootResources,
       disabled: this.$formDisabled,
-      tScope: this.tScope,
       t: this.t,
       errors: this.$errors,
       actionResults: this.$actionResults
     }
-    const render = this.$scopedSlots?.default
-    const nodes = render && render(props)
-
-    if(!nodes) {
-      return
-    }
-
-    if(nodes.length > 1) {
-      return h('div', null, nodes)
-    }
-
-    return nodes[0]
+    return this.$slots.default(props)
   }
 }
