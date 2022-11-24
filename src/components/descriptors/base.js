@@ -6,6 +6,11 @@ import set from '@/utils/set'
 import Translate from '@/mixins/translate';
 
 export default {
+  props: {
+    value: [Number, String, Object],
+    disabled: Boolean,
+    readonly: Boolean
+  },
   mixins: [Resource, Translate],
   methods: {
     onBlur: function(e) {
@@ -57,7 +62,7 @@ export default {
 
 
         if (this.$vuex) {
-          const store = this.$store || this.VueResourceForm.store;
+          const store = this.$store || this.config.globalProperties.VueResourceForm.store;
           if (!store) {
             return console.warn("Store for VueResourceForm is not defined");
           }

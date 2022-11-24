@@ -35,7 +35,7 @@ export default {
   },
   render: function(h) {
     if (this.$scopedSlots.activator) {
-      const nodes = this.$scopedSlots['activator']({
+      const nodes = this.$slots['activator']({
         humanName: this.$label,
         label: this.$label,
         on: this.$on,

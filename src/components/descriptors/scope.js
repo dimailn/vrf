@@ -3,6 +3,7 @@ import Resource from '@/mixins/resource'
 import {propsFactory} from '@/components/descriptors/form'
 import VueProvideObservable from 'vue-provide-observable'
 import pick from '@/utils/pick'
+import {reactive, h} from 'vue'
 
 const nameMapper = (name) => name === 'submit' ? name : `$${name}`
 
@@ -10,11 +11,7 @@ export default {
   name: 'rf-scope',
   mixins: [
     Resource,
-    VueProvideObservable(
-      'vrf',
-      propsFactory,
-      nameMapper
-    )
+    VueProvideObservable('vrf', propsFactory, nameMapper, () => true, reactive)
   ],
   props: {
     disabled: Boolean,
@@ -85,11 +82,7 @@ export default {
       this.$emit(`update:${name}`, value)
     }
   },
-  render(h) {
-    if (this.$slots.default.length > 1) {
-      return h('div', {}, this.$slots.default)
-    }
-
-    return this.$slots.default
+  render() {
+    return this.$slots.default()
   }
 }
