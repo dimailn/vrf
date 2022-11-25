@@ -1,7 +1,7 @@
 import BaseInput from '@/components/descriptors/base-input';
 
 export default {
-  name: 'rf-radio-group',
+  name: 'rf-radio',
   vrfParent: 'Base',
   extends: BaseInput,
   computed: {
