@@ -59,16 +59,20 @@ export default function(components) {
           results = [];
           for (name in adapter.components) {
             component = adapter.components[name];
-            if (!component.vrfParent) {
-              console.warn(`[vrf] Component ${name} from ${adapter.name} has not vrfParent and will not initialized`);
-              continue;
+
+            if(!component.extends) {
+              if (!component.vrfParent) {
+                console.warn(`[vrf] Component ${name} from ${adapter.name} has not vrfParent and will not initialized`);
+                continue;
+              }
+              descriptor = descriptors[component.vrfParent];
+              if (!descriptor) {
+                console.warn(`[vrf] Vrf parent ${component.vrfParent} is not found for component ${name} from ${adapter.name}`);
+                continue;
+              }
+              component.extends = descriptor;
             }
-            descriptor = descriptors[component.vrfParent];
-            if (!descriptor) {
-              console.warn(`[vrf] Vrf parent ${component.vrfParent} is not found for component ${name} from ${adapter.name}`);
-              continue;
-            }
-            component.extends = descriptor;
+
             component.computed || (component.computed = {});
 
             (function(name, previousComponent){
