@@ -1,6 +1,6 @@
 {
   "name": "vrf",
-  "version": "0.98.2",
+  "version": "0.94.0-alpha",
   "description": "",
   "author": "Dmitry Sadovsky <dimailn9@gmail.com>",
   "scripts": {
