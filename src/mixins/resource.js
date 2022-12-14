@@ -15,7 +15,8 @@ const FIELDS_FROM_CONTEXT = [
   'translationName',
   'rootResource',
   'formDisabled',
-  'formReadonly'
+  'formReadonly',
+  'scope'
 ]
 
 export default {
