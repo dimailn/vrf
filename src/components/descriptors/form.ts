@@ -27,7 +27,6 @@ import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames, Event, 
 import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
 
-
 export const propsFactory = function() {
   return {
     resource: null,
@@ -641,6 +640,9 @@ export default {
       return this.single ? false : !this.resourceId()
     },
     submit(resource = cloneDeep(this.$resource), root) {
+      if (resource.initUIEvent && typeof resource.initUIEvent === 'function') {
+        resource = cloneDeep(this.$resource)
+      }
       // let onChange inputs change the model
       return this.$nextTick(() => {
         this.$emit('before-submit', {
