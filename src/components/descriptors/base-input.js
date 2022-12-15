@@ -34,6 +34,10 @@ export default {
     label: String,
     required: Boolean
   },
-  created: validateProps,
-  updated: validateProps
+  updated: validateProps,
+  created() {
+    validateProps.call(this)
+
+    this.$scope && this.name && this.$scope.emit('initialized', this.name)
+  },
 };

@@ -16,4 +16,10 @@ export default class PathService {
       return this.root[name] = {};
     }
   }
+
+  getRootByPath(path = []) {
+    return path.reduce((result, key) => {
+      return result[key]
+    }, this.root)
+  }
 }

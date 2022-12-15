@@ -49,6 +49,13 @@ export default {
           return
         }
 
+        this.$scope.emit('changed', {
+          name: this.name,
+          oldValue: this.$value,
+          newValue: value
+        })
+
+
         if (this.$vuex) {
           const store = this.$store || this.VueResourceForm.store;
           if (!store) {

@@ -46,7 +46,8 @@ export const propsFactory = function() {
     actionPendings: {},
     lastSaveFailed: false,
     requireSource: null,
-    translationName: null
+    translationName: null,
+    scope: null
   };
 };
 
@@ -76,6 +77,8 @@ export const nameMapper = function(name) {
       return 'readonly';
     case 'rootResource':
       return '$rootResource';
+    case 'scope':
+      return '$scope';
     default:
       return name;
   }
@@ -296,7 +299,7 @@ export default {
     )
 
     if(this.isNested){
-      if(this.$slots.default.length > 1) {
+      if(this.$slots.default && this.$slots.default.length > 1) {
         genForm(this.$slots.default)
       } else {
         return this.$slots.default
@@ -488,6 +491,13 @@ export default {
     },
     $rootResource() {
       return this.rootResource || this.$resource
+    },
+    $scope() {
+      return {
+        emit() {
+
+        }
+      }
     }
   },
   methods: {
@@ -630,21 +640,21 @@ export default {
     isNew(){
       return this.single ? false : !this.resourceId()
     },
-    submit() {
+    submit(resource = cloneDeep(this.$resource), root) {
       // let onChange inputs change the model
       return this.$nextTick(() => {
         this.$emit('before-submit', {
-          resource: this.$resource
+          resource
         });
         this.$emit('submit', {
-          resource: this.$resource
+          resource
         });
         if (!this.auto) {
           return;
         }
         this.setSyncProp('saving', true);
 
-        const resource = this.executeEffectEventFold('onBeforeSave', 'resource', this.preserialize())
+        resource = this.executeEffectEventFold('onBeforeSave', 'resource', this.preserialize(resource, root))
 
         if(!resource || typeof resource !== 'object') {
           throw `[vrf] onBeforeSave handlers should return an object, but result is ${resource}`
@@ -696,16 +706,19 @@ export default {
         }).catch(console.error)
       })
     },
-    preserialize() {
-      var children, name, ref, resource;
-      resource = cloneDeep(this.$resource);
-      ref = this.form.$pathService.root;
-      for (name in ref) {
-        children = ref[name];
-        resource[name + 'Attributes'] = resource[name];
-        delete resource[name];
+    preserialize(resource, root) {
+      resource ||= cloneDeep(this.$resource)
+      root ||= this.form.$pathService.root
+
+      for (let name in root) {
+        resource[name + 'Attributes'] = resource[name]
+        delete resource[name]
+
+        if(Object.keys(root[name]).length > 0) {
+          this.preserialize(resource[name], root[name])
+        }
       }
-      return resource;
+      return resource
     },
     deserialize(json) {},
     setResource(resource) {
