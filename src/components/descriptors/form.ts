@@ -97,6 +97,10 @@ export default {
     /**
       * Main resource of form
       */
+    value: Object,
+    /**
+      * Alias to value
+      */
     resource: Object,
     /**
       * Sources for current form
@@ -354,6 +358,10 @@ export default {
     return genForm(children)
   },
   mounted() {
+    if(this.value && this.resource) {
+      console.error('[vrf] The props value and resource are specified both, you need to use only one, value is preferrable.')
+    }
+
     this.mountEffects()
 
     if(this.auto && !this.resourceId() && !this.$resource){
@@ -398,13 +406,13 @@ export default {
       return this.translationName || this.$name;
     },
     $$resource() {
-      return this.resource;
+      return this.value || this.resource;
     },
     $resource() {
       if (this.vuex) {
         return this.$store.state[camelCase(this.$name)];
       }
-      return this.innerResource || this.resource;
+      return this.innerResource || this.$$resource;
     },
     $sources() {
       return this.innerSources || this.sources || this.$resourcesDeprecated || {};
@@ -617,7 +625,11 @@ export default {
       this[`inner${capitalizeFirst(camelize(name))}`] = value;
       this.$emit(`update:${name}`, value);
       if (name === 'sources') { // for deprecated prop sources sync
-        return this.$emit("update:resources", value);
+        return this.$emit("update:resources", value)
+      }
+
+      if(name === 'resource') {
+        this.$emit('input', value)
       }
     },
     resourceId(){

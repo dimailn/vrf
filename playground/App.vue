@@ -5,7 +5,11 @@
     VRF playground
     <h1> Simple form </h1>
     <div style="display: flex">
-      <rf-form :resource="todo" class="form" v-slot="{$resource}">
+      <rf-form
+        v-model="todo"
+        class="form"
+        v-slot="{$resource}"
+      >
         <rf-scope :disabled="$resource.title.length > 5">
           <rf-input name="title" />
 
@@ -62,7 +66,7 @@
 
     <h1> Nested form </h1>
     <div style="display: flex">
-      <rf-form :resource="user" class="form">
+      <rf-form v-model="user" class="form">
         <rf-nested name="todos">
           <template slot-scope="props">
             <div class="form">
