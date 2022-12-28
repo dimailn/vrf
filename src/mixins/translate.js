@@ -1,13 +1,30 @@
 export default {
   methods: {
-    t: function(property, modelName = this.$translationName) {
-      var translate, vue;
-      vue = Object.getPrototypeOf(this.$root).constructor;
-      translate = vue.prototype.VueResourceForm.translate;
+    t: function(property, modelName = this.$translationName, options = {}) {
+      const vue = Object.getPrototypeOf(this.$root).constructor
+      const translate = vue.prototype.VueResourceForm.translate
+
       if (!translate) {
-        return property;
+        return property
       }
-      return translate(property, modelName);
+
+      if (options.isAction) {
+        property = `$${property}`
+      }
+
+      const translationFromModelScope = translate.call(this, property, modelName)
+
+      if (translationFromModelScope === null) {
+        const translationFromVrfScope = translate.call(this, property, '$vrf')
+
+        if (translationFromVrfScope !== null) {
+          return translationFromVrfScope
+        }
+
+        return property
+      }
+
+      return translationFromModelScope
     }
   }
 };
