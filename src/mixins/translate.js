@@ -8,14 +8,12 @@ export default {
         return property
       }
 
-      if (options.isAction) {
-        property = `$${property}`
-      }
+      const propertyName = options.isAction ? `$${property}` : property
 
-      const translationFromModelScope = translate.call(this, property, modelName)
+      const translationFromModelScope = translate.call(this, propertyName, modelName)
 
       if (translationFromModelScope === null) {
-        const translationFromVrfScope = translate.call(this, property, '$vrf')
+        const translationFromVrfScope = translate.call(this, propertyName, '$vrf')
 
         if (translationFromVrfScope !== null) {
           return translationFromVrfScope
