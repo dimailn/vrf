@@ -17,7 +17,7 @@ export default {
       return this.$originalDisabled;
     },
     humanName: function() {
-      return this.t('submit', '$vrf');
+      return this.t('submit', this.$translationName, { isAction: true })
     }
   }
 };

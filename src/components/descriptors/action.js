@@ -20,7 +20,7 @@ export default {
       if (this.label) {
         return this.label;
       }
-      return this.t(`$actions.${this.labelName || this.name}`);
+      return this.t(this.labelName || this.name, this.$translationName, { isAction: true });
     }
   },
   render: function(h) {
