@@ -153,7 +153,7 @@ export default function(components) {
 
       Vue.prototype.VueResourceForm.translate = function (modelProperty, modelName) {
         if (!this.$t || !this.$te) {
-          return modelProperty
+          return null
         }
 
         const path = `models.${modelName}.${modelProperty}`
