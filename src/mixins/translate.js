@@ -13,7 +13,7 @@ export default {
       const translationFromModelScope = translate.call(this, propertyName, modelName)
 
       if (translationFromModelScope === null) {
-        const translationFromVrfScope = translate.call(this, propertyName, '$vrf')
+        const translationFromVrfScope = translate.call(this, propertyName, null)
 
         if (translationFromVrfScope !== null) {
           return translationFromVrfScope
