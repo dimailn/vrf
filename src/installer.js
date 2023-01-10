@@ -156,9 +156,9 @@ export default function(components) {
           return null
         }
 
-        const scope = modelName === null ? 'defaults' : 'models'
+        const scope = modelName === null ? 'defaults' : `models.${modelName}`
 
-        const path = `vrf.${scope}.${modelName}.${modelProperty}`
+        const path = `vrf.${scope}.${modelProperty}`
 
         if (!this.$te(path)) {
           return null
