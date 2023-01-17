@@ -234,6 +234,13 @@ export default {
     actionPendings: {
       type: Object
     },
+    /**
+     * Postfix for nested attributes for serialization
+     */
+    nestedPostfix: {
+      type: String,
+      default: 'Attributes'
+    },
     // Internal service settings used for nested forms
     /**
      * @ignore
@@ -725,13 +732,17 @@ export default {
       root ||= this.form.$pathService.root
 
       for (let name in root) {
-        resource[name + 'Attributes'] = resource[name]
+        const value = resource[name]
+
         delete resource[name]
+
+        resource[name + this.nestedPostfix] = value
 
         if(Object.keys(root[name]).length > 0) {
           this.preserialize(resource[name], root[name])
         }
       }
+
       return resource
     },
     deserialize(json) {},
