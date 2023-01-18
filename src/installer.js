@@ -4,6 +4,8 @@ import descriptors from './components/descriptors';
 
 import indexBy from './utils/index-by';
 
+import merge from 'lodash.merge'
+
 import {
   installer
 } from 'vue-provide-observable';
@@ -37,6 +39,7 @@ export default function(components) {
       var base, component, name;
 
       Vue.prototype.VueResourceForm || (Vue.prototype.VueResourceForm = {})
+      Vue.prototype.VueResourceForm.templates ||= {}
 
       if (process.env.NODE_ENV === 'development') {
         console.log(`[vrf] v.${__VERSION__}`);
@@ -56,6 +59,14 @@ export default function(components) {
           if (typeof adapter.install === "function") {
             adapter.install(Vue);
           }
+
+          if(adapter.templates) {
+            Vue.prototype.VueResourceForm.templates = merge(
+              Vue.prototype.VueResourceForm.templates,
+              adapter.templates
+            )
+          }
+
           results = [];
           for (name in adapter.components) {
             component = adapter.components[name];
