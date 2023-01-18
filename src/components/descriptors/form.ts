@@ -26,6 +26,7 @@ import VueProvideObservable from 'vue-provide-observable';
 import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames, Event, Message} from '../../types/effect'
 import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
+import Templates from '@/mixins/templates'
 
 export const propsFactory = function() {
   return {
@@ -86,7 +87,10 @@ export const nameMapper = function(name) {
 
 export default {
   name: 'rf-form',
-  mixins: [VueProvideObservable('vrf', propsFactory, nameMapper)],
+  mixins: [
+    VueProvideObservable('vrf', propsFactory, nameMapper),
+    Templates
+  ],
   provide: function() {
     return {
       vueResourceFormPath: this.path,
@@ -500,8 +504,16 @@ export default {
     isNested() {
       return !!this.path;
     },
-    $loader(){
-      return this.VueResourceForm.loader
+    $loader() {
+      if (this.$templates.loader) {
+        return this.$templates.loader
+      }
+
+      if (this.VueResourceForm.loader) {
+        console.warn('[vrf] Using Vue.prototype.VueResourceForm.loader is deprecated and will be removed, use templates adapter option instead.')
+
+        return this.VueResourceForm.loader
+      }
     },
     $rootResource() {
       return this.rootResource || this.$resource
