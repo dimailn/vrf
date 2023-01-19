@@ -12,7 +12,7 @@ export default {
   mixins: [Templates],
   props: {
     type: {
-      type: String,
+      type: [String, Object, Function],
       required: true
     },
     entity: String,
@@ -147,15 +147,7 @@ export default {
       return typeof titleKey === 'function' ? titleKey(item) : get(item, titleKey)
     },
     setupAutocomplete() {
-      const vue = Object.getPrototypeOf(this.$root).constructor
-
-      const provider = vue.prototype.VueResourceForm.autocompletes?.find((provider) => provider.name === this.type)
-
-      if (!provider) {
-        throw `[vrf] Autocomplete provider for ${this.type} not found`;
-      }
-
-      const {setup} = provider
+      const setup = this.providerSetup
 
       if(!setup) {
         throw `[vrf] Autocomplete provider should contain setup method, but ${this.type} provider doesn't have`
@@ -199,6 +191,26 @@ export default {
     },
     $idKey() {
       return this.idKey || this.titleKey
+    },
+    providerSetup() {
+      if (typeof this.type === 'function') {
+        return this.type
+      }
+
+      if (typeof this.type === 'object' && this.type !== null && this.type.setup) {
+        return this.type.setup
+      }
+
+      const vue = Object.getPrototypeOf(this.$root).constructor
+
+      const provider = vue.prototype.VueResourceForm.autocompletes?.find((provider) => provider.name === this.type)
+
+
+      if (!provider) {
+        throw `[vrf] Autocomplete provider for ${this.type} not found`;
+      }
+
+      return provider.setup
     }
   }
 };
