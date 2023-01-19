@@ -117,7 +117,7 @@ Binding to an object is the cornerstone of vrf.  This concept assumes that inste
 ```vue
 <template>
 
-<rf-form :resource="resource" :errors="errors">
+<rf-form v-model="resource" :errors="errors">
   <rf-input name="title">
 </rf-form>
 
@@ -242,7 +242,7 @@ Some components (for example, such as selects) require options for their work.  
 
 <template>
 
-<rf-form :resource="todo" :sources="sources">
+<rf-form v-model="todo" :sources="sources">
   <rf-select name="status" options="statuses" />
 </rf-form>
 
@@ -285,7 +285,7 @@ Vrf supports work with nested entities, both single and with collections. To wor
 ```vue
 <template>
 
-<rf-form :resource="todo">
+<rf-form v-model="todo">
   <rf-input name="title" />
   <rf-nested name="subtasks"> // you may specify translation-name for nested scope, by default it will be singularized name
     <template v-slot="props">
