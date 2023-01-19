@@ -1,14 +1,20 @@
-import BaseInput from '@/components/descriptors/base-input';
+import BaseInput from '@/components/descriptors/base-input'
 
-import pick from '@/utils/pick';
+import pick from '@/utils/pick'
+import get from 'lodash.get'
 
-import debounce from 'lodash.debounce';
+import debounce from 'lodash.debounce'
+import Templates from '@/mixins/templates'
 
 export default {
   name: 'rf-autocomplete',
   extends: BaseInput,
+  mixins: [Templates],
   props: {
-    type: String,
+    type: {
+      type: String,
+      required: true
+    },
     entity: String,
     limit: [Number, String],
     disabled: [Boolean, String],
@@ -19,9 +25,15 @@ export default {
       default: true
     },
     stateless: Boolean,
-    rfParams: Object
+    params: Object,
+    titleKey: {
+      type: [String, Function]
+    },
+    idKey: {
+      type: [String, Function]
+    }
   },
-  data: function() {
+  data() {
     return {
       query: '',
       loading: false,
@@ -30,71 +42,163 @@ export default {
     };
   },
   watch: {
-    $value: function() {
-      return this.providerInstance.onValueChanged();
+    $value() {
+      this.executeEvent('onValueChanged')
     }
   },
-  mounted: function() {
-    return this.providerInstance.mounted();
+  mounted() {
+    this.setupAutocomplete()
+    this.executeEvent('onMounted')
+  },
+  created() {
+    this.listeners = {}
   },
   methods: {
-    reset: function() {
+    reset() {
       this.query = '';
       return this.$value = null;
     },
-    onSelect: function(item) {
-      this.providerInstance.onSelect(item);
-      return this.$emit('select', item);
+    onSelect(item) {
+      const result = this.executeEvent('onSelect', [item])
+
+      const {$idKey, titleKey} = this
+
+      if (result instanceof Object) {
+        const {value, query} = result
+
+        this.$value = value
+        this.query = query
+      } else if (titleKey || $idKey) {
+        if ($idKey) {
+          this.$value = typeof $idKey === 'function' ? $idKey(item) : get(item, $idKey)
+        }
+
+        if(titleKey) {
+          this.query = typeof titleKey === 'function' ? titleKey(item) : get(item, titleKey)
+        }
+      }
+
+      return this.$emit('select', item)
     },
-    onInput: function(val) {
-      this.$emit('update:text', val);
-      this.load();
-      this.providerInstance.onInput();
-      return this.$emit('input', val);
+    onInput(val) {
+      this.$emit('update:text', val)
+      this.load()
+
+      this.executeEvent('onInput')
+
+      return this.$emit('input', val)
     },
-    focus: function() {
+    focus() {
       return this.$refs.autocomplete.focus();
     },
-    onClick: function() {
-      this.providerInstance.onInputClick();
-      return this.$emit('click');
+    onClick() {
+      this.executeEvent('onInputClick')
+
+      return this.$emit('click')
     },
-    onClear: function() {
-      return this.$emit('clear');
+    onClear() {
+      this.executeEvent('onClear')
+
+      return this.$emit('clear')
     },
     load: debounce(function() {
       if ((this.query != null) && this.query.length > 0) {
         return this.instantLoad();
       }
-    }, 400)
-  },
-  asyncMethods: {
-    instantLoad: function() {
+    }, 400),
+    executeEvent(eventName, args = []) {
+      const handlers = this.listeners[eventName] || []
+
+      return handlers.reduce((lastResult, handler) => lastResult || handler(...args), undefined)
+    },
+    instantLoad() {
       if (!this.entity) {
         throw `[vrf] Entity for autocomplete ${this.name} must be defined`;
       }
+
       if (this.active) {
-        this.loading = true;
-        return this.providerInstance.load(pick(this, ['query', 'limit', 'entity'])).then((items) => {
-          this.items = items;
-          this.loading = false;
-          return this.menu = this.items.length > 0;
-        });
+        this.loading = true
+
+        this.executeEvent('onLoad', [pick(this, ['query', 'limit', 'entity'])])
+          .then((items) =>  {
+            this.items = items
+            this.menu = this.items.length > 0
+          })
+          .finally(() => this.loading = false)
       }
-    }
-  },
-  computed: {
-    providerInstance: function() {
-      var provider, vue;
-      vue = Object.getPrototypeOf(this.$root).constructor;
-      provider = vue.prototype.VueResourceForm.autocompletes[this.type];
+    },
+    onFor(item) {
+      return {
+        click: this.onSelect.bind(this, item)
+      }
+    },
+    on() {
+      return {
+        click: this.onSelect
+      }
+    },
+    presentItem(item) {
+      const {titleKey} = this
+
+      if(!titleKey) {
+        return item
+      }
+
+      return typeof titleKey === 'function' ? titleKey(item) : get(item, titleKey)
+    },
+    setupAutocomplete() {
+      const vue = Object.getPrototypeOf(this.$root).constructor
+
+      const provider = vue.prototype.VueResourceForm.autocompletes?.find((provider) => provider.name === this.type)
+
       if (!provider) {
         throw `[vrf] Autocomplete provider for ${this.type} not found`;
       }
-      return new provider(this.entity, this.$resource, this);
+
+      const {setup} = provider
+
+      if(!setup) {
+        throw `[vrf] Autocomplete provider should contain setup method, but ${this.type} provider doesn't have`
+      }
+
+      const context = {
+        form: this.$form,
+        ...[
+          'onLoad',
+          'onSelect',
+          'onClear',
+          'onInput',
+          'onMounted',
+          'onValueChanged'
+        ].reduce((listenerSetups, name) => {
+          listenerSetups[name] = (handler) => {
+            this.listeners[name] ||= []
+
+            this.listeners[name].push(handler)
+          }
+
+          return listenerSetups
+        }, {})
+      }
+
+      return setup(context)
+    }
+  },
+  computed: {
+    itemsComponent() {
+      return this.$templates[this.type] && this.$templates[this.type].items
     },
-    itemsComponent: function() {
-      return this.providerInstance.getItemsComponent();
+    itemComponent() {
+      return this.$templates[this.type] && this.$templates[this.type].item
+    },
+    hasItemsSlot() {
+      return !!this.$scopedSlots.items
+    },
+    hasItemSlot() {
+      return !!this.$scopedSlots.item
+    },
+    $idKey() {
+      return this.idKey || this.titleKey
     }
   }
 };
