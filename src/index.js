@@ -36,11 +36,11 @@ import RfRequire from './components/templates/require'
 
 import RfScope from './components/templates/scope'
 
+import RfAutocomplete from './components/templates/autocomplete'
+
 import descriptors from './components/descriptors';
 
 import mutations from './vuex/mutations';
-
-import AutocompleteProvider from './abstract/autocomplete-provider';
 
 import Resource from './mixins/resource';
 
@@ -67,7 +67,8 @@ const components = {
   RfRadioGroup,
   RfRadio,
   RfRequire,
-  RfScope
+  RfScope,
+  RfAutocomplete
 };
 
 export default installer(components);
@@ -89,10 +90,10 @@ export {
   RfActionResult,
   RfRequire,
   RfScope,
+  RfAutocomplete,
   descriptors,
   mutations,
   components,
-  AutocompleteProvider,
   Resource,
   installer
 };
