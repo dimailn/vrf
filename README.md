@@ -242,7 +242,7 @@ Some components (for example, such as selects) require options for their work.  
 
 <template>
 
-<rf-form v-model="todo" :sources="sources">
+<rf-form v-model="resource" :sources="sources">
   <rf-select name="status" options="statuses" />
 </rf-form>
 
