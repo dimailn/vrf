@@ -31,6 +31,10 @@ export default {
     },
     idKey: {
       type: [String, Function]
+    },
+    allowEmptyRequests: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -49,6 +53,12 @@ export default {
   mounted() {
     this.setupAutocomplete()
     this.executeEvent('onMounted')
+
+    document.addEventListener('click', this.handleDocumentClick)
+  },
+
+  beforeDestroy(){
+    document.removeEventListener('click', this.handleDocumentClick)
   },
   created() {
     this.listeners = {}
@@ -78,6 +88,8 @@ export default {
         }
       }
 
+      this.menu = false
+
       return this.$emit('select', item)
     },
     onInput(val) {
@@ -94,7 +106,11 @@ export default {
     onClick() {
       this.executeEvent('onInputClick')
 
-      return this.$emit('click')
+      this.$emit('click')
+
+      if (this.items.length > 0) {
+        this.menu = true
+      }
     },
     onClear() {
       this.executeEvent('onClear')
@@ -102,8 +118,11 @@ export default {
       return this.$emit('clear')
     },
     load: debounce(function() {
-      if ((this.query != null) && this.query.length > 0) {
-        return this.instantLoad();
+      if ((this.query != null && this.query.length > 0) || this.allowEmptyRequests) {
+        return this.instantLoad()
+      } else {
+        this.items = []
+        this.menu  = false
       }
     }, 400),
     executeEvent(eventName, args = []) {
@@ -174,6 +193,16 @@ export default {
       }
 
       return setup(context)
+    },
+    handleDocumentClick(e) {
+      if (!this.menu) { return }
+
+      const { target } = e
+      const { root } = this.$refs
+
+      if (!root.contains(target)) {
+        this.menu = false
+      }
     }
   },
   computed: {
