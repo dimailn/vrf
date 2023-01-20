@@ -285,7 +285,7 @@ Vrf supports work with nested entities, both single and with collections. To wor
 ```vue
 <template>
 
-<rf-form v-model="todo">
+<rf-form v-model="resource">
   <rf-input name="title" />
   <rf-nested name="subtasks"> // you may specify translation-name for nested scope, by default it will be singularized name
     <template v-slot="props">
