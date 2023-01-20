@@ -88,6 +88,8 @@ export default {
         }
       }
 
+      this.menu = false
+
       return this.$emit('select', item)
     },
     onInput(val) {
@@ -104,7 +106,11 @@ export default {
     onClick() {
       this.executeEvent('onInputClick')
 
-      return this.$emit('click')
+      this.$emit('click')
+
+      if (this.items.length > 0) {
+        this.menu = true
+      }
     },
     onClear() {
       this.executeEvent('onClear')
