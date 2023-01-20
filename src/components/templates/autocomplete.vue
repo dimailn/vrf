@@ -1,5 +1,5 @@
 <template>
-<div>
+<div ref="root">
   <input
     v-model="query"
     :disabled="$disabled"

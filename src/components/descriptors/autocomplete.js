@@ -53,6 +53,12 @@ export default {
   mounted() {
     this.setupAutocomplete()
     this.executeEvent('onMounted')
+
+    document.addEventListener('click', this.handleDocumentClick)
+  },
+
+  beforeDestroy(){
+    document.removeEventListener('click', this.handleDocumentClick)
   },
   created() {
     this.listeners = {}
@@ -181,6 +187,16 @@ export default {
       }
 
       return setup(context)
+    },
+    handleDocumentClick(e) {
+      if (!this.menu) { return }
+
+      const { target } = e
+      const { root } = this.$refs
+
+      if (!root.contains(target)) {
+        this.menu = false
+      }
     }
   },
   computed: {
