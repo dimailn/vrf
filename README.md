@@ -464,7 +464,7 @@ you can use this component as a wrapper for checkboxes, or use its ```options```
 ```vue
 <template>
 
-<rf-form v-model="todo">
+<rf-form v-model="resource">
 
   <!-- rf-bitwise as wrapper, markup mode -->
   <rf-bitwise name="flags">
