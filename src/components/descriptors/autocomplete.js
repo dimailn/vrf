@@ -31,6 +31,10 @@ export default {
     },
     idKey: {
       type: [String, Function]
+    },
+    allowEmptyRequests: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -102,8 +106,11 @@ export default {
       return this.$emit('clear')
     },
     load: debounce(function() {
-      if ((this.query != null) && this.query.length > 0) {
-        return this.instantLoad();
+      if ((this.query != null && this.query.length > 0) || this.allowEmptyRequests) {
+        return this.instantLoad()
+      } else {
+        this.items = []
+        this.menu  = false
       }
     }, 400),
     executeEvent(eventName, args = []) {
