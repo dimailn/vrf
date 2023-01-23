@@ -231,8 +231,9 @@ export default {
       }
 
       const vue = Object.getPrototypeOf(this.$root).constructor
+      const {autocompletes} = vue.prototype.VueResourceForm
 
-      const provider = vue.prototype.VueResourceForm.autocompletes?.find((provider) => provider.name === this.type)
+      const provider = autocompletes && autocompletes.find((provider) => provider.name === this.type)
 
 
       if (!provider) {
