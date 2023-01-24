@@ -174,6 +174,9 @@ export default {
 
       const context = {
         form: this.$form,
+        setQuery: (query) => {
+          this.query = query
+        },
         ...[
           'onLoad',
           'onSelect',
