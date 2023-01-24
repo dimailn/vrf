@@ -177,6 +177,11 @@ export default {
         setQuery: (query) => {
           this.query = query
         },
+        setValue: (value) => {
+          this.$value = value
+        },
+        getQuery: () => this.query,
+        getValue: () => this.$value,
         ...[
           'onLoad',
           'onSelect',
