@@ -69,6 +69,8 @@ export default {
       return this.$value = null;
     },
     onSelect(item) {
+      this.abortRequest && this.abortRequest()
+
       const result = this.executeEvent('onSelect', [item])
 
       const {$idKey, titleKey} = this
@@ -90,7 +92,7 @@ export default {
 
       this.menu = false
 
-      return this.$emit('select', item)
+      this.$emit('select', item)
     },
     onInput(val) {
       this.$emit('update:text', val)
@@ -138,8 +140,20 @@ export default {
       if (this.active) {
         this.loading = true
 
-        this.executeEvent('onLoad', [pick(this, ['query', 'limit', 'entity'])])
-          .then((items) =>  {
+        Promise.race([
+          new Promise(resolve => this.abortRequest = () => {
+            resolve({status: 'aborted'})
+            this.abortRequest = null
+          }),
+
+          this.executeEvent('onLoad', [pick(this, ['query', 'limit', 'entity'])])
+            .then(items => ({status: 'ok', items}))
+        ])
+          .then(({status, items}) =>  {
+            if (status === 'aborted') {
+              return
+            }
+
             this.items = items
             this.menu = this.items.length > 0
           })
