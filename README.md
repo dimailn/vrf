@@ -56,6 +56,7 @@ Vue.use(Vrf)
 - [Advanced](#advanced)
   - [Architecture](#architecture)
   - [Effects API](#effects-api)
+  - [Autocomplete API](#autocomplete-api)
   - [Adapter API](#adapter-api)
 
 
@@ -670,6 +671,80 @@ The listeners of these events are just mappers, which get object and return modi
 ### User notifications
 
 There is a standard way to provide user notification customization using ```onShowMessage``` subscription. So, you may use ```showMessage``` helper to emit message from any effect using type definitions from vrf, and any notifications effect which uses ```onShowMessage``` subscription will be able to show this notification.
+
+## Autocomplete API
+
+The component ```rf-autocomplete``` is designed to be reusable through providers that contain the logic of fetching/initializing data and any custom functionalities, like special row for creating new resources and so on.
+
+The definition of autocomplete provider is quite similar to an effect definition:
+
+```javascript
+
+// vrf-search.js
+export default () => ({
+  name: 'search',
+  setup({
+    onLoad,
+    onMounted,
+    onValueChanged
+  }) {
+    onLoad(async ({query}) => {
+      const items = await ...
+      
+      return items
+    })
+    
+    onMounted(() => {
+      // onMounted logic, if you need
+    })
+    
+    onValueChanged(() => {
+      // onValueChanged logic, if you need
+    })
+  }
+})
+```
+
+Using as a global plugin
+
+```javascript
+import vrfSearch from './vrf-search'
+
+Vue.use(Vrf, {
+  autocompletes: [
+    vrfSearch()  
+  ]
+})
+
+```
+
+```vue
+<rf-autocomplete name="title" type="search" title-key="title" />
+```
+
+or ad-hoc
+
+```vue
+<template>
+
+<rf-autocomplete name="title" :type="search" title-key="title" />
+
+</template>
+
+<script>
+import vrfSearch from './vrf-search'
+
+export default {
+  computed: {
+    search: vrfSearch()
+  }
+}
+
+</script>
+```
+
+
+
 
 
 ## Adapter API
