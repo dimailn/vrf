@@ -14,6 +14,14 @@ describe 'autocomplete', ->
 
   describe 'with provider', ->
     describe 'with specified title-key', ->
+      def('listenersMap', -> {})
+
+      beforeEach ->
+        document.addEventListener = jest.fn((event, cb) =>
+          $listenersMap[event] = cb
+        )
+
+      def('componentOnSelect', -> jest.fn())
       def('wrapper', ->
         mount(
           template: """
@@ -25,6 +33,7 @@ describe 'autocomplete', ->
                 title-key="title"
                 ref="autocomplete"
                 class="autocomplete"
+                @select="onSelect"
               />
             </rf-form>
           """
@@ -32,6 +41,8 @@ describe 'autocomplete', ->
             resource: {
               title: ''
             }
+          methods:
+            onSelect: $componentOnSelect
         )
       )
 
@@ -42,11 +53,17 @@ describe 'autocomplete', ->
         }
       ]))
 
+      def('onMounted', -> jest.fn())
+
+      def('onSelect', -> jest.fn())
+
       def('autocompletes', () => [
         {
           name: 'sample',
-          setup: ({onLoad}) ->
+          setup: ({onLoad, onMounted, onSelect}) ->
             onLoad($onLoad)
+            onMounted($onMounted)
+            onSelect($onSelect)
         }
       ])
 
@@ -54,28 +71,50 @@ describe 'autocomplete', ->
 
       def('input', -> $wrapper.find('input'))
 
+      beforeEach -> $wrapper
 
-      beforeEach ->
-        $input.element.value = 'test'
-        $input.trigger('input')
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+      test 'calls onMounted', ->
+        expect($onMounted).toHaveBeenCalled()
 
-      test 'calls onLoad with query', ->
-        expect($onLoad).toHaveBeenCalledWith({
-          query: 'test',
-          entity: 'todo',
-          limit: undefined
-        })
+      describe 'on user input autocomplete', ->
+        beforeEach ->
+          $input.element.value = 'test'
+          $input.trigger('input')
+          await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      test 'contains items', ->
-        expect($wrapper.vm.$refs.autocomplete.items).toEqual(
-          [
-            {
-              id: 1
-              title: 'Some text'
-            }
-          ]
-        )
+        test 'calls onLoad with query', ->
+          expect($onLoad).toHaveBeenCalledWith({
+            query: 'test',
+            entity: 'todo',
+            limit: undefined
+          })
 
-      test 'shows suggestion', ->
-        expect($wrapper.text()).toContain('Some text')
+        test 'contains items', ->
+          expect($wrapper.vm.$refs.autocomplete.items).toEqual(
+            [
+              {
+                id: 1
+                title: 'Some text'
+              }
+            ]
+          )
+
+        test 'shows suggestion', ->
+          expect($wrapper.text()).toContain('Some text')
+
+        describe 'on item clicked', ->
+          beforeEach ->
+            $wrapper.find('li').trigger('click')
+
+          test 'calls onSelect in provider', ->
+            expect($onSelect).toHaveBeenCalledWith(id: 1, title: 'Some text')
+
+          test 'calls onSelect in component', ->
+            expect($componentOnSelect).toHaveBeenCalledWith(id: 1, title: 'Some text')
+
+        describe 'on document clicked', ->
+          beforeEach ->
+            $listenersMap.click(target: $wrapper.find('form').element)
+
+          test 'doesnt show suggestion', ->
+            expect($wrapper.text()).not.toContain('Some text')
