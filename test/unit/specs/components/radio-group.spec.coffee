@@ -5,20 +5,36 @@ import {
 } from '@vue/test-utils'
 
 sharedExamplesFor "successful rendering", ->
-  it "contains radio options", ->
+  test "contains radio options", ->
     expect($wrapper.text()).toContain('Admin')
     expect($wrapper.text()).toContain('Manager')
+
+    expect($wrapper.find('input[value=admin]').element).not.toBeChecked()
+    expect($wrapper.find('input[value=manager]').element).not.toBeChecked()
+
 
 sharedExamplesFor "successful selection", ->
   describe 'clicked radio', ->
     beforeEach ->
       $wrapper.find('input[value=admin]').setChecked(true)
 
-    it 'changes value', ->
+    test 'changes value', ->
       expect($wrapper.vm.resource.typeId).toBe 'admin'
+
+sharedExamplesFor "successful showing changes", ->
+  describe "change value in resource", ->
+    beforeEach ->
+      await $wrapper.vm.$nextTick()
+
+      $resource.typeId = 'admin'
+
+    test 'radio should be checked', ->
+      expect($wrapper.find('input[value=admin]').element).toBeChecked()
 
 
 describe 'radio-group', ->
+  def('resource', -> typeId: null)
+
   describe 'markup mode', ->
     def(
       'wrapper'
@@ -33,13 +49,13 @@ describe 'radio-group', ->
         '''
 
         data: ->
-          resource:
-            typeId: null
+          resource: $resource
       )
     )
 
     itBehavesLike "successful rendering"
     itBehavesLike "successful selection"
+    itBehavesLike "successful showing changes"
 
 
   describe 'options mode', ->
@@ -53,8 +69,7 @@ describe 'radio-group', ->
         '''
 
         data: ->
-          resource:
-            typeId: null
+          resource: $resource
           options: [
             {
               id: 'admin'
@@ -70,6 +85,16 @@ describe 'radio-group', ->
 
     itBehavesLike "successful rendering"
     itBehavesLike "successful selection"
+    itBehavesLike "successful showing changes"
+
+    describe 'with initialized value', ->
+      def('resource', -> typeId: 'admin')
+
+      test 'radio should be checked', ->
+        expect($wrapper.find('input[value=admin]').element).toBeChecked()
+
+
+
 
 
 

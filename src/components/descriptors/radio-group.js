@@ -29,7 +29,8 @@ export default {
       if (this.wrapper.radioGroupValue === value) {
         return;
       }
-      return this.wrapper.radioGroupValue = value
+
+      this.wrapper.radioGroupValue = value
     }
   }
 };
