@@ -30,7 +30,8 @@ module.exports = {
     "**/specs/**/*.spec.coffee"
   ],
   coveragePathIgnorePatterns: [
-     "<rootDir>/src/components/descriptors"
+     "<rootDir>/src/components/descriptors",
+     "<rootDir>/src/utils/set.js"
   ],
   globals: {
     'ts-jest': {
