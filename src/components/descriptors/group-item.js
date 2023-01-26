@@ -64,7 +64,7 @@ export default {
 
       return false
     },
-    humanName: function() {
+    $label() {
       return this.label || this.t(this.$inverted ? `${this.name}__inverted` : this.name);
     },
     $value: {

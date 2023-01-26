@@ -16,11 +16,16 @@ export default {
   },
   mixins: [Resource, Translate],
   computed: {
-    humanName: function() {
+    $label() {
       if (this.label) {
         return this.label;
       }
       return this.t(this.labelName || this.name, this.$translationName, { isAction: true });
+    },
+    humanName: function() {
+      console.warn('[vrf] Computed property humanName is deprecated, use $label instead')
+
+      return this.$label
     }
   },
   render: function(h) {
@@ -30,7 +35,8 @@ export default {
     };
     if (this.$scopedSlots.activator) {
       nodes = this.$scopedSlots['activator']({
-        humanName: this.humanName,
+        humanName: this.$label,
+        label: this.$label,
         on: events,
         pending: this.$actionPendings[this.name] || false
       });
@@ -42,7 +48,7 @@ export default {
     } else {
       return h('button', {
         on: events
-      }, this.humanName);
+      }, this.$label)
     }
   },
   methods: {

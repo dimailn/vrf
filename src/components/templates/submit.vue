@@ -1,6 +1,6 @@
 <template>
 <button type="button" @click="$submit" v-if="!$disabled">
-  <slot>{{humanName}}</slot>
+  <slot>{{$label}}</slot>
 </button>
 </template>
 

@@ -16,7 +16,7 @@ export default {
       }
       return this.$originalDisabled;
     },
-    humanName: function() {
+    $label() {
       return this.t('submit', this.$translationName, { isAction: true })
     }
   }
