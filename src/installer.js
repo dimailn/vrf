@@ -1,8 +1,6 @@
-import dateInterceptor from './utils/date-interceptor';
+import dateInterceptor from './utils/date-interceptor'
 
-import descriptors from './components/descriptors';
-
-import indexBy from './utils/index-by';
+import descriptors from './components/descriptors'
 
 import merge from 'lodash.merge'
 
