@@ -16,8 +16,6 @@ import RfSubmit from './components/templates/submit';
 
 import RfNested from './components/templates/nested';
 
-import RfPartial from './components/templates/partial';
-
 import RfSpan from './components/templates/span';
 
 import RfBitwise from './components/templates/bitwise';
@@ -58,7 +56,6 @@ const components = {
   RfForm,
   RfSubmit,
   RfNested,
-  RfPartial,
   RfSpan,
   RfBitwise,
   RfAction,
@@ -83,7 +80,6 @@ export {
   RfForm,
   RfSubmit,
   RfNested,
-  RfPartial,
   RfSpan,
   RfBitwise,
   RfAction,

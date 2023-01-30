@@ -20,8 +20,6 @@ import autocomplete from './autocomplete';
 
 import form from './form';
 
-import partial from './partial';
-
 import bitwise from './bitwise';
 
 import action from './action';
@@ -38,4 +36,4 @@ import require from './require'
 
 import scope from './scope'
 
-export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, partial, bitwise, action, actionResult, file, radioGroup, radio, require, scope};
+export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, bitwise, action, actionResult, file, radioGroup, radio, require, scope};
