@@ -117,7 +117,10 @@ export default {
     onClear() {
       this.executeEvent('onClear')
 
-      return this.$emit('clear')
+      this.$emit('clear')
+
+      this.query = ''
+      this.$value = null
     },
     load: debounce(function() {
       if ((this.query != null && this.query.length > 0) || this.allowEmptyRequests) {
