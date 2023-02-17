@@ -23,107 +23,96 @@ sharedExamplesFor "non-auto mode warnings", ->
     expect($warnSpy).toHaveBeenCalledWith("Reload methods is applicable only to auto-forms")
 
 describe 'form', ->
-  beforeEach ->
-    Vue::VueResourceForm.effects = $effects
-    Vue::VueResourceForm.idFromRoute = $idFromRoute
-
-  def('idFromRoute', -> -> 1)
-  def('save', => jest.fn -> Promise.resolve([true, null]))
-  def('sources', ->
-    {
-      roles: [
-        {
-          id: 'admin'
-          title: 'Admin'
-        }
-        {
-          id: 'manager'
-          title: 'Manager'
-        }
-      ],
-      types: [
-        {
-          id: 1,
-          title: 'Some type'
-        }
-      ]
-      categories: [
-        {
-          id: 1
-          title: 'Category 1'
-        }
-        {
-          id: 2
-          title: 'Category 2'
-        }
-      ]
-    }
-  )
-  def('loadSources', -> jest.fn (names) ->
-    Promise.resolve(
-      Object.entries($sources)
-        .filter(([name, options]) -> names.includes(name))
-        .reduce(
-          (sources, [name, options]) -> sources[name] = options; sources
-          {}
-        )
-    )
-  )
-  def('loadSource', (name) -> jest.fn (name) -> Promise.resolve($sources[name]))
-
-  def('load', -> jest.fn -> Promise.resolve({id: 1, title: 'Test'}))
-  def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
-
-
-
-  def('create', -> jest.fn -> ->)
-  def('update', -> jest.fn -> ->)
-  def('created', -> jest.fn -> ->)
-
-  def('effects', ->
-    [
-      {
-        name: 'rest',
-        api: true,
-        effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction, onCreate, onCreated, onUpdate}) ->
-          onCreate($create)
-          onUpdate($update)
-          onSave($save)
-          onLoadSource($loadSource)
-          onLoadSources($loadSources)
-          onLoad($load)
-          onExecuteAction($executeAction)
-          onCreated($created)
-      }
-    ]
-  )
-
-
-
-  def('wrapper', ->
-    mount(
-      template: '''
-        <rf-form name="Todo" auto class="form">
-          <rf-input name="title" />
-          <rf-submit class="submit" />
-          <rf-action name="archive" class="rf-action" />
-        </rf-form>
-      '''
-    )
-  )
-
-  def('store', ->
-    new Vuex.Store(
-      {
-        state: {
-          todo: null
-        }
-        mutations
-      }
-    )
-  )
-
   describe 'auto mode, after load', ->
+    beforeEach ->
+      Vue::VueResourceForm.effects = $effects
+      Vue::VueResourceForm.idFromRoute = $idFromRoute
+
+    def('idFromRoute', -> -> 1)
+    def('save', => jest.fn -> Promise.resolve([true, null]))
+    def('sources', ->
+      {
+        roles: [
+          {
+            id: 'admin'
+            title: 'Admin'
+          }
+          {
+            id: 'manager'
+            title: 'Manager'
+          }
+        ],
+        types: [
+          {
+            id: 1,
+            title: 'Some type'
+          }
+        ]
+        categories: [
+          {
+            id: 1
+            title: 'Category 1'
+          }
+          {
+            id: 2
+            title: 'Category 2'
+          }
+        ]
+      }
+    )
+    def('loadSources', -> jest.fn (names) ->
+      Promise.resolve(
+        Object.entries($sources)
+          .filter(([name, options]) -> names.includes(name))
+          .reduce(
+            (sources, [name, options]) -> sources[name] = options; sources
+            {}
+          )
+      )
+    )
+    def('loadSource', (name) -> jest.fn (name) -> Promise.resolve($sources[name]))
+
+    def('load', -> jest.fn -> Promise.resolve({id: 1, title: 'Test'}))
+    def('executeAction', -> jest.fn -> Promise.resolve({data: 'data', status: 200}))
+
+
+
+    def('create', -> jest.fn -> ->)
+    def('update', -> jest.fn -> ->)
+    def('created', -> jest.fn -> ->)
+
+    def('effects', ->
+      [
+        {
+          name: 'rest',
+          api: true,
+          effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction, onCreate, onCreated, onUpdate}) ->
+            onCreate($create)
+            onUpdate($update)
+            onSave($save)
+            onLoadSource($loadSource)
+            onLoadSources($loadSources)
+            onLoad($load)
+            onExecuteAction($executeAction)
+            onCreated($created)
+        }
+      ]
+    )
+
+
+
+    def('wrapper', ->
+      mount(
+        template: '''
+          <rf-form name="Todo" auto class="form">
+            <rf-input name="title" />
+            <rf-submit class="submit" />
+            <rf-action name="archive" class="rf-action" />
+          </rf-form>
+        '''
+      )
+    )
+
     beforeEach ->
       await $wrapper.vm.$nextTick()
       await $wrapper.vm.$nextTick()
@@ -219,6 +208,16 @@ describe 'form', ->
 
 
     describe 'vuex enabled', ->
+      def('store', ->
+        new Vuex.Store(
+          {
+            state: {
+              todo: null
+            }
+            mutations
+          }
+        )
+      )
       def('wrapper', ->
         mount(
           template: '''
@@ -451,6 +450,81 @@ describe 'form', ->
 
         expect($wrapper.vm.resource).not.toBeNull()
         expect($wrapper.vm.resource.title).toBe 'Test'
+
+  describe 'side effects', ->
+    def('effects', -> [
+      {
+        name: 'test1',
+        effect: jest.fn()
+      },
+      {
+        name: 'test2',
+        effect: jest.fn()
+      },
+      {
+        name: 'test3',
+        effect: jest.fn()
+      }
+    ])
+
+    beforeEach ->
+        Vue::VueResourceForm.effects = $effects
+        await $wrapper.vm.$nextTick()
+
+
+    describe 'effects === true', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form effects/>
+          '''
+        )
+      )
+
+      test 'activates all effects', ->
+        expect($effects[0].effect).toHaveBeenCalled()
+        expect($effects[1].effect).toHaveBeenCalled()
+        expect($effects[2].effect).toHaveBeenCalled()
+
+
+    describe 'choose some effects', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form :effects="['test2', 'test3']" />
+          '''
+        )
+      )
+
+      test 'activates two effects', ->
+        expect($effects[0].effect).not.toHaveBeenCalled()
+        expect($effects[1].effect).toHaveBeenCalled()
+        expect($effects[2].effect).toHaveBeenCalled()
+
+    describe 'pass effect implementation and strings mixed', ->
+      def('additionalEffect', -> {
+        name: 'test4',
+        effect: jest.fn()
+      })
+
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form :effects="['test2', effect]" />
+          '''
+          computed:
+            effect: -> $additionalEffect
+        )
+      )
+
+      test 'activates chosen effect and directly passed implementation', ->
+        expect($effects[0].effect).not.toHaveBeenCalled()
+        expect($effects[1].effect).toHaveBeenCalled()
+        expect($effects[2].effect).not.toHaveBeenCalled()
+        expect($additionalEffect.effect).toHaveBeenCalled()
+
+
+
 
 
   describe 'non-auto mode', ->
