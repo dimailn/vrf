@@ -523,6 +523,38 @@ describe 'form', ->
         expect($effects[2].effect).not.toHaveBeenCalled()
         expect($additionalEffect.effect).toHaveBeenCalled()
 
+    describe 'when effects changes', ->
+      def('test1Unmounted', -> jest.fn())
+      def('test2Mounted', -> jest.fn())
+      def('effects', -> [
+        {
+          name: 'test1',
+          effect: jest.fn(({onUnmounted}) -> onUnmounted($test1Unmounted))
+        },
+        {
+          name: 'test2',
+          effect: jest.fn(({onMounted}) -> onMounted($test2Mounted))
+        }
+      ])
+
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form :effects="effects" />
+          '''
+
+          data: ->
+            effects: ['test1']
+        )
+      )
+
+      beforeEach ->
+        $wrapper.vm.effects = ['test2']
+        await $wrapper.vm.$nextTick()
+
+      test 'remounts effects', ->
+        expect($test1Unmounted).toHaveBeenCalled()
+        expect($test2Mounted).toHaveBeenCalled()
 
 
 
