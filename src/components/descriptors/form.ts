@@ -459,7 +459,19 @@ export default {
       }
 
       const effects : Array<Effect> = [...(this.VueResourceForm.effects || [])]
-        .filter((effect) => (this.auto && effect.api) || this.effects === true || (this.effects instanceof Array && this.effects.includes(effect.name)) || this.implicit === true)
+        .filter(
+          (effect) =>
+            (this.auto && effect.api) ||
+            this.effects === true ||
+            (this.effects instanceof Array && this.effects.includes(effect.name)) ||
+             this.implicit === true
+        )
+
+      if(this.effects instanceof Array) {
+        this.effects
+          .filter(effect => typeof effect === 'object' && effect.effect)
+          .forEach(effect => effects.push(effect))
+      }
 
       if(this.auto){
         effects.push({
