@@ -1,35 +1,16 @@
-import Select from '@/components/descriptors/select';
+import Group from '@/components/descriptors/group'
 
 export default {
   name: 'rf-bitwise',
-  vrfParent: 'Base',
-  extends: Select,
+  extends: Group,
   props: {
     options: [Array, String],
     inverted: Boolean
   },
-  data: function() {
-    return {
-      wrapper: {
-        bitwiseValue: 0
-      }
-    };
-  },
-  created: function() {
-    if (this.$originalValue == null) {
-      return;
-    }
-    return this.wrapper.bitwiseValue = this.$originalValue;
-  },
-  watch: {
-    'wrapper.bitwiseValue': function(value) {
-      return this.$originalValue = value;
-    },
-    '$originalValue': function(value) {
-      if (this.wrapper.bitwiseValue === value) {
-        return;
-      }
-      return this.wrapper.bitwiseValue = parseInt(value) || 0;
+  methods: {
+    setValueOnGroup(value) {
+      this.wrapper.groupValue = parseInt(value) || 0
     }
   }
-};
+}
+

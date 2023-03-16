@@ -36,4 +36,27 @@ import require from './require'
 
 import scope from './scope'
 
-export default {base, checkbox, datepicker, input, select, textarea, resource, submit, nested, autocomplete, form, bitwise, action, actionResult, file, radioGroup, radio, require, scope};
+import group from './group'
+
+export default {
+  base,
+  checkbox,
+  datepicker,
+  input,
+  select,
+  textarea,
+  resource,
+  submit,
+  nested,
+  autocomplete,
+  form,
+  bitwise,
+  action,
+  actionResult, file,
+  radioGroup,
+  radio,
+  require,
+  scope,
+  group
+}
+

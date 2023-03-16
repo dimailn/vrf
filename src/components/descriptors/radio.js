@@ -6,7 +6,7 @@ export default {
   extends: BaseInput,
   computed: {
     $fieldName: function() {
-      return 'radioGroupValue';
+      return 'groupValue';
     },
     $valuePropSpecified() {
       return false

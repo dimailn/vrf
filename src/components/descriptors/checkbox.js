@@ -30,7 +30,7 @@ export default {
       if (this.$power == null) {
         return this.name;
       }
-      return 'bitwiseValue';
+      return 'groupValue';
     },
     humanName: function() {
       return this.label || this.t(this.inverted ? `${this.name}__inverted` : this.name);
@@ -88,4 +88,4 @@ export default {
       return this.$originalValue = value ? this.$originalValue | 2 ** this.$power : this.$originalValue & ~(2 ** this.$power);
     }
   }
-};
+}
