@@ -38,6 +38,8 @@ import scope from './scope'
 
 import group from './group'
 
+import groupItem from './group-item'
+
 export default {
   base,
   checkbox,
@@ -57,6 +59,7 @@ export default {
   radio,
   require,
   scope,
-  group
+  group,
+  groupItem
 }
 

@@ -5,11 +5,14 @@ export default {
   extends: Group,
   props: {
     options: [Array, String],
-    inverted: Boolean
-  },
-  methods: {
-    setValueOnGroup(value) {
-      this.wrapper.groupValue = parseInt(value) || 0
+    inverted: Boolean,
+    bitwise: {
+      type: Boolean,
+      default: true
+    },
+    multiple: {
+      type: Boolean,
+      default: true
     }
   }
 }
