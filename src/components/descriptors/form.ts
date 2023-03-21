@@ -613,6 +613,9 @@ export default {
 
       return this.executeOnLoad(this.resourceId(), modifier)
     },
+    clearErrors() {
+      this.setSyncProp('errors', {});
+    },
     executeOnLoad(resourceId, modifier){
       return this.executeEffectEvent('onLoad', true, [resourceId])
       .then((resource) => {

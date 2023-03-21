@@ -97,6 +97,9 @@ export default {
     requireSource(name){
       return this.$form.requireSource(name)
     },
+    clearErrors: function () {
+      return this.$form.clearErrors();
+    },
     errorsFor: function(index) {
       if (!this.$errors) {
         return;
