@@ -116,7 +116,11 @@ export default {
         return this.$power
       }
 
-      return this.value
+      if(this.value !== undefined) {
+        return this.value
+      }
+
+      return this.name
     }
   },
   methods: {
@@ -177,15 +181,15 @@ export default {
       }
 
       if(value) {
-        const containsValue = this.$originalValue.find(originalValueItem => originalValueItem === value)
+        const containsValue = this.$originalValue.find(originalValueItem => originalValueItem === this.$itemValue)
 
         if(containsValue) {
           return
         }
 
-        this.$originalValue = this.$originalValue.concat([this.value])
+        this.$originalValue = this.$originalValue.concat([this.$itemValue])
       } else {
-        this.$originalValue = this.$originalValue.filter(originalValueItem => originalValueItem !== this.value)
+        this.$originalValue = this.$originalValue.filter(originalValueItem => originalValueItem !== this.$itemValue)
       }
 
     }
