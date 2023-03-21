@@ -65,7 +65,7 @@ describe 'nested', ->
       beforeEach ->
         Vue.prototype.VueResourceForm.translate = $translate
 
-        $wrapper.find('.subtask-title').vm.humanName
+        $wrapper.find('.subtask-title').vm.$label
       describe "without translation-name passed", ->
         it 'should pass proper modelName singular', ->
           expect($translate).toHaveBeenCalledWith('title', 'Subtask')

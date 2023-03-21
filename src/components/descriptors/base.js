@@ -97,15 +97,20 @@ export default {
     $readonly: function() {
       return this.$originalReadonly;
     },
-    humanName: function() {
+    $label() {
       if (this.noLabel) {
-        return '';
+        return ''
       } else {
-        return this.label || this.t(this.name);
+        return this.label || this.t(this.name)
       }
     },
     $firstError: function() {
       return this.$errors[this.name] && this.$errors[this.name][0];
+    },
+    humanName: function() {
+      console.warn('[vrf] Computed property humanName is deprecated, use $label instead')
+
+      return this.$label
     }
   }
 };
