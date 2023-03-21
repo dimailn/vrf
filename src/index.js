@@ -36,6 +36,8 @@ import RfScope from './components/templates/scope'
 
 import RfAutocomplete from './components/templates/autocomplete'
 
+import RfGroup from './components/templates/group'
+
 import descriptors from './components/descriptors';
 
 import mutations from './vuex/mutations';
@@ -65,7 +67,8 @@ const components = {
   RfRadio,
   RfRequire,
   RfScope,
-  RfAutocomplete
+  RfAutocomplete,
+  RfGroup
 };
 
 export default installer(components);
@@ -87,6 +90,7 @@ export {
   RfRequire,
   RfScope,
   RfAutocomplete,
+  RfGroup,
   descriptors,
   mutations,
   components,

@@ -4,8 +4,9 @@
   <input
     :id="$id"
     type="radio"
-    :value="value"
-    v-model="$value"
+    :value="$itemValue"
+    :checked="$value"
+    @change=" $value = $event.target.value"
   />
   <label :for="$id" v-if="label">{{label}}</label>
 </div>

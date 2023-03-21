@@ -1,16 +1,9 @@
-import BaseInput from '@/components/descriptors/base-input';
+import GroupItem from '@/components/descriptors/group-item'
 
 export default {
   name: 'rf-radio',
-  vrfParent: 'Base',
-  extends: BaseInput,
+  extends: GroupItem,
   computed: {
-    $fieldName: function() {
-      return 'radioGroupValue';
-    },
-    $valuePropSpecified() {
-      return false
-    },
     $id() {
       return `rf-radio-${Math.floor(Math.random() * 100000000)}`
     }
