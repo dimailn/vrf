@@ -159,7 +159,7 @@ export default {
         return false
       }
 
-      const hasItem = this.$originalValue.some(originalValueItem => originalValueItem === this.value)
+      const hasItem = this.$originalValue.some(originalValueItem => originalValueItem === this.$itemValue)
 
       return this.$inverted ? !hasItem : hasItem
     },
@@ -192,6 +192,9 @@ export default {
         this.$originalValue = this.$originalValue.filter(originalValueItem => originalValueItem !== this.$itemValue)
       }
 
+    },
+    toggle() {
+      this.$value = !this.$value
     }
   }
 }
