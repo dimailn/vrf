@@ -139,7 +139,17 @@ export default {
       return this.$originalValue;
     },
     setBoolean(value) {
-      return this.$originalValue = this.$inverted ? !value : value;
+      if(this.$inverted) {
+        value = !value
+      }
+
+      if(this.$insideGroup) {
+        this.$originalValue = value ? this.$itemValue : null
+
+        return
+      }
+
+      return this.$originalValue = value
     },
     getBitwise() {
       if (typeof this.$originalValue !== 'number') {
