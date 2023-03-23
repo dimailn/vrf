@@ -550,6 +550,46 @@ export default {
 
 Also, you can use ```inverted``` property on ```rf-group``` to invert the behaviour.
 
+Group supports ```options``` prop, you can pass an array and use any descendant of ```descriptors.groupItem``` as ```item-component```(```rf-radio``` is used by default)
+
+```vue
+<rf-form v-model="resource">
+  <!-- also you  can specify id-key and title-key -->
+  <rf-group 
+    name="mode" 
+    :options="modes"
+    item-component="rf-checkbox"
+    multiple 
+  />
+</rf-form>
+ 
+</template>
+
+<script>
+
+export default {
+  data() {
+    return {
+      resource: {
+        mode: ['read', 'write']
+      },
+      modes: [
+        {
+          id: 'read',
+          title: 'Read'
+        },
+        {
+          id: 'write',
+          title: 'Write'
+        }
+      ]
+    }
+  }
+}
+
+</script>
+```
+
 
 Moreover, sometimes you need to manage some bitwise values in your resource. Groups allow you to manage them. It has two modes -
 you can use this component as a wrapper for checkboxes, or use its ```options``` property(like ```rf-select```). It supports ```inverted``` mode as well.
