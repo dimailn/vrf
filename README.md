@@ -601,6 +601,7 @@ you can use this component as a wrapper for items, or use its ```options``` prop
 
   <!-- markup mode -->
   <rf-group name="flags" bitwise multiple>
+    <!-- value is a power -->
     <rf-checkbox name="visible" value="0" />
     <rf-checkbox name="editable" value="1" />
     <rf-checkbox name="shareable" value="2" />
