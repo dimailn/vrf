@@ -50,7 +50,7 @@ Vue.use(Vrf)
   - [Data loading control](#data-loading-control)
   - [Actions](#actions)
     - [Run actions programmatically](#run-actions-programmatically)
-  - [Bitwise fields](#bitwise-fields)
+  - [Groups](#groups)
   - [Default props](#default-props)
   - [v-model](#v-model)
 - [Advanced](#advanced)
@@ -457,9 +457,101 @@ export default {
 
 ```
 
-## Bitwise fields
+## Groups
 
-Sometimes you need to manage some bitwise values in your resource. There is ```rf-bitwise``` component to manage them. It has two modes -
+Vrf contains ```rf-group``` component that is used for grouping descendants from ```descriptors.groupItem```, like ```rf-checkbox```, ```rf-radio```, or any custom descendant. 
+
+Outside of group, groupItem components work like boolean selection:
+
+```vue
+
+<template>
+
+<rf-form v-model="resource">
+  <rf-checkbox name="isActive" />
+</rf-form>
+ 
+</template>
+
+<script>
+
+export default {
+  data() {
+    return {
+      resource: {
+        isActive: false
+      }
+    }
+  }
+}
+
+</script>
+```
+
+But inside they are used to choose value:
+
+```vue
+
+<template>
+
+<rf-form v-model="resource">
+  <rf-group name="mode">
+    <rf-checkbox name="read" />
+    <rf-checkbox name="write" />
+  </rf-group>
+</rf-form>
+ 
+</template>
+
+<script>
+
+export default {
+  data() {
+    return {
+      resource: {
+        mode: 'read'
+      }
+    }
+  }
+}
+
+</script>
+```
+
+Choose multiple value:
+
+```vue
+
+<template>
+
+<rf-form v-model="resource">
+  <rf-group name="mode" multiple>
+    <rf-checkbox name="read" />
+    <rf-checkbox name="write" />
+  </rf-group>
+</rf-form>
+ 
+</template>
+
+<script>
+
+export default {
+  data() {
+    return {
+      resource: {
+        mode: ['read', 'write']
+      }
+    }
+  }
+}
+
+</script>
+```
+
+Also, you can use ```inverted``` property on ```rf-group``` to invert the behaviour.
+
+
+Moreover, sometimes you need to manage some bitwise values in your resource. Groups allow you to manage them. It has two modes -
 you can use this component as a wrapper for checkboxes, or use its ```options``` property(like ```rf-select```). It supports ```inverted``` mode as well.
 
 ```vue
@@ -467,14 +559,14 @@ you can use this component as a wrapper for checkboxes, or use its ```options```
 
 <rf-form v-model="resource">
 
-  <!-- rf-bitwise as wrapper, markup mode -->
-  <rf-bitwise name="flags">
+  <!-- markup mode -->
+  <rf-group name="flags" bitwise multiple>
     <rf-checkbox name="visible" power="0" />
     <rf-checkbox name="editable" power="1" />
     <rf-checkbox name="shareable" power="2" />
-  </rf-bitwise>
+  </rf-group>
 
-  <!-- rf-bitwise renders checkboxes itself by options -->
+  <!-- rf-bitwise is an alias for rf-group with set bitwise and multiple flags -->
   <rf-bitwise
     name="flags"
     :options="options"
