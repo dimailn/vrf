@@ -525,7 +525,7 @@ Choose multiple value:
 <template>
 
 <rf-form v-model="resource">
-  <rf-group name="mode" multiple>
+  <rf-group name="modes" multiple>
     <rf-checkbox name="read" />
     <rf-checkbox name="write" />
   </rf-group>
@@ -539,7 +539,7 @@ export default {
   data() {
     return {
       resource: {
-        mode: ['read', 'write']
+        modes: ['read', 'write']
       }
     }
   }
