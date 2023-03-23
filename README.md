@@ -592,7 +592,7 @@ export default {
 
 
 Moreover, sometimes you need to manage some bitwise values in your resource. Groups allow you to manage them. It has two modes -
-you can use this component as a wrapper for checkboxes, or use its ```options``` property(like ```rf-select```). It supports ```inverted``` mode as well.
+you can use this component as a wrapper for items, or use its ```options``` property. It supports ```inverted``` mode as well.
 
 ```vue
 <template>
