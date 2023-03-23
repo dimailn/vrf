@@ -601,9 +601,9 @@ you can use this component as a wrapper for items, or use its ```options``` prop
 
   <!-- markup mode -->
   <rf-group name="flags" bitwise multiple>
-    <rf-checkbox name="visible" power="0" />
-    <rf-checkbox name="editable" power="1" />
-    <rf-checkbox name="shareable" power="2" />
+    <rf-checkbox name="visible" value="0" />
+    <rf-checkbox name="editable" value="1" />
+    <rf-checkbox name="shareable" value="2" />
   </rf-group>
 
   <!-- rf-bitwise is an alias for rf-group with set bitwise and multiple flags -->
