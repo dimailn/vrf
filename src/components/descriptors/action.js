@@ -26,33 +26,42 @@ export default {
       console.warn('[vrf] Computed property humanName is deprecated, use $label instead')
 
       return this.$label
+    },
+    $on() {
+      return {
+        click: this.onClick
+      }
     }
   },
   render: function(h) {
-    var events, nodes;
-    events = {
-      click: this.onClick
-    };
     if (this.$scopedSlots.activator) {
-      nodes = this.$scopedSlots['activator']({
+      const nodes = this.$scopedSlots['activator']({
         humanName: this.$label,
         label: this.$label,
-        on: events,
+        on: this.$on,
         pending: this.$actionPendings[this.name] || false
-      });
+      })
+
       if (nodes.length > 1) {
-        return h('div', null, nodes);
+        return h('div', null, nodes)
       } else {
-        return nodes;
+        return nodes
       }
     } else {
-      return h('button', {
-        on: events
-      }, this.$label)
+      return this.renderByDefault(h)
     }
   },
   methods: {
-    onClick: function() {
+    renderByDefault(h){
+      return h(
+        'button',
+        {
+          on: this.$on
+        },
+        this.$label
+      )
+    },
+    onClick() {
       return this.$form.executeAction(this.name, {
         params: this.params,
         data: this.data,
