@@ -1,17 +1,52 @@
 <template>
 
-<rf-resource v-slot="{actionResults}">
-  <template v-if="actionResults && actionResults[name]">
+<rf-resource v-slot="{}">
+  <template v-if="$result">
     <component
       :is="component"
-      :data="actionResults[name].data"
-      :status="actionResults[name].status"
+      :data="$result.data"
+      :status="$result.status"
       v-if="component"
     />
     <slot
-      :data="actionResults[name].data"
-      :status="actionResults[name].status"
+      :data="$result.data"
+      :status="$result.status"
       v-else
+    />
+
+    <slot
+      name="success"
+      :data="$result.data"
+      :status="$result.status"
+      v-if="$isSuccess"
+    />
+
+    <slot
+      name="failure"
+      :data="$result.data"
+      :status="$result.status"
+      v-if="$isFailure"
+    />
+
+    <slot
+      name="soft-failure"
+      :data="$result.data"
+      :status="$result.status"
+      v-if="$isSoftFailure"
+    />
+
+    <slot
+      name="network-failure"
+      :data="$result.data"
+      :status="$result.status"
+      v-if="$isNetworkFailure"
+    />
+
+    <slot
+      name="server-failure"
+      :data="$result.data"
+      :status="$result.status"
+      v-if="$isServerFailure"
     />
   </template>
 </rf-resource>

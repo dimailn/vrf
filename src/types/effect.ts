@@ -27,6 +27,18 @@ export interface Message {
   type?: 'success' | 'error' | 'info'
 }
 
+type RequestStatusHandle = 'SUCCESSFUL' |
+  'SOFT_FAILURE' |
+  'NETWORK_FAILUIRE' |
+  'SERVER_FAILURE' |
+  'OTHER_FAILURE'
+
+interface ExecuteActionResult {
+  status: number,
+  data: any,
+  statusHandle: RequestStatusHandle
+}
+
 export interface EffectContextBuiltinListeners {
   onLoad: (listener: (id: Id) => Promise<OnLoadResult> | void) => void
   onSave: (listener: (resource: any) =>  Promise<[boolean, any]> | void) => void
@@ -35,7 +47,7 @@ export interface EffectContextBuiltinListeners {
   onUpdate: (listener: (resource: any) => Promise<[boolean, void | object]> | void) => void
   onLoadSource: (listener: (sourceName: string) => Promise<object> | void) => void
   onLoadSources: (listener: (sourceNames: Array<string>) => Promise<object> | void) => void
-  onExecuteAction: (listener: (actionName: string, options: ExecuteActionOptions) => Promise<any> | void) => void
+  onExecuteAction: (listener: (actionName: string, options: ExecuteActionOptions) => Promise<ExecuteActionResult> | void) => void
   onShowMessage: (listener: (event: Event<Message>) => void) => void
   onMounted: (listener: () => void) => void
   onUnmounted: (listener: () => void) => void

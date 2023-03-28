@@ -3,9 +3,8 @@ import Base from '@/components/descriptors/base';
 export default {
   name: 'rf-resource',
   extends: Base,
-  render: function() {
-    var props, ref, ref1;
-    props = {
+  render(h) {
+    const props = {
       $resource: this.$resource,
       $sources: this.$sources,
       $errors: this.$errors,
@@ -23,7 +22,18 @@ export default {
       t: this.t,
       errors: this.$errors,
       actionResults: this.$actionResults
-    };
-    return (ref = this.$scopedSlots) != null ? typeof ref.default === "function" ? (ref1 = ref.default(props)) != null ? ref1[0] : void 0 : void 0 : void 0;
+    }
+    const render = this.$scopedSlots?.default
+    const nodes = render && render(props)
+
+    if(!nodes) {
+      return
+    }
+
+    if(nodes.length > 1) {
+      return h('div', null, nodes)
+    }
+
+    return nodes[0]
   }
-};
+}
