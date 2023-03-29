@@ -677,68 +677,81 @@ export default {
         resource = cloneDeep(this.$resource)
       }
       // let onChange inputs change the model
-      return this.$nextTick(() => {
-        this.$emit('before-submit', {
-          resource
-        });
-        this.$emit('submit', {
-          resource
-        });
-        if (!this.auto) {
-          return;
-        }
-        this.setSyncProp('saving', true);
-
-        resource = this.executeEffectEventFold('onBeforeSave', 'resource', this.preserialize(resource, root))
-
-        if(!resource || typeof resource !== 'object') {
-          throw `[vrf] onBeforeSave handlers should return an object, but result is ${resource}`
-        }
-
-        let eventResult = this.executeEffectEventOptional('onSave', true, [resource])
-
-        if(!(eventResult instanceof Promise)){
-          eventResult = this.isNew() ?
-            this.executeEffectEvent('onCreate', true, [resource])
-            .then(([ok, id]) => {
-              if(ok && !id){
-                throw '[vrf] onCreate handler must return id of created resource when it succeed'
-              }
-
-              if(ok) {
-                this.setSyncProp('rfId', id)
-                return Promise.all(this.executeEffectEventMap('onCreated', {id})).then(() => [ok, id])
-              }
-
-              return [ok, id]
-            })
-            :
-            this.executeEffectEvent('onUpdate', true, [resource])
-        }
-
-        return eventResult.then((result) => {
-          if (!(result instanceof Array) || result.length !== 2 || typeof result[0] !== 'boolean') {
-
-            console.error('[vrf] Handlers of onSave/onCreate/onUpdate events must return an array with boolean status as first element and id/resource/errors/ as second.')
-            return
+      return new Promise((resolve, reject) => {
+        this.$nextTick(() => {
+          this.$emit('before-submit', {
+            resource
+          });
+          this.$emit('submit', {
+            resource
+          });
+          if (!this.auto) {
+            return;
           }
 
-          const [ok, dataOrErrors] = result
+          if(!root) {
+            this.setSyncProp('saving', true)
+          }
 
-          this.innerLastSaveFailed = !ok
-          this.setSyncProp('saving', false)
-          this.setSyncProp('errors', ok ? {} : dataOrErrors)
-          this.$emit('after-submit')
-          if(ok && typeof dataOrErrors === 'object'){
-            this.setSyncProp('resource', dataOrErrors)
+          resource = this.executeEffectEventFold('onBeforeSave', 'resource', this.preserialize(resource, root))
+
+          if(!resource || typeof resource !== 'object') {
+            throw `[vrf] onBeforeSave handlers should return an object, but result is ${resource}`
           }
-          if(!ok){
-            this.executeEffectEventOptional('onFailure', false, [new VrfEvent('onFailure', {errors: dataOrErrors})])
-          } else {
-            this.executeEffectEventOptional('onSuccess', false, [])
+
+          let eventResult = this.executeEffectEventOptional('onSave', true, [resource])
+
+          if(!(eventResult instanceof Promise)){
+            eventResult = this.isNew() ?
+              this.executeEffectEvent('onCreate', true, [resource])
+              .then(([ok, id]) => {
+                if(ok && !id){
+                  throw '[vrf] onCreate handler must return id of created resource when it succeed'
+                }
+
+                if(ok) {
+                  this.setSyncProp('rfId', id)
+                  return Promise.all(this.executeEffectEventMap('onCreated', {id})).then(() => [ok, id])
+                }
+
+                return [ok, id]
+              })
+              :
+              this.executeEffectEvent('onUpdate', true, [resource])
           }
-          return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
-        }).catch(console.error)
+
+          return eventResult.then((result) => {
+            if (!(result instanceof Array) || result.length !== 2 || typeof result[0] !== 'boolean') {
+
+              console.error('[vrf] Handlers of onSave/onCreate/onUpdate events must return an array with boolean status as first element and id/resource/errors/ as second.')
+              return
+            }
+
+            const [ok, dataOrErrors] = result
+
+            this.innerLastSaveFailed = !ok
+
+            if(!root) {
+              this.setSyncProp('saving', false)
+            }
+
+            this.setSyncProp('errors', ok ? {} : dataOrErrors)
+            this.$emit('after-submit')
+            if(ok && typeof dataOrErrors === 'object'){
+              this.setSyncProp('resource', dataOrErrors)
+            }
+            if(!ok){
+              this.executeEffectEventOptional('onFailure', false, [new VrfEvent('onFailure', {errors: dataOrErrors})])
+            } else {
+              this.executeEffectEventOptional('onSuccess', false, [])
+            }
+            resolve()
+            return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
+          }).catch((e) => {
+            console.error(e)
+            reject(e)
+          })
+        })
       })
     },
     preserialize(resource, root) {
