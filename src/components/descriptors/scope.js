@@ -28,7 +28,8 @@ export default {
   },
   data() {
     return {
-      fieldNames: []
+      fieldNames: [],
+      saving: false
     }
   },
 
@@ -70,14 +71,19 @@ export default {
   methods: {
     submit() {
       if (this.isolated) {
+        this.setSyncProp('saving', true)
         this.$form.submit(
           pick(this.$resource, this.fieldNames),
           this.$form.$pathService.getRootByPath(this.$form.path)
-        )
+        ).finally(() => this.setSyncProp('saving', false))
       } else {
         this.$form.submit()
       }
     },
+    setSyncProp(name, value) {
+      this[name] = value
+      this.$emit(`update:${name}`, value)
+    }
   },
   render(h) {
     if (this.$slots.default.length > 1) {

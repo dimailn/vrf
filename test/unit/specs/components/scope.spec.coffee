@@ -49,18 +49,22 @@ describe 'scope', ->
 
   describe 'rf-scope isolated', ->
     def('onSaveHandler', () => jest.fn(() => Promise.resolve([true, {}])))
+    def('savingWatcher', () => jest.fn())
+    def('scopeSavingWatcher', () => jest.fn())
+
     def('wrapper', ->
       mount(
         template: """
           <rf-form
             :resource="resource"
+            :saving.sync="saving"
             v-slot="{ $resource }"
             :auto="effect"
             no-fetch
             :rf-id="1"
             name="Test"
           >
-            <rf-scope :isolated="isolated">
+            <rf-scope :isolated="isolated" :saving.sync="scopeSaving">
               <rf-input name="title" class="title" />
               <rf-textarea name="description" class="description" />
               <rf-submit class="submit" />
@@ -76,6 +80,11 @@ describe 'scope', ->
             active: false
           },
           isolated: $isolated
+          saving: false
+          scopeSaving: false
+        watch:
+          saving: $savingWatcher
+          scopeSaving: $scopeSavingWatcher
         computed:
           effect: ->
             ({onSave}) => onSave($onSaveHandler)
@@ -90,6 +99,12 @@ describe 'scope', ->
     describe 'true', ->
       def('isolated', -> true)
 
+      test 'changes scope saving flag', ->
+        expect($scopeSavingWatcher).toHaveBeenCalled()
+
+      test 'doesnt change form saving flag', ->
+        expect($savingWatcher).not.toHaveBeenCalled()
+
       test 'saves only scope data', ->
         expect($onSaveHandler).toHaveBeenCalledWith({
           title: 'test',
@@ -98,6 +113,12 @@ describe 'scope', ->
 
     describe 'false', ->
       def('isolated', -> false)
+
+      test 'changes scope saving flag', ->
+        expect($scopeSavingWatcher).not.toHaveBeenCalled()
+
+      test 'change form saving flag', ->
+        expect($savingWatcher).toHaveBeenCalled()
 
       test 'saves all data', ->
         expect($onSaveHandler).toHaveBeenCalledWith({
