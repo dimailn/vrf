@@ -27,14 +27,9 @@ npm start
 # Vrf installation
 
 Vue 2
+
 ```bash
 npm install --save vrf
-```
-
-Vue 3(experimental build)
-
-```bash
-npm install --save vrf@next
 ```
 
 ```javascript
@@ -44,6 +39,24 @@ import Vrf from 'vrf'
 Vue.use(Vrf)
 
 ```
+
+
+Vue 3 (experimental build)
+
+```bash
+npm install --save vrf@next
+```
+
+```javascript
+import {createApp} from 'vue'
+import Vrf from 'vrf'
+
+createApp(...)
+  .use(Vrf)
+  .mount(...)
+
+```
+
 
 # Table of contents
 
