@@ -45,12 +45,12 @@ Vue.use(Vrf)
   - [Where is the resource?](#where-is-the-resource)
   - [Expressions](#expressions)
   - [Sources](#sources)
+  - [Groups](#groups)
   - [Nested entities](#nested-entities)
   - [Autoforms](#autoforms)
   - [Data loading control](#data-loading-control)
   - [Actions](#actions)
     - [Run actions programmatically](#run-actions-programmatically)
-  - [Groups](#groups)
   - [Default props](#default-props)
   - [v-model](#v-model)
 - [Advanced](#advanced)
@@ -280,182 +280,6 @@ Instead of a string with the name of the options, you may also pass directly an 
 When you use a source name with autoforms, form uses effects to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
 
 
-## Nested entities
-Vrf supports work with nested entities, both single and with collections. To work with them, the ```rf-nested``` component is used, which expects a scoped slot with form components for a nested entity. Internally, ```rf-nested``` uses the ```rf-form``` the required number of times, so the use of rf-nested can be equated with the declaration of the form inside the form, which can be duplicated if necessary.
-
-```vue
-<template>
-
-<rf-form v-model="resource">
-  <rf-input name="title" />
-  <rf-nested name="subtasks"> // you may specify translation-name for nested scope, by default it will be singularized name
-    <template v-slot="props">
-      <rf-input name="title">
-      <rf-datepicker name="deadline" />
-    </template>
-  </rf-nested>
-</rf-form>
-
-</template>
-
-<script>
-
-export default {
-  data(){
-    return {
-      resource: {
-        title: '',
-        subtasks: [
-          {
-            title: '',
-            deadline: new Date
-          }
-        ]
-      }
-    }
-  }
-}
-
-
-</script>
-
-
-```
-
-
-## Autoforms
-
-Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
-
-Autoforms powered by Effects API which allows to create plugins in modular way. Due to this, it is possible to implement the flow of autoforms for the specifics of any project. You may use ready-made effects or implement your own.
-
-
-## Data loading control
-
-Vrf provide some methods on rf-form allows you to manage data loading:
-
-```javascript
-
-$refs.form.forceReload() // Completely reloading, excplicitly displayed to user
-
-$refs.form.reloadResource() // Reload only resource without showing loaders
-
-$refs.form.reloadResource(['messages']) // Reload only 'messages' key on resource
-
-$refs.form.reloadSources() // Reload only sources
-
-$refs.form.reloadRootResource(['options']) // reload root form resource, useful if nested component affects data on top level
-
-```
-
-Method ```reloadResource``` allows you to write custom components which may reload the piece of data they are responsible for.
-
-```javascript
-import {descriptors} from 'vrf'
-
-export default {
-  extends: descriptors.base,
-  methods: {
-    ... // some logic mutating data on the server
-    invalidate(){
-      this.$form.reloadResource(this.name)
-    }
-  }
-}
-
-```
-
-
-## Actions
-
-Vrf provides its own way to create simple buttons that activate async requests. These requests are served by effects and the received data stored in the context of the form(by analogy with a resource).
-
-For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
-```vue
-<rf-action name="archive" />
-```
-
-You may change requests parameters by props
-
-```vue
-<rf-action 
-  name="archive"
-  method="put"
-  :data="{force: true}"
-  :params="{queryParameter: 1}"
-/>
-```
-
-```rf-action``` in adapters may handle pending status by loader showing. Moreover, you can implement your own ```rf-action``` view using activator slot
-
-```vue
-
-<rf-action name="archive">
-  <template v-slot:activator="{on, pending, humanName}">
-    <my-great-button v-on="on" :loading="pending">{{humanName}}</my-great-button>
-  </template>
-</rf-action>
-
-```
-
-To render the results, in simple cases you can use ```rf-action-result``` component(with slot or component).
-
-```vue
-<rf-action name="loadText" />
-
-<rf-action-result name="loadText" component="some-component-with-data-and-or-status-props" />
-
-<rf-action-result name="loadtext">
-  <template v-slot="{data}">
-    <p>{{data}}></p>
-  </template>
-</rf-action-result>
-```
-
-Or/and use event ```result```
-
-```vue
-
-<rf-action name="doSomething" @result="onResult" />
-```
-
-If you need reload resource on result, you may use prop ```reload-on-result```
-
-```vue
-
-<rf-action name="switchMode" reload-on-result />
-
-```
-
-If your action must show toast in UI by result, this can be done in the effects. For example, in REST effect $message field will be processed by effect as a message for user and it will be emitted by ```showMessage```.
-
-
-### Run actions programmatically
-
-You may run actions programmatically as well
-
-```vue
-
-<template>
-
-<rf-form name="Todo" auto>
-  ...
-</rf-form>
-
-</template>
-
-<script>
-export default {
-  methods: {
-    attachImage() {
-      const data = new FormData()
-      this.$form.executeAction('attachImage', {data, method: 'PUT'})
-    }
-  }
-}
-</script>
-
-```
 
 ## Groups
 
@@ -652,6 +476,184 @@ export default {
 </template>
 
 ```
+
+## Nested entities
+Vrf supports work with nested entities, both single and with collections. To work with them, the ```rf-nested``` component is used, which expects a scoped slot with form components for a nested entity. Internally, ```rf-nested``` uses the ```rf-form``` the required number of times, so the use of rf-nested can be equated with the declaration of the form inside the form, which can be duplicated if necessary.
+
+```vue
+<template>
+
+<rf-form v-model="resource">
+  <rf-input name="title" />
+  <rf-nested name="subtasks"> // you may specify translation-name for nested scope, by default it will be singularized name
+    <template v-slot="props">
+      <rf-input name="title">
+      <rf-datepicker name="deadline" />
+    </template>
+  </rf-nested>
+</rf-form>
+
+</template>
+
+<script>
+
+export default {
+  data(){
+    return {
+      resource: {
+        title: '',
+        subtasks: [
+          {
+            title: '',
+            deadline: new Date
+          }
+        ]
+      }
+    }
+  }
+}
+
+
+</script>
+
+
+```
+
+
+## Autoforms
+
+Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
+
+Autoforms powered by Effects API which allows to create plugins in modular way. Due to this, it is possible to implement the flow of autoforms for the specifics of any project. You may use ready-made effects or implement your own.
+
+
+## Data loading control
+
+Vrf provide some methods on rf-form allows you to manage data loading:
+
+```javascript
+
+$refs.form.forceReload() // Completely reloading, excplicitly displayed to user
+
+$refs.form.reloadResource() // Reload only resource without showing loaders
+
+$refs.form.reloadResource(['messages']) // Reload only 'messages' key on resource
+
+$refs.form.reloadSources() // Reload only sources
+
+$refs.form.reloadRootResource(['options']) // reload root form resource, useful if nested component affects data on top level
+
+```
+
+Method ```reloadResource``` allows you to write custom components which may reload the piece of data they are responsible for.
+
+```javascript
+import {descriptors} from 'vrf'
+
+export default {
+  extends: descriptors.base,
+  methods: {
+    ... // some logic mutating data on the server
+    invalidate(){
+      this.$form.reloadResource(this.name)
+    }
+  }
+}
+
+```
+
+
+## Actions
+
+Vrf provides its own way to create simple buttons that activate async requests. These requests are served by effects and the received data stored in the context of the form(by analogy with a resource).
+
+For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
+```vue
+<rf-action name="archive" />
+```
+
+You may change requests parameters by props
+
+```vue
+<rf-action 
+  name="archive"
+  method="put"
+  :data="{force: true}"
+  :params="{queryParameter: 1}"
+/>
+```
+
+```rf-action``` in adapters may handle pending status by loader showing. Moreover, you can implement your own ```rf-action``` view using activator slot
+
+```vue
+
+<rf-action name="archive">
+  <template v-slot:activator="{on, pending, humanName}">
+    <my-great-button v-on="on" :loading="pending">{{humanName}}</my-great-button>
+  </template>
+</rf-action>
+
+```
+
+To render the results, in simple cases you can use ```rf-action-result``` component(with slot or component).
+
+```vue
+<rf-action name="loadText" />
+
+<rf-action-result name="loadText" component="some-component-with-data-and-or-status-props" />
+
+<rf-action-result name="loadtext">
+  <template v-slot="{data}">
+    <p>{{data}}></p>
+  </template>
+</rf-action-result>
+```
+
+Or/and use event ```result```
+
+```vue
+
+<rf-action name="doSomething" @result="onResult" />
+```
+
+If you need reload resource on result, you may use prop ```reload-on-result```
+
+```vue
+
+<rf-action name="switchMode" reload-on-result />
+
+```
+
+If your action must show toast in UI by result, this can be done in the effects. For example, in REST effect $message field will be processed by effect as a message for user and it will be emitted by ```showMessage```.
+
+
+### Run actions programmatically
+
+You may run actions programmatically as well
+
+```vue
+
+<template>
+
+<rf-form name="Todo" auto>
+  ...
+</rf-form>
+
+</template>
+
+<script>
+export default {
+  methods: {
+    attachImage() {
+      const data = new FormData()
+      this.$form.executeAction('attachImage', {data, method: 'PUT'})
+    }
+  }
+}
+</script>
+
+```
+
 
 ## Default props
 
