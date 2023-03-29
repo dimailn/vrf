@@ -780,16 +780,17 @@ export default {
       let result = null
       this.setActionPending(name, true);
 
-      return this.executeEffectEvent('onExecuteAction', true, [name, {params, data, method, url}]).then(({status, data}) => {
-        return result = {status, data};
-      }).catch((e = {status, data}) => {
-        if (!status) {
-          throw e;
-        }
-        return result = {status, data};
-      }).finally(() => {
-        return this.setActionResult(name, result);
-      });
+      return this.executeEffectEvent('onExecuteAction', true, [name, {params, data, method, url}])
+        .then(({status, data, statusHandle}) => {
+          return result = {status, data, statusHandle}
+        }).catch((e = {status, data, statusHandle}) => {
+          if (!status) {
+            throw e;
+          }
+          return result = {status, data, statusHandle}
+        }).finally(() => {
+          return this.setActionResult(name, result);
+        })
     },
     executeEffectEvent(eventName: EffectListenerNames, api: boolean, args: Array<any> = []): Promise<any> | void {
       const effectResult = this.executeEffectEventOptional(eventName, api, args)
