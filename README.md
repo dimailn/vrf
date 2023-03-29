@@ -46,6 +46,7 @@ Vue.use(Vrf)
   - [Expressions](#expressions)
   - [Sources](#sources)
   - [Groups](#groups)
+  - [Scopes](#scopes)
   - [Nested entities](#nested-entities)
   - [Autoforms](#autoforms)
   - [Data loading control](#data-loading-control)
@@ -476,6 +477,56 @@ export default {
 </template>
 
 ```
+
+## Scopes
+
+There is ```rf-scope``` component that helps you to break your form by logical scopes.
+
+For example, if you need to disable only part of form, it'll look like
+
+```vue
+
+<rf-form name="User" v-slot="{ $resource }">
+  <rf-input name="name" />
+  
+  <rf-scope :disabled="!$resource.isAdmin">
+    <rf-checkbox name="readPermission" />
+    <rf-checkbox name="writePermission" />
+   </rf-scope>
+   
+   <rf-submit />
+</rf-form>
+```
+
+The scope may be submitted separately as a slice of fields which are inside the scope when you use ```isolated``` mode
+
+```vue
+<rf-form name="User" v-slot="{ $resource }">
+  <rf-input name="name" />
+  
+  <rf-scope isolated>
+    <rf-input name="token"/>
+    
+    <rf-submit /> <!-- this submit sends only { token: '...' } object -->
+   </rf-scope>
+   
+   <rf-submit />
+</rf-form>
+```
+
+You also can trigger submit if data are changed inside the scope with property ```autosave```
+
+```vue
+<rf-form name="User" v-slot="{ $resource }">
+  <rf-input name="name" />
+  
+  <rf-scope isolated autosave>
+    <rf-switch name="blocked" />
+   <rf-submit />
+</rf-form>
+```
+
+
 
 ## Nested entities
 Vrf supports work with nested entities, both single and with collections. To work with them, the ```rf-nested``` component is used, which expects a scoped slot with form components for a nested entity. Internally, ```rf-nested``` uses the ```rf-form``` the required number of times, so the use of rf-nested can be equated with the declaration of the form inside the form, which can be duplicated if necessary.
