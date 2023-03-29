@@ -513,7 +513,7 @@ For example, if you need to disable only part of form, it'll look like
 <rf-form name="User">
   <rf-input name="name" />
   
-  <rf-scope :disabled="isAdmin">
+  <rf-scope :disabled="!isAdmin">
     <rf-checkbox name="readPermission" />
     <rf-checkbox name="writePermission" />
    </rf-scope>
@@ -541,7 +541,7 @@ The scope may be submitted separately as a slice of fields which are inside the 
 You also can trigger submit if data are changed inside the scope with property ```autosave```
 
 ```vue
-<rf-form name="User" v-slot="{ $resource }">
+<rf-form name="User">
   <rf-input name="name" />
   
   <rf-scope isolated autosave>
