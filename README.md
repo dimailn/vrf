@@ -26,6 +26,17 @@ npm start
 
 # Vrf installation
 
+Vue 2
+```bash
+npm install --save vrf
+```
+
+Vue 3(experimental build)
+
+```bash
+npm install --save vrf@next
+```
+
 ```javascript
 import Vue from 'vue'
 import Vrf from 'vrf'
