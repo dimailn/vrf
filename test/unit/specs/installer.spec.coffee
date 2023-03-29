@@ -1,11 +1,10 @@
 import Vrf, {RfInput} from '../../../src'
-import Vue from 'vue'
 import capitalize from '../../../src/utils/capitalize'
 import { createLocalVue } from '@vue/test-utils'
 
 
 describe 'installer', ->
-  componentSpy = jest.spyOn(Vue, 'component')
+  componentSpy = jest.spyOn(subject, 'component')
   def('RfInput', ->
     {
       vrfParent: 'input'
