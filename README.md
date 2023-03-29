@@ -787,7 +787,7 @@ Vrf is all about modularity, you may customize almost any part of it. The final 
 
 * Core(this package) - contains all business logic of forms. It implements form based on standard html components, without any styling and it's the foundation providing APIs for other modules.
 
-* Adapters - implements VRF using some ui framework over link components descriptors from core. Most likely you will use vrf with some adapter.
+* Adapters - implements vrf using some ui framework over link components descriptors from core. Most likely you will use vrf with some adapter.
 
 * Translate lambda - function with ```(modelProperty, modelName) -> translation``` signature, used for translations
 
