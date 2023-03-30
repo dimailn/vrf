@@ -870,6 +870,10 @@ There are some subscriptions for api effects:
 * ```onSuccess``` - is fired when resource is saved successfully
 * ```onFailure``` - is fired when resource wasn't saved due to errors
 
+### Validations
+
+* ```onValidate``` - is fired before saving process, stops saving if any listeners returns ```false```
+
 
 ### Data converters
 

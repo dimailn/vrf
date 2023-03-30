@@ -80,13 +80,14 @@ describe 'form', ->
     def('create', -> jest.fn -> ->)
     def('update', -> jest.fn -> ->)
     def('created', -> jest.fn -> ->)
+    def('validate', -> jest.fn -> true)
 
     def('effects', ->
       [
         {
           name: 'rest',
           api: true,
-          effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction, onCreate, onCreated, onUpdate}) ->
+          effect: ({onLoad, onLoadSources, onLoadSource, onSave, onExecuteAction, onCreate, onCreated, onUpdate, onValidate}) ->
             onCreate($create)
             onUpdate($update)
             onSave($save)
@@ -95,6 +96,7 @@ describe 'form', ->
             onLoad($load)
             onExecuteAction($executeAction)
             onCreated($created)
+            onValidate($validate)
         }
       ]
     )
@@ -248,6 +250,13 @@ describe 'form', ->
 
       it 'saves resource', ->
         expect($save.mock.calls.length).toBe(1)
+
+      describe 'with onValidate', ->
+        def('validate', -> jest.fn -> false)
+
+        it 'doesnt save resource', ->
+          expect($save.mock.calls.length).toBe(0)
+
 
       describe 'no onSave', ->
         def('save', -> null)

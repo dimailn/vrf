@@ -53,6 +53,7 @@ export interface EffectContextBuiltinListeners {
   onUnmounted: (listener: () => void) => void
   onAfterLoad: (listener: (event: Event<{resource: any}>) => object) => void
   onBeforeSave: (listener: (event: Event<{resource: any}>) => object) => void
+  onValidate: (listener: (event: Event<{resource: any}>) => boolean) => void
   onFailure: (listener: (event: Event<{errors: any}>) => object) => void
   onSuccess: (listener: () => void) => void
   onLoaded: (listener: () => void) => void
