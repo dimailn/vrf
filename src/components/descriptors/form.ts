@@ -679,6 +679,13 @@ export default {
       // let onChange inputs change the model
       return new Promise((resolve, reject) => {
         this.$nextTick(() => {
+          // optimize
+          const validationResults = this.executeEffectEventMap('onValidate', resource)
+
+          if(validationResults.length > 0 && validationResults.some(isValid => !isValid)) {
+            return
+          }
+
           this.$emit('before-submit', {
             resource
           });
@@ -959,6 +966,7 @@ export default {
         'onUnmounted',
         'onAfterLoad',
         'onBeforeSave',
+        'onValidate',
         'onFailure',
         'onSuccess',
         'onLoaded'
