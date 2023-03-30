@@ -128,11 +128,12 @@ Such form will load and save data without a single line of Javascript code. This
 * expressive syntax
 * ease of separation
 * I18n
-* Serverside validations
+* Validations(as interface)
 * autoforms
 * nested entities
 * option ```disabled``` / ```readonly``` for entire form
 * vuex integration
+* unlimited extension using Effects API
 
 # Basics
 
