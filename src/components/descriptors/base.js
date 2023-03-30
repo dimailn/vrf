@@ -105,7 +105,17 @@ export default {
       }
     },
     $firstError: function() {
-      return this.$errors[this.name] && this.$errors[this.name][0];
+      const errorsForField = this.$errors[this.name]
+
+      if (!errorsForField) {
+        return
+      }
+
+      if (typeof errorsForField === 'string') {
+        return errorsForField
+      }
+
+      return errorsForField[0]
     },
     humanName: function() {
       console.warn('[vrf] Computed property humanName is deprecated, use $label instead')
