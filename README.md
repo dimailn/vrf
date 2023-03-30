@@ -1063,10 +1063,6 @@ Vue.use(Vrf, {
 - [vrf-redirect](https://github.com/dimailn/vrf-redirect)
 - [vrf-date-converter](https://github.com/dimailn/vrf-date-converter)
 
-## Planned
-
-* Clientside validations
->
 
 
 
