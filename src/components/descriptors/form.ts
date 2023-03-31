@@ -744,7 +744,7 @@ export default {
 
             this.setSyncProp('errors', ok ? {} : dataOrErrors)
             this.$emit('after-submit')
-            if(ok && typeof dataOrErrors === 'object'){
+            if(ok && typeof dataOrErrors === 'object' && dataOrErrors !== null) {
               this.setSyncProp('resource', dataOrErrors)
             }
             if(!ok){
