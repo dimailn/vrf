@@ -995,7 +995,7 @@ export default (options) => {
 }
 ```
 
-One of the main things to consider when writing an adapter is that your adapter should not have a dependency vrf or a ui framework that you are wrapping(you must include them only in dev and peer dependencies). Following this rule will avoid duplication of dependencies in the final product. To achieve this, you need set up your bundler to handle vrf as external dependency and import descriptor in usual way.
+One of the main things to consider when writing an adapter is that your adapter should not have vrf or a wrapped ui framework dependency in your bundle(you must include them only in dev and peer dependencies). Following this rule will avoid duplication of dependencies in the final product. To achieve this, you need to set up your bundler to handle vrf as external dependency and import descriptor in usual way.
 
 ```vue
 <template>
