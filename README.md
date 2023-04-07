@@ -995,9 +995,7 @@ export default (options) => {
 }
 ```
 
-One of the main things to consider when writing an adapter is that your adapter should not have a dependency vrf or a ui framework that you are wrapping(you must include them only in dev and peer dependencies). Following this rule will avoid duplication of dependencies in the final product.
-
-For this reason, instead of importing the parent descriptor from vrf (which is only valid in the final product), you need to use the vrfParent key in your component.
+One of the main things to consider when writing an adapter is that your adapter should not have a dependency vrf or a ui framework that you are wrapping(you must include them only in dev and peer dependencies). Following this rule will avoid duplication of dependencies in the final product. To achieve this, you need set up your bundler to handle vrf as external dependency and import descriptor in usual way.
 
 ```vue
 <template>
@@ -1007,9 +1005,10 @@ For this reason, instead of importing the parent descriptor from vrf (which is o
 </template>
 
 <script>
+import {descriptors} from 'vrf'
 
 export default {
-  vrfParent: 'input'
+  extends: descriptors.input
 }
 
 </script>
@@ -1021,15 +1020,16 @@ If you need a basic implementation of element from core - use ```$vrfParent```
 
 <template>
 
-<button @onClick="onClick" v-if="someCondition">{{humanName}}</button>
+<button @onClick="onClick" v-if="someCondition">{{$label}}</button>
 <component :is="$vrfParent" v-else />
 
 </template>
 
 <script>
+import {descriptors} from 'vrf'
 
 export default {
-  vrfParent: 'action',
+  extends: descriptors.action,
   computed: {
     someCondition() {
       ...
