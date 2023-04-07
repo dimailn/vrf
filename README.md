@@ -666,8 +666,8 @@ You may change requests parameters by props
 ```vue
 
 <rf-action name="archive">
-  <template v-slot:activator="{on, pending, humanName}">
-    <my-great-button v-on="on" :loading="pending">{{humanName}}</my-great-button>
+  <template v-slot:activator="{on, pending, label}">
+    <my-great-button v-on="on" :loading="pending">{{label}}</my-great-button>
   </template>
 </rf-action>
 
