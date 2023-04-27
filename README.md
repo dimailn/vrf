@@ -97,9 +97,9 @@ Vrf is an abstraction over
 
 # Ideology
 
-Vrf puts form at the forefront of your application, but at the same time all high-level features are provided unobtrusively and their activation is implemented explicitly.  The main thesis of vrf is to stay simple while it is possible.  This means, for example, that you can make the most of the built-in autoforming capabilities and not write any code, but if one day you need a more complex flow than effects can offer, you can simply turn off the auto mode and manually manipulate the form, while still taking the other advantages that  vrf gives.
+Vrf puts form at the forefront of your application, but at the same time all high-level features are provided unobtrusively and their activation is implemented explicitly.  The main thesis of vrf is to stay simple while it is possible.  This means, for example, that you can make the most of the built-in auto-forming capabilities without having to write any code, but if one day you need a more complex flow than effects can offer, you can simply turn off the auto mode and manually manipulate the form, while still taking the other advantages that  vrf gives.
 
-In other words, the complex things have the right to be complex, but simple must remain simple.
+In other words, the complex things have the right to be complex, but simple should remain simple.
 
 # What does it look like?
 
@@ -118,7 +118,7 @@ It allows you to write forms in this way:
 ```
 
 
-Such form will load and save data without a single line of Javascript code. This is possible due to the use of the effects, which describes the general logic of working with entities in your project. If some form required very specific logic, the form can be used in a lower level mode(without "auto" flag).
+Such form will load and save data without a single line of Javascript code. This is possible due to the use of the effects, which describes the general logic of working with entities in your project. If a form requires very specific logic, that form can be used in a lower-level mode(without the "auto" flag).
 
 ## Features
 
@@ -136,7 +136,7 @@ Such form will load and save data without a single line of Javascript code. This
 
  ## Object binding
 
-Binding to an object is the cornerstone of vrf.  This concept assumes that instead of defining a v-model for a field each time, you do a binding once — entirely on the form object, and simply inform each component of the form what the name of the field to which it is attached is called.  Due to this knowledge, the form can take on the tasks of internationalization and display of validations (whereas when determining the v-model for each field, you are forced to do it yourself).
+The cornerstone of vrf is the binding to an object. This concept assumes that instead of defining a v-model for a field each time, you do a binding once — entirely on the form object, and simply inform each component of the form what the name of the field to which it is attached is called.  Due to this knowledge, the form can take on the tasks of internationalization and display of validations (whereas when determining the v-model for each field, you are forced to do it yourself).
 
 ```vue
 <template>
@@ -168,7 +168,7 @@ export default {
 
 ## Access to the resource
 
-The form passes a reactive context to all child components (using the Provide / Inject API), so any descendant of the form (not even direct) can receive this data.  This allows you to break complex forms into parts, but without the need, it is better not to use this opportunity and try to keep the entire form in one file.
+The form passes a reactive context to all child components (using the Provide / Inject API), so any descendant of that form (not even direct) can receive this data.  This allows you to break complex forms into several parts, however, in most cases it is recommended to keep the form in one file.
 
 There are several ways to access the resource:
 
@@ -233,12 +233,12 @@ export default {
 The resource can be in three places:
 
 * in the state of the parent component for the form
-* in the state of form(this happens in autoforms, or for example if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
+* in the state of form(this happens in auto forms, or for example, if you do not pass a ```resource``` prop). In this case, you can get a reference to the resource using ```:resource.sync``` prop.
 * in vuex
 
 ## Expressions
 
-The standard way of writing expressions that depdends on resource is using ```$resource``` variable from scoped slot on ```rf-form``` in main form file
+The standard way of writing expressions that depend on the resource is the use ```$resource``` variable from the scoped slot on ```rf-form``` in the main form file
 
 ```vue
 
@@ -251,16 +251,16 @@ The standard way of writing expressions that depdends on resource is using ```$r
 
 ```
 
-It won't fail if ```$resource``` is not loaded yet, because scoped slot is rendered only after ```$resource``` is loaded. All required sources are initialized using empty arrays, so using ```$sources``` reference is safe as well.
+It won't fail if ```$resource``` is not loaded yet, because the scoped slot is rendered only after ```$resource``` is loaded. All required sources are initialized using empty arrays, so using ```$sources``` reference is also safe.
 
-If your form is splitted into files and you need conditional rendering in the file without ```rf-form``` - you should use ```rf-resource``` component to access the resource.
+If your form is split into files and you need conditional rendering in the file without ```rf-form``` - you should use ```rf-resource``` component to access the resource.
 
 
 
 ## Sources
 
-Some components (for example, such as selects) require options for their work.  For these purposes, the form
-```sources``` property serves.  It expects a hash of all the necessary options that can be accessed in specific components by name.
+Some components (such as selects) require options for their work.  The form
+```sources``` property is used for this purpose. It expects a hash of all the necessary options which can be accessed in specific components by name.
 
 ```vue
 
@@ -298,10 +298,9 @@ export default {
 
 </script>
 ```
-Instead of a string with the name of the options, you may also pass directly an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and autoforms can load sources by name).
+Instead of a string with the name of the options, you can also directly pass an array of options(but it is used less often since vrf's strength is precisely the declarative descriptions of forms and auto forms can load sources by name).
 
-When you use a source name with autoforms, form uses effects to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when component was mounted or ```options``` prop was updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components, when you need sources for their work.
-
+When you use a source name with auto forms, the form uses effects to load the collection for a source. Internally, this is achieved by calling the method ```requireSource``` on the form when the component is mounted or the```options``` prop is updated. Then the form chooses the most effective loading strategy depending on the stage at which the method ```requireSource``` was called. You may use this method in your own components when you need sources for their work.
 
 
 ## Groups
