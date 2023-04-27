@@ -35,20 +35,19 @@ export default {
     isCollection: function() {
       return this.nestedResource instanceof Array;
     },
-    collection: function() {
-      var baseCollection;
-      baseCollection = this.nestedResource.filter(function(r) {
-        return !r._destroy;
-      });
-      if (this.filter) {
-        baseCollection = baseCollection.filter(this.filter);
-      }
-      return baseCollection;
+    wrappedCollection() {
+      return this.nestedResource.map((item, index) => ({index, item}))
     },
-    wrappedCollection: function() {
-      return this.collection.map(function(item, index) {
-        return {index, item};
-      });
+    wrappedCollectionFiltered() {
+      let wrappedCollectionFiltered =
+        this.wrappedCollection
+          .filter((wrappedResource) => !wrappedResource.item._destroy)
+
+      if(this.filter) {
+        wrappedCollectionFiltered = wrappedCollectionFiltered.filter(this.filter)
+      }
+
+      return wrappedCollectionFiltered
     },
     nestedResource: function() {
       return this.$resource && this.$resource[this.name];
@@ -63,15 +62,15 @@ export default {
     pathService: function() {
       return this.vueResourceFormPathService;
     },
-    errorsForNestedResource: function() {
-      var prefix;
-      prefix = this.name;
-      return Object.keys(this.$errors).filter(function(path) {
-        return path.substr(0, prefix.length) === prefix;
-      }).reduce((ownErrors, path) => {
-        ownErrors[path.slice(prefix.length + 1)] = this.$errors[path];
-        return ownErrors;
-      }, {});
+    errorsForNestedResource() {
+      const prefix = this.name
+
+      return Object.keys(this.$errors)
+        .filter((path) => path.substr(0, prefix.length) === prefix)
+        .reduce((ownErrors, path) => {
+          ownErrors[path.slice(prefix.length + 1)] = this.$errors[path]
+          return ownErrors
+        }, {})
     },
     $schema: function() {
       return this.schema || this.defaultSchema;
@@ -100,17 +99,18 @@ export default {
     clearErrors: function () {
       return this.$form.clearErrors();
     },
-    errorsFor: function(index) {
+    errorsFor(index) {
       if (!this.$errors) {
-        return;
+        return
       }
-      const prefix = this.name + `[${index}]`;
-      const errors = Object.keys(this.$errors).filter(function(path) {
-        return path.substr(0, prefix.length) === prefix;
-      }).reduce((ownErrors, path) => {
-        ownErrors[path.slice(prefix.length + 1)] = this.$errors[path];
-        return ownErrors;
-      }, {});
+
+      const prefix = this.name + `[${index}]`
+      const errors = Object.keys(this.$errors)
+        .filter((path) => path.substr(0, prefix.length) === prefix)
+        .reduce((ownErrors, path) => {
+          ownErrors[path.slice(prefix.length + 1)] = this.$errors[path]
+          return ownErrors
+        }, {})
 
       Object.keys(this.$errors).forEach((path) => {
         const commonPrefix = `${this.name}.`
