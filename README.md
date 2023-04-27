@@ -91,9 +91,9 @@ createApp(...)
 
 Vrf is an abstraction over
 * UI, because it is a set of components' interfaces that should be implemented in adapters
-* Network, because you operate only with terms of subject area and business actions in application code, and the implementation is delegated to effects
+* Network, because you operate only with terms of the subject area and business actions in application code, and the implementation is delegated to effects
 * I18n, because you can plug in any i18n library(but vue-i18n is supported from the box)
-* Any other stuff related to forms, like validations, notifications, analytics, that should be decoupled into plugins, using Effects API
+* Any other areas related to forms, like validations, notifications and analytics, that should be decoupled into plugins, using Effects API
 
 # Ideology
 
