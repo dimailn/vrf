@@ -112,6 +112,34 @@ describe 'nested', ->
 
         expect(input.$firstError).toBe "Invalid property"
 
+    describe 'with filtered items', ->
+      def('errors', ->
+        {
+          "subtasks[0].title": ["Invalid property"]
+        }
+      )
+
+      def('resource', ->
+        title: ''
+        subtasks: [
+          {
+            title: ''
+            deadline: new Date
+            _destroy: true
+          }
+          {
+            title: ''
+            deadline: new Date
+          }
+        ]
+      )
+
+      it "doesn't render error for non-filtered resource", ->
+        input = $wrapper.vm.$refs.input
+
+        expect(input.$firstError).not.toBe "Invalid property"
+
+
   describe 'one object', ->
     def('template', ->
       '''
