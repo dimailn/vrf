@@ -139,6 +139,41 @@ describe 'nested', ->
 
         expect(input.$firstError).not.toBe "Invalid property"
 
+    describe 'with explicit filter', ->
+      def('template', ->
+        '''
+          <rf-form :resource="resource" :errors="errors" ref="form">
+            <rf-input name="title" />
+            <rf-nested name="subtasks" :filter="(item) => item.shouldExclude">
+              <template slot-scope="props">
+                <rf-input name="title" class="subtask-title" ref="input" />
+                <rf-input name="deadline" />
+              </template>
+            </rf-nested>
+          </rf-form>
+        '''
+      )
+
+      def('resource', ->
+        title: ''
+        subtasks: [
+          {
+            title: 'First'
+            deadline: new Date
+            shouldExclude: true
+          }
+          {
+            title: 'Second'
+            deadline: new Date
+          }
+        ]
+      )
+
+      it "doesnt show filtered item", ->
+        input = $wrapper.vm.$refs.input
+
+        expect(input.$value).toBe 'Second'
+
 
   describe 'one object', ->
     def('template', ->

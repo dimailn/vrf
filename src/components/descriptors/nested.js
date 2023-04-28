@@ -44,7 +44,7 @@ export default {
           .filter((wrappedResource) => !wrappedResource.item._destroy)
 
       if(this.filter) {
-        wrappedCollectionFiltered = wrappedCollectionFiltered.filter(this.filter)
+        wrappedCollectionFiltered = wrappedCollectionFiltered.filter(({item}) => this.filter(item))
       }
 
       return wrappedCollectionFiltered
