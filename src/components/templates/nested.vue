@@ -4,7 +4,7 @@
   :name="name"
   :translation-name="$translationName"
   :key="index"
-  :resource="wrappedCollection[index].item"
+  :resource="wrappedCollectionFiltered[index].item"
   :sources="$sources"
   :errors="errorsFor(index)"
   :vuex="$vuex"
@@ -19,12 +19,12 @@
   @require-source="requireSource"
   v-if="isCollection && (index !== undefined)"
 >
-  <slot :resource="wrappedCollection[index].item" :$resource="wrappedCollection[index].item"  />
+  <slot :resource="wrappedCollectionFiltered[index].item" :$resource="wrappedCollectionFiltered[index].item"  />
 </rf-form>
 
 <component :is="wrapper" v-else-if="isCollection">
 
-  <template v-for="block in $schema">
+  <template v-for="block, in $schema">
     <template v-if="typeof block === 'function'">
       <rf-form
         :name="name"

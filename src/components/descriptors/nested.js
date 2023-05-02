@@ -75,10 +75,10 @@ export default {
     $schema: function() {
       return this.schema || this.defaultSchema;
     },
-    defaultSchema: function() {
+    defaultSchema() {
       return [
-        () => {
-          return this.wrappedCollection;
+        (resources) => {
+          return resources
         }
       ];
     }
@@ -105,6 +105,7 @@ export default {
       }
 
       const prefix = this.name + `[${index}]`
+
       const errors = Object.keys(this.$errors)
         .filter((path) => path.substr(0, prefix.length) === prefix)
         .reduce((ownErrors, path) => {

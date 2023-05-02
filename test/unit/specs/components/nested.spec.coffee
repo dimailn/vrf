@@ -123,19 +123,19 @@ describe 'nested', ->
         title: ''
         subtasks: [
           {
-            title: ''
+            title: '1'
             deadline: new Date
             _destroy: true
           }
           {
-            title: ''
+            title: '2'
             deadline: new Date
           }
         ]
       )
 
       it "doesn't render error for non-filtered resource", ->
-        input = $wrapper.vm.$refs.input
+        input = $wrapper.find('.subtask-title').vm
 
         expect(input.$firstError).not.toBe "Invalid property"
 
@@ -144,7 +144,7 @@ describe 'nested', ->
         '''
           <rf-form :resource="resource" :errors="errors" ref="form">
             <rf-input name="title" />
-            <rf-nested name="subtasks" :filter="(item) => item.shouldExclude">
+            <rf-nested name="subtasks" :filter="(item) => !item.shouldExclude">
               <template slot-scope="props">
                 <rf-input name="title" class="subtask-title" ref="input" />
                 <rf-input name="deadline" />
@@ -169,8 +169,9 @@ describe 'nested', ->
         ]
       )
 
-      it "doesnt show filtered item", ->
-        input = $wrapper.vm.$refs.input
+      test "doesnt show filtered item", ->
+        input = $wrapper.find('.subtask-title').vm
+
 
         expect(input.$value).toBe 'Second'
 
