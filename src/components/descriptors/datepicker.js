@@ -4,13 +4,13 @@ export default {
   name: 'rf-datepicker',
   extends: BaseInput,
   computed: {
-    date: function() {
+    date() {
       return this.VueResourceForm.dateInterceptor.out(this.$value);
     }
   },
   methods: {
-    onInput: function(e) {
+    onInput(e) {
       this.$value = this.VueResourceForm.dateInterceptor.in(e.target.value)
     }
   }
-};
+}

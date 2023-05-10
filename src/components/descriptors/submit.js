@@ -10,7 +10,7 @@ export default {
     }
   },
   computed: {
-    $disabled: function() {
+    $disabled() {
       if (this.$readonly) {
         return true;
       }
@@ -20,4 +20,4 @@ export default {
       return this.t('submit', this.$translationName, { isAction: true })
     }
   }
-};
+}

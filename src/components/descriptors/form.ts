@@ -91,7 +91,7 @@ export default {
     VueProvideObservable('vrf', propsFactory, nameMapper),
     Templates
   ],
-  provide: function() {
+  provide() {
     return {
       vueResourceFormPath: this.path,
       vueResourceFormPathService: this.$pathService
@@ -181,7 +181,7 @@ export default {
       */
     errors: {
       type: Object,
-      default: function() {
+      default() {
         return {};
       }
     },
@@ -255,7 +255,7 @@ export default {
      */
     rootElement: String
   },
-  data: function() {
+  data() {
     return {
       innerResource: null,
       innerSources: null,
@@ -270,12 +270,12 @@ export default {
     };
   },
   watch: {
-    rfId: function() {
+    rfId() {
       return this.forceReload({
         boot: true
       });
     },
-    resource: function(old, current) {
+    resource(old, current) {
       if (old === current) {
         return;
       }

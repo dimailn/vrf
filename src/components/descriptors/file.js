@@ -19,5 +19,4 @@ export default {
       this.$value = Object.preventExtensions(fileOrFiles)
     }
   }
-
 }

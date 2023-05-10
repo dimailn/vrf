@@ -28,21 +28,21 @@ export default {
         ...this.$attrs
       }
     },
-    $fieldName: function() {
-      return this.name;
+    $fieldName() {
+      return this.name
     },
     $valuePropSpecified() {
       return this.value !== undefined
     },
     $originalValue: {
-      get: function() {
+      get() {
         if(this.$valuePropSpecified){
           return this.value
         }
 
         return get(this.$resource, this.$fieldName);
       },
-      set: function(value) {
+      set(value) {
         if(this.$valuePropSpecified){
           this.$emit('input', value)
 
@@ -72,29 +72,29 @@ export default {
       }
     },
     $value: {
-      get: function() {
+      get() {
         return this.$originalValue;
       },
-      set: function(value) {
+      set(value) {
         return this.$originalValue = value;
       }
     },
-    $originalDisabled: function() {
+    $originalDisabled() {
       if (this.disabled == null) {
         return this.$formDisabled;
       }
       return this.disabled
     },
-    $disabled: function() {
+    $disabled() {
       return this.$originalDisabled;
     },
-    $originalReadonly: function() {
+    $originalReadonly() {
       if (this.readonly == null) {
         return this.$formReadonly;
       }
       return this.readonly
     },
-    $readonly: function() {
+    $readonly() {
       return this.$originalReadonly;
     },
     $label() {
@@ -104,13 +104,13 @@ export default {
         return this.label || this.t(this.name)
       }
     },
-    $firstError: function() {
+    $firstError() {
       return this.$errors[this.name] && this.$errors[this.name][0];
     },
-    humanName: function() {
+    humanName() {
       console.warn('[vrf] Computed property humanName is deprecated, use $label instead')
 
       return this.$label
     }
   }
-};
+}

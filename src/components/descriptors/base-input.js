@@ -39,5 +39,5 @@ export default {
     validateProps.call(this)
 
     this.$scope && this.name && this.$scope.emit('initialized', this.name)
-  },
-};
+  }
+}

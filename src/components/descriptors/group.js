@@ -17,7 +17,7 @@ export default {
       default: 'rf-radio'
     }
   },
-  data: function() {
+  data() {
     return {
       wrapper: {
         groupValue: null,
@@ -29,7 +29,7 @@ export default {
       }
     };
   },
-  created: function() {
+  created() {
     this.wrapper.bitwise = this.bitwise
     this.wrapper.multiple = this.multiple
     this.wrapper.inverted = this.inverted

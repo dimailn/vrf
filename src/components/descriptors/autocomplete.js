@@ -267,4 +267,4 @@ export default {
       return provider.setup
     }
   }
-};
+}
