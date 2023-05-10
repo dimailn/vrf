@@ -59,7 +59,7 @@ export default {
               break;
 
             case 'changed':
-              if (this.$form.auto) {
+              if (this.$form.auto && this.autosave) {
                 this.debouncedSubmit()
               }
               break;

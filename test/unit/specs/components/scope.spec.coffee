@@ -142,7 +142,7 @@ describe 'scope', ->
             :rf-id="1"
             name="Test"
           >
-            <rf-scope isolated autosave>
+            <rf-scope isolated :autosave="autosave">
               <rf-input name="title" class="title" />
               <rf-textarea name="description" class="description" />
             </rf-scope>
@@ -156,23 +156,38 @@ describe 'scope', ->
             description: ''
             active: false
           }
+          autosave: $autosave
         computed:
           effect: ->
             ({onSave}) => onSave($onSaveHandler)
       )
     )
 
+
     def('input', -> $wrapper.find('.title'))
 
     beforeEach ->
       $input.setData($value: "Test")
 
-    test 'saves data after one second', ->
-      await new Promise((resolve) -> setTimeout(resolve, 1000))
-      expect($onSaveHandler).toHaveBeenCalledWith({
-        title: 'Test',
-        description: ''
-      })
+    describe 'true', ->
+      def('autosave', -> true)
+
+      test 'saves data after one second', ->
+        await new Promise((resolve) -> setTimeout(resolve, 1000))
+        expect($onSaveHandler).toHaveBeenCalledWith({
+          title: 'Test',
+          description: ''
+        })
+
+    describe 'false', ->
+      def('autosave', -> false)
+
+      test 'saves data after one second', ->
+        await new Promise((resolve) -> setTimeout(resolve, 1000))
+        expect($onSaveHandler).not.toHaveBeenCalledWith({
+          title: 'Test',
+          description: ''
+        })
 
 
 
