@@ -10,7 +10,7 @@ export default {
     }
   },
   computed: {
-    $disabled: function() {
+    $disabled() {
       if (this.$readonly) {
         return true;
       }

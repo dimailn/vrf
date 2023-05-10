@@ -22,7 +22,7 @@ export default {
       }
       return this.t(this.labelName || this.name, this.$translationName, { isAction: true });
     },
-    humanName: function() {
+    humanName() {
       console.warn('[vrf] Computed property humanName is deprecated, use $label instead')
 
       return this.$label

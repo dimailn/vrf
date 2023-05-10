@@ -19,7 +19,7 @@ export default {
     type: String
   },
   watch: {
-    $value: function(value, prev) {
+    $value(value, prev) {
       if (value == null) {
         return;
       }
@@ -32,7 +32,7 @@ export default {
     }
   },
   methods: {
-    applyTransform: function(value, prev) {
+    applyTransform(value, prev) {
       const transform = typeof this.transform === 'string' ? this.VueResourceForm.transforms[this.transform] : this.transform;
       if (transform != null) {
         return this.$nextTick(() => {

@@ -11,11 +11,11 @@ export default {
       required: true
     }
   },
-  created: function() {
+  created() {
     this.$requireSource(this.name);
   },
   watch: {
-    name: function() {
+    name() {
       this.$requireSource(this.name);
     }
   },

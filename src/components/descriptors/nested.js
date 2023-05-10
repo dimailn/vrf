@@ -49,17 +49,17 @@ export default {
 
       return wrappedCollectionFiltered
     },
-    nestedResource: function() {
+    nestedResource() {
       return this.$resource && this.$resource[this.name];
     },
-    parentPath: function() {
+    parentPath() {
       this.vueResourceFormPathService.add(this.vueResourceFormPath, this.name);
       if (!this.vueResourceFormPath) {
         return [this.name];
       }
       return this.vueResourceFormPath.concat([this.name]);
     },
-    pathService: function() {
+    pathService() {
       return this.vueResourceFormPathService;
     },
     errorsForNestedResource() {
@@ -72,7 +72,7 @@ export default {
           return ownErrors
         }, {})
     },
-    $schema: function() {
+    $schema() {
       return this.schema || this.defaultSchema;
     },
     defaultSchema() {
@@ -84,19 +84,19 @@ export default {
     }
   },
   methods: {
-    reloadResource: function(modifier) {
+    reloadResource(modifier) {
       return this.$form.reloadResource(modifier);
     },
-    reloadSources: function() {
+    reloadSources() {
       return this.$form.reloadSources();
     },
-    reloadRootResource: function(modifier) {
+    reloadRootResource(modifier) {
       return this.$form.reloadRootResource(modifier);
     },
     requireSource(name){
       return this.$form.requireSource(name)
     },
-    clearErrors: function () {
+    clearErrors() {
       return this.$form.clearErrors();
     },
     errorsFor(index) {
@@ -123,7 +123,7 @@ export default {
 
       return errors;
     },
-    pathFor: function(index) {
+    pathFor(index) {
       return this.parentPath.concat([index]);
     }
   }

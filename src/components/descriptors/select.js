@@ -25,26 +25,26 @@ export default {
       default: 'title'
     }
   },
-  created: function() {
+  created() {
     if (this.sourceMustBeRequired) {
       return this.$requireSource(this.options);
     }
   },
   watch: {
-    options: function() {
+    options() {
       if (this.sourceMustBeRequired) {
         return this.$requireSource(this.options);
       }
     }
   },
   computed: {
-    $disabled: function() {
+    $disabled() {
       if (this.$readonly) {
         return true;
       }
       return this.$originalDisabled;
     },
-    $_options: function() {
+    $_options() {
       if (typeof this.options === 'string') {
         const options = this.$sources[this.options] ||
           this.$resource && this.$resource[this.options] instanceof Array && this.$resource[this.options] ||
@@ -62,12 +62,12 @@ export default {
         return this.options;
       }
     },
-    _listeners: function() {
+    _listeners() {
       return {
         change: this.onChange
       };
     },
-    listeners: function() {
+    listeners() {
       return {
         input: this.onChange
       };
