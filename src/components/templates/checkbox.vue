@@ -1,4 +1,5 @@
 <template>
+
 <input
   type="checkbox"
   v-model="$value"
@@ -6,7 +7,9 @@
   :readonly="$readonly"
   :name="name"
   :title="label"
+  :checked="$value"
 />
+
 </template>
 
 <script src="../descriptors/checkbox.js" />

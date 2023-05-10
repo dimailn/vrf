@@ -27,6 +27,7 @@ import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames, Event, 
 import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
 import Templates from '@/mixins/templates'
+import {reactive, h} from 'vue'
 
 export const propsFactory = function() {
   return {
@@ -88,8 +89,9 @@ export const nameMapper = function(name) {
 export default {
   name: 'rf-form',
   mixins: [
-    VueProvideObservable('vrf', propsFactory, nameMapper),
+    VueProvideObservable('vrf', propsFactory, nameMapper,() => true, reactive),
     Templates
+
   ],
   provide() {
     return {
@@ -97,11 +99,17 @@ export default {
       vueResourceFormPathService: this.$pathService
     };
   },
+  emits: [
+    'reloadResource',
+    'reloadRootResource',
+    'reloadSources',
+    'requireSource'
+  ],
   props: {
     /**
       * Main resource of form
       */
-    value: Object,
+    modelValue: Object,
     /**
       * Alias to value
       */
@@ -292,24 +300,20 @@ export default {
   beforeDestroy(){
     this.executeEffectEventOptional('onUnmounted', false, [])
   },
-  render(h){
+  render(){
     if(this.rootElement){
-      return h(this.rootElement, {}, this.$slots.default)
+      return h(this.rootElement, {}, this.$slots.default())
     }
 
     const genForm = (children?: any) => h(
       'form', {
-        on: { submit: (e) => e.preventDefault() }
+        onSubmit: (e) => e.preventDefault()
       },
       children
     )
 
     if(this.isNested){
-      if(this.$slots.default && this.$slots.default.length > 1) {
-        genForm(this.$slots.default)
-      } else {
-        return this.$slots.default
-      }
+      return this.$slots.default()
     }
 
     if(!this.$resource){
@@ -340,12 +344,12 @@ export default {
       )
     }
 
-    if(this.$scopedSlots.default && this.$resource){
+    if(this.$slots.default && typeof this.$slots.default === 'function' && this.$resource){
       children.push(
         h(
           'div',
           options,
-          this.$scopedSlots.default({$resource: this.$resource})
+          this.$slots.default({$resource: this.$resource})
         )
       )
     } else {
@@ -353,7 +357,7 @@ export default {
         h(
           'div',
           options,
-          this.$slots.default
+          this.$slots.default()
         )
       )
     }
@@ -361,7 +365,7 @@ export default {
     return genForm(children)
   },
   mounted() {
-    if(this.value && this.resource) {
+    if(this.modelValue && this.resource) {
       console.error('[vrf] The props value and resource are specified both, you need to use only one, value is preferrable.')
     }
 
@@ -409,7 +413,7 @@ export default {
       return this.translationName || this.$name;
     },
     $$resource() {
-      return this.value || this.resource;
+      return this.modelValue || this.resource;
     },
     $resource() {
       if (this.vuex) {
