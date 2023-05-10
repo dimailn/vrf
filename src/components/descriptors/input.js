@@ -50,4 +50,4 @@ export default {
       return this.type  || 'text'
     }
   }
-};
+}

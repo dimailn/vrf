@@ -13,4 +13,4 @@ export default {
       this.$value = this.VueResourceForm.dateInterceptor.in(e.target.value)
     }
   }
-};
+}

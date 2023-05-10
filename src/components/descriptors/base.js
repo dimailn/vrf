@@ -113,4 +113,4 @@ export default {
       return this.$label
     }
   }
-};
+}

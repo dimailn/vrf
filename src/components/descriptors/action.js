@@ -72,7 +72,7 @@ export default {
           this.$form.reloadResource();
         }
         return this.$emit('result', result);
-      });
+      })
     }
   }
-};
+}

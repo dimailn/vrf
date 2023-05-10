@@ -127,4 +127,4 @@ export default {
       return this.parentPath.concat([index]);
     }
   }
-};
+}

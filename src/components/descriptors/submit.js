@@ -20,4 +20,4 @@ export default {
       return this.t('submit', this.$translationName, { isAction: true })
     }
   }
-};
+}

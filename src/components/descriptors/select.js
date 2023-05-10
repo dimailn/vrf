@@ -76,4 +76,4 @@ export default {
       return typeof this.options === 'string' && !(this.VueResourceForm.sources || {})[this.options]
     }
   }
-};
+}
