@@ -307,7 +307,7 @@ When you use a source name with auto forms, the form uses effects to load the co
 
 Vrf contains ```rf-group``` component that is used for grouping descendants from ```descriptors.groupItem```, like ```rf-checkbox```, ```rf-radio```, or any custom descendant. 
 
-Outside of group, groupItem components work like boolean selection:
+Outside of a group, groupItem components work like boolean selection:
 
 ```vue
 
@@ -394,10 +394,9 @@ export default {
 </script>
 ```
 
-Also, you can use ```inverted``` property on ```rf-group``` to invert the behaviour.
+Also, you can use the ```inverted``` property on ```rf-group``` to invert the behaviour.
 
-Group supports ```options``` prop, you can pass an array and use any descendant of ```descriptors.groupItem``` as ```item-component```(```rf-radio``` is used by default)
-
+The group supports ```options``` prop, you can pass an array and use any descendant of ```descriptors.groupItem``` as ```item-component```(```rf-radio``` is used by default)h
 ```vue
 <rf-form v-model="resource">
   <!-- also you  can specify id-key and title-key -->
@@ -438,7 +437,7 @@ export default {
 
 
 Moreover, sometimes you need to manage some bitwise values in your resource. Groups allow you to manage them. It has two modes -
-you can use this component as a wrapper for items, or use its ```options``` property. It supports ```inverted``` mode as well.
+either you can use this component as a wrapper for items, or you can use its ```options``` property. It supports ```inverted``` mode as well.
 
 ```vue
 <template>
@@ -503,7 +502,7 @@ export default {
 
 There is ```rf-scope``` component that helps you to break your form by logical scopes.
 
-For example, if you need to disable only part of form, it'll look like
+For example, if you need to disable only part of a form, it'll look like
 
 ```vue
 
@@ -535,7 +534,7 @@ The scope may be submitted separately as a slice of fields which are inside the 
 </rf-form>
 ```
 
-You also can trigger submit if data are changed inside the scope with property ```autosave```
+You also can trigger submit if data is changed inside the scope with property ```autosave```
 
 ```vue
 <rf-form name="User">
@@ -552,7 +551,7 @@ You also can trigger submit if data are changed inside the scope with property `
 
 
 ## Nested entities
-Vrf supports work with nested entities, both single and with collections. To work with them, the ```rf-nested``` component is used, which expects a scoped slot with form components for a nested entity. Internally, ```rf-nested``` uses the ```rf-form``` the required number of times, so the use of rf-nested can be equated with the declaration of the form inside the form, which can be duplicated if necessary.
+Vrf supports work with nested entities, both single and with collections. The ```rf-nested``` component is used to work with them, which expects a scoped slot with form components for a nested entity. Internally, ```rf-nested``` uses the ```rf-form``` the required number of times, so the use of rf-nested can be equated with the declaration of the form inside the form, which can be duplicated if necessary.
 
 ```vue
 <template>
@@ -596,14 +595,14 @@ export default {
 
 ## Autoforms
 
-Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors, and can also perform some side effects, for example, redirecting to a page of a newly created entity.
+Autoforms are a special form mode in which the form within itself performs tasks of loading, saving data, forwarding validation errors and can also perform some side effects, for example, redirecting to a page of a newly created entity.
 
-Autoforms powered by Effects API which allows to create plugins in modular way. Due to this, it is possible to implement the flow of autoforms for the specifics of any project. You may use ready-made effects or implement your own.
+Autoforms are powered by Effects API which allows the creation of plugins in modular way. Due to this, it is possible to implement the flow of autoforms for the specifics of any project. You may use ready-made effects or implement your own.
 
 
 ## Data loading control
 
-Vrf provide some methods on rf-form allows you to manage data loading:
+Vrf provides some methods on rf-form allows you to manage data loading:
 
 ```javascript
 
@@ -639,7 +638,7 @@ export default {
 
 ## Actions
 
-Vrf provides its own way to create simple buttons that activate async requests. These requests are served by effects and the received data stored in the context of the form(by analogy with a resource).
+Vrf provides a way to create simple buttons that activate async requests. These requests are served by effects and the received data is stored in the context of the form(by analogy with a resource).
 
 For example, this snippet renders a button that initiates POST request to /archive in a resource context. 
 ```vue
@@ -698,7 +697,7 @@ If you need reload resource on result, you may use prop ```reload-on-result```
 
 ```
 
-If your action must show toast in UI by result, this can be done in the effects. For example, in REST effect $message field will be processed by effect as a message for user and it will be emitted by ```showMessage```.
+If your action must show toast in UI by result, this can be done in the effects. For example, in REST effect $message field will be processed by effect as a message for the user and it will be emitted by ```showMessage```.
 
 
 ### Run actions programmatically
@@ -748,7 +747,7 @@ Vue.use(Vrf, {
 
 ## v-model
 
-In some cases you may want to use ```rf-``` controls outside of form, if you don't need form functionality, but still want to use the same elements without separating by vrf/non-vrf inputs. Regarding to this vrf inputs support ```v-model``` directive, allowing to use them in seamless way
+In some cases you may want to use ```rf-``` controls outside of the form, if you don't need the form functionality, but still want to use the same elements without separating vrf/non-vrf inputs. Regarding this, vrf inputs support ```v-model``` directive, allowing for them to be used in a seamless way
 
 ```vue
 <template>
