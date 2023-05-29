@@ -76,20 +76,16 @@ export default {
 
       const result = this.executeEvent('onSelect', [item])
 
-      const {$idKey, titleKey, $queryKey} = this
+      const {$idKey, $queryKey} = this
 
       if (result instanceof Object) {
         const {value, query} = result
 
         this.$value = value
         this.query = query
-      } else if (titleKey || $idKey || $queryKey) {
+      } else if ($idKey || $queryKey) {
         if ($idKey) {
           this.$value = typeof $idKey === 'function' ? $idKey(item) : get(item, $idKey)
-        }
-
-        if(titleKey) {
-          this.query = typeof titleKey === 'function' ? titleKey(item) : get(item, titleKey)
         }
 
         if ($queryKey) {
