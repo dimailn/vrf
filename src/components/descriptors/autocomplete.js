@@ -32,7 +32,7 @@ export default {
     idKey: {
       type: [String, Function]
     },
-    selectionKey: {
+    queryKey: {
       type: [String, Function]
     },
     allowEmptyRequests: {
@@ -76,25 +76,24 @@ export default {
 
       const result = this.executeEvent('onSelect', [item])
 
-      const {$idKey, titleKey, selectionKey} = this
+      const {$idKey, titleKey, $queryKey} = this
 
       if (result instanceof Object) {
         const {value, query} = result
 
         this.$value = value
         this.query = query
-      } else if (titleKey || $idKey || selectionKey) {
+      } else if (titleKey || $idKey || $queryKey) {
         if ($idKey) {
           this.$value = typeof $idKey === 'function' ? $idKey(item) : get(item, $idKey)
         }
 
-        if(selectionKey) {
-          this.query = typeof selectionKey === 'function' ? selectionKey(item) : get(item, selectionKey)
-          return
-        }
-
         if(titleKey) {
           this.query = typeof titleKey === 'function' ? titleKey(item) : get(item, titleKey)
+        }
+
+        if ($queryKey) {
+          this.query = typeof $queryKey === 'function' ? $queryKey(item) : get(item, $queryKey)
         }
       }
 
@@ -253,6 +252,9 @@ export default {
     },
     $idKey() {
       return this.idKey || this.titleKey
+    },
+    $queryKey() {
+      return this.queryKey || this.titleKey
     },
     providerSetup() {
       if (typeof this.type === 'function') {
