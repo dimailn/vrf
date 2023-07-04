@@ -747,13 +747,14 @@ export default {
             if(ok && typeof dataOrErrors === 'object' && dataOrErrors !== null) {
               this.setSyncProp('resource', dataOrErrors)
             }
+            this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
+
             if(!ok){
               this.executeEffectEventOptional('onFailure', false, [new VrfEvent('onFailure', {errors: dataOrErrors})])
             } else {
               this.executeEffectEventOptional('onSuccess', false, [])
             }
             resolve()
-            return this.$emit(ok ? 'after-submit-success' : 'after-submit-failure')
           }).catch((e) => {
             console.error(e)
             reject(e)
