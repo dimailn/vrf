@@ -57,6 +57,7 @@ export interface EffectContextBuiltinListeners {
   onFailure: (listener: (event: Event<{errors: any}>) => object) => void
   onSuccess: (listener: () => void) => void
   onLoaded: (listener: () => void) => void
+  onLoadFailure: (listener: () => void) => void
 }
 
 type EffectContext = {

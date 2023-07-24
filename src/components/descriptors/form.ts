@@ -552,6 +552,11 @@ export default {
           this.$emit('after-load-success')
           this.executeEffectEventOptional('onLoaded', false, [])
         })
+        .catch((e) => {
+          this.$emit('after-load-failure')
+          this.executeEffectEventOptional('onLoadFailure', false, [])
+          console.error(e)
+        })
         .finally(() => {
           this.setSyncProp('errors', {});
           this.setSyncProp('fetching', false);
@@ -970,7 +975,8 @@ export default {
         'onValidate',
         'onFailure',
         'onSuccess',
-        'onLoaded'
+        'onLoaded',
+        'onLoadFailure'
       ]
 
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
