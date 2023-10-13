@@ -739,7 +739,7 @@ export default {
               return
             }
 
-            const [ok, dataOrErrors] = result
+            let [ok, dataOrErrors] = result
 
             this.innerLastSaveFailed = !ok
 
@@ -749,6 +749,9 @@ export default {
 
             this.setSyncProp('errors', ok ? {} : dataOrErrors)
             this.$emit('after-submit')
+
+            dataOrErrors = this.executeEffectEventFold('onAfterUpdate', 'resource', dataOrErrors)
+
             if(ok && typeof dataOrErrors === 'object' && dataOrErrors !== null) {
               this.setSyncProp('resource', dataOrErrors)
             }
@@ -976,7 +979,8 @@ export default {
         'onFailure',
         'onSuccess',
         'onLoaded',
-        'onLoadFailure'
+        'onLoadFailure',
+        'onAfterUpdate'
       ]
 
       this.instantiatedEffects = this.$effects.map(({effect, name, api}: Effect) => {
