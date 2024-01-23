@@ -17,6 +17,7 @@
   @reload-root-resource="reloadRootResource"
   @reload-sources="reloadSources"
   @require-source="requireSource"
+  @submit="$submit"
   v-if="isCollection && (index !== undefined)"
 >
   <slot
@@ -48,6 +49,7 @@
         @reload-root-resource="reloadRootResource"
         @reload-sources="reloadSources"
         @require-source="requireSource"
+        @submit="$submit"
       >
         <slot
           :resource="wrapper.item"
@@ -79,6 +81,7 @@
   @reload-root-resource="reloadRootResource"
   @reload-sources="reloadSources"
   @require-source="requireSource"
+  @submit="$submit"
 >
   <slot :resource="nestedResource" />
 </rf-form>
