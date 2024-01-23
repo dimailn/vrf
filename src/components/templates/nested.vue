@@ -19,7 +19,11 @@
   @require-source="requireSource"
   v-if="isCollection && (index !== undefined)"
 >
-  <slot :resource="wrappedCollectionFiltered[index].item" :$resource="wrappedCollectionFiltered[index].item"  />
+  <slot
+    :resource="wrappedCollectionFiltered[index].item"
+    :$resource="wrappedCollectionFiltered[index].item"
+    :$index="wrappedCollectionFiltered[index].index"
+  />
 </rf-form>
 
 <component :is="wrapper" v-else-if="isCollection">
@@ -45,7 +49,11 @@
         @reload-sources="reloadSources"
         @require-source="requireSource"
       >
-        <slot :resource="wrapper.item" :$resource="wrapper.item" />
+        <slot
+          :resource="wrapper.item"
+          :$resource="wrapper.item"
+          :$index="wrapper.index"
+        />
       </rf-form>
     </template>
 
