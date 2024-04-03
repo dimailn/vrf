@@ -241,10 +241,10 @@ export default {
       return this.$templates[this.type] && this.$templates[this.type].item
     },
     hasItemsSlot() {
-      return !!this.$scopedSlots.items
+      return !!this.$slots.items
     },
     hasItemSlot() {
-      return !!this.$scopedSlots.item
+      return !!this.$slots.item
     },
     $idKey() {
       return this.idKey || this.titleKey
