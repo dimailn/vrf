@@ -1,7 +1,7 @@
 <template>
 
 <rf-resource>
-  <template v-if="$result">
+  <template #default v-if="$result">
     <component
       :is="component"
       :data="$result.data"
