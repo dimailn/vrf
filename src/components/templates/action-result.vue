@@ -1,6 +1,6 @@
 <template>
 
-<rf-resource v-slot="{}">
+<rf-resource>
   <template v-if="$result">
     <component
       :is="component"
