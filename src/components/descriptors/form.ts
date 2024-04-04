@@ -103,7 +103,14 @@ export default {
     'reloadResource',
     'reloadRootResource',
     'reloadSources',
-    'requireSource'
+    'requireSource',
+    'update:resource',
+    'update:sources',
+    'update:resources',
+    'update:errors',
+    'update:fetching',
+    'before-load',
+    'after-load-success'
   ],
   props: {
     /**
