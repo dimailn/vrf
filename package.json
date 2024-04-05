@@ -4,13 +4,13 @@
   "description": "",
   "author": "Dmitry Sadovsky <dimailn9@gmail.com>",
   "scripts": {
-    "dev": "webpack-dev-server --progress --config build/webpack.dev.conf.js",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --no-cache",
     "cov": "jest --config test/unit/jest.conf.js --coverage --no-cache",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit",
-    "build": "node build/build.js && npm run build:types",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider node build/build.js && npm run build:types",
     "build:types": "tsc ./src/index.ts --outDir dist/static -d --emitDeclarationOnly",
     "pub": "npm run build && npm publish --tag next",
     "analyze": "webpack --config build/webpack.prod.conf.js --json > stats.json",
@@ -29,8 +29,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.2",
-    "pluralize": "^8.0.0",
-    "vue-provide-observable": "^4.0.1"
+    "pluralize": "^8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
@@ -88,7 +87,7 @@
     "vue-style-loader": "^3.0.1",
     "vue-styleguidist": "^4.41.1",
     "vuex": "^4.1.0",
-    "webpack": "^4.46.0",
+    "webpack": "^4.47.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.0.0",
