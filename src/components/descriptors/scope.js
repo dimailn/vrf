@@ -50,10 +50,10 @@ export default {
       )
     },
     $formDisabled() {
-      return this.disabled || this.vrf.value.formDisabled
+      return this.disabled || this.vrf.formDisabled
     },
     $formReadonly() {
-      return this.readonly || this.vrf.value.formReadonly
+      return this.readonly || this.vrf.formReadonly
     },
     $scope() {
       return {

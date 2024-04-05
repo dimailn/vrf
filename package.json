@@ -81,7 +81,7 @@
     "typescript": "^4.4.4",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
-    "vue": "^3.2.45",
+    "vue": "^3.4.21",
     "vue-loader": "^17.0.1",
     "vue-router": "^3.0.1",
     "vue-style-loader": "^3.0.1",
