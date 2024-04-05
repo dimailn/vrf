@@ -21,13 +21,11 @@ import {
   camelize
 } from 'humps';
 
-import VueProvideObservable from 'vue-provide-observable';
-
 import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames, Event, Message} from '../../types/effect'
 import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
 import Templates from '@/mixins/templates'
-import {reactive, h} from 'vue'
+import {h, computed} from 'vue'
 
 export const propsFactory = function() {
   return {
@@ -89,14 +87,15 @@ export const nameMapper = function(name) {
 export default {
   name: 'rf-form',
   mixins: [
-    VueProvideObservable('vrf', propsFactory, nameMapper,() => true, reactive),
+    // VueProvideObservable('vrf', propsFactory, nameMapper,() => true, reactive),
     Templates
 
   ],
   provide() {
     return {
       vueResourceFormPath: this.path,
-      vueResourceFormPathService: this.$pathService
+      vueResourceFormPathService: this.$pathService,
+      vrf: computed(() => this.vrfProvider)
     };
   },
   emits: [
@@ -391,6 +390,11 @@ export default {
     }
   },
   computed: {
+    vrfProvider() {
+      return Object.fromEntries(
+        Object.keys(propsFactory()).map(name => [name, this[nameMapper(name)]])
+      )
+    },
     tailPath() {
       var lastElement;
       if (!this.path) {

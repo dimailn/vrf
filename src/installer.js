@@ -4,10 +4,6 @@ import descriptors from './components/descriptors'
 
 import merge from 'lodash.merge'
 
-import {
-  installer
-} from 'vue-provide-observable';
-
 import pluralize from 'pluralize'
 import {decamelize} from 'humps'
 
@@ -42,8 +38,7 @@ export default function(components) {
       if (process.env.NODE_ENV === 'development') {
         console.log(`[vrf] v.${__VERSION__}`);
       }
-      Vue.use(installer)
-
+      
       const defaultProps = options.defaultProps || {}
 
       if(defaultProps === null || typeof defaultProps !== 'object') {

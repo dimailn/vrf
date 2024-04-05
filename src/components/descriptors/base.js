@@ -7,7 +7,7 @@ import Translate from '@/mixins/translate';
 
 export default {
   props: {
-    value: [Number, String, Object],
+    modelValue: [Number, String, Object],
     disabled: Boolean,
     readonly: Boolean
   },
@@ -37,17 +37,17 @@ export default {
       return this.name
     },
     $valuePropSpecified() {
-      return this.value !== undefined
+      return this.modelValue !== undefined
     },
     $originalValue: {
       get() {
         if(this.$valuePropSpecified){
-          return this.value
+          return this.modelValue
         }
 
         return get(this.$resource, this.$fieldName);
       },
-      set(value) {
+      set(value) {   
         if(this.$valuePropSpecified){
           this.$emit('input', value)
 
@@ -72,7 +72,7 @@ export default {
             value
           });
         } else {
-          set(this.$resource, this.$fieldName, value, this.$set);
+          set(this.$resource, this.$fieldName, value);
         }
       }
     },

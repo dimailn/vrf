@@ -23,7 +23,7 @@ export default {
   inject: {
     vrf: {
       default: {
-        wrapper: {}
+        value: {}
       }
     }
   },
@@ -32,7 +32,7 @@ export default {
       FIELDS_FROM_CONTEXT.map(propertyName => [
         `$${propertyName}`,
         function() {
-          return this.vrf.wrapper[propertyName]
+          return this.vrf.value[propertyName]
         }
       ])
     ),
@@ -48,7 +48,7 @@ export default {
         function() {
           console.warn(`[vrf] Field ${propertyName} in Resource mixin deprecated, use $${propertyName} instead.`);
 
-          return this.vrf.wrapper[propertyName]
+          return this.vrf.value[propertyName]
         }
       ])
     ),
