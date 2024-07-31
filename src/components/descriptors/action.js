@@ -29,7 +29,7 @@ export default {
     },
     $on() {
       return {
-        click: this.onClick
+        onClick: this.onClick
       }
     }
   },
