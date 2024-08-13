@@ -25,7 +25,7 @@ import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames, Event, 
 import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
 import Templates from '@/mixins/templates'
-import {h, computed} from 'vue'
+import {h, computed, withDirectives, vShow} from 'vue'
 
 export const propsFactory = function() {
   return {
@@ -308,7 +308,7 @@ export default {
   },
   render(){
     if(this.rootElement){
-      return h(this.rootElement, {}, this.$slots.default())
+      return h(this.rootElement, {}, this.$slots.default({$resource: this.$resource}))
     }
 
     const genForm = (children?: any) => h(
@@ -327,16 +327,8 @@ export default {
     }
 
     const show = !this.$fetching
-    const options =           {
-      directives: [
-        {
-          name: 'show',
-          value: show
-        }
-      ],
-      attrs: {
-        class: 'vrf__root-wrapper'
-      }
+    const options = {
+      class: 'vrf__root-wrapper'
     }
 
     const children = []
@@ -350,21 +342,18 @@ export default {
       )
     }
 
-    if(this.$slots.default && typeof this.$slots.default === 'function' && this.$resource){
+    if(this.$slots.default && this.$resource){
       children.push(
-        h(
+        withDirectives(h(
           'div',
           options,
           this.$slots.default({$resource: this.$resource})
-        )
-      )
-    } else {
-      children.push(
-        h(
-          'div',
-          options,
-          this.$slots.default()
-        )
+        ), [
+          [
+            vShow,
+            show
+          ]
+        ])
       )
     }
 
@@ -680,14 +669,18 @@ export default {
 
       const {idFromRoute} = this.VueResourceForm
 
-      const id = idFromRoute(this)
+      try {
+        const id = idFromRoute(this)
 
+        if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
+          console.warn(`[vrf] You haven\'t specified rf-id prop for form ${this.$name}, in this case vrf use idFromRouter helper. However, resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly, or you forgot to pass id of the resource.`)
+        }
 
-      if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
-        console.warn(`[vrf] You haven\'t specified rf-id prop for form ${this.$name}, in this case vrf use idFromRouter helper. However, resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly, or you forgot to pass id of the resource.`)
-      }
-
-      return id
+        return id
+      } catch(e) {
+        console.error("[vrf] idFromRoute helper has thrown an exception:")
+        throw e
+      } 
     },
     isNew(){
       return this.single ? false : !this.resourceId()
