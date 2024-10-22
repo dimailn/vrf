@@ -295,6 +295,12 @@ export default {
       }
       return this.innerResource = null;
     },
+    modelValue(old, current) {
+      if (old === current) {
+        return;
+      }
+      return this.innerResource = null;
+    },
     $effects(){
       console.log('$effects changed, mount effects...')
 
@@ -659,7 +665,7 @@ export default {
       }
 
       if(name === 'resource') {
-        this.$emit('input', value)
+        this.$emit('update:modelValue', value)
       }
     },
     resourceId(){
