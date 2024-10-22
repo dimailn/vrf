@@ -6,6 +6,11 @@ import set from '@/utils/set'
 import Translate from '@/mixins/translate';
 
 export default {
+  props: {
+    modelValue: [Number, String, Object],
+    disabled: Boolean,
+    readonly: Boolean
+  },
   mixins: [Resource, Translate],
   methods: {
     onBlur: function(e) {
@@ -32,17 +37,17 @@ export default {
       return this.name
     },
     $valuePropSpecified() {
-      return this.value !== undefined
+      return this.modelValue !== undefined
     },
     $originalValue: {
       get() {
         if(this.$valuePropSpecified){
-          return this.value
+          return this.modelValue
         }
 
         return get(this.$resource, this.$fieldName);
       },
-      set(value) {
+      set(value) {   
         if(this.$valuePropSpecified){
           this.$emit('input', value)
 
@@ -57,7 +62,7 @@ export default {
 
 
         if (this.$vuex) {
-          const store = this.$store || this.VueResourceForm.store;
+          const store = this.$store || this.config.globalProperties.VueResourceForm.store;
           if (!store) {
             return console.warn("Store for VueResourceForm is not defined");
           }
@@ -67,7 +72,7 @@ export default {
             value
           });
         } else {
-          set(this.$resource, this.$fieldName, value, this.$set);
+          set(this.$resource, this.$fieldName, value);
         }
       }
     },

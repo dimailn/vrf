@@ -1,8 +1,7 @@
 export default {
   methods: {
     t: function(property, modelName = this.$translationName, options = {}) {
-      const vue = Object.getPrototypeOf(this.$root).constructor
-      const translate = vue.prototype.VueResourceForm.translate
+      const translate = this.$root.$.appContext.config.globalProperties.VueResourceForm.translate
 
       if (!translate) {
         return property

@@ -4,10 +4,6 @@ import descriptors from './components/descriptors'
 
 import merge from 'lodash.merge'
 
-import {
-  installer
-} from 'vue-provide-observable';
-
 import pluralize from 'pluralize'
 import {decamelize} from 'humps'
 
@@ -36,14 +32,13 @@ export default function(components) {
     install: function(Vue, options = {}) {
       var base, component, name;
 
-      Vue.prototype.VueResourceForm || (Vue.prototype.VueResourceForm = {})
-      Vue.prototype.VueResourceForm.templates ||= {}
+      Vue.config.globalProperties.VueResourceForm || (Vue.config.globalProperties.VueResourceForm = {})
+      Vue.config.globalProperties.VueResourceForm.templates ||= {}
 
       if (process.env.NODE_ENV === 'development') {
         console.log(`[vrf] v.${__VERSION__}`);
       }
-      Vue.use(installer)
-
+      
       const defaultProps = options.defaultProps || {}
 
       if(defaultProps === null || typeof defaultProps !== 'object') {
@@ -59,8 +54,8 @@ export default function(components) {
           }
 
           if(adapter.templates) {
-            Vue.prototype.VueResourceForm.templates = merge(
-              Vue.prototype.VueResourceForm.templates,
+            Vue.config.globalProperties.VueResourceForm.templates = merge(
+              Vue.config.globalProperties.VueResourceForm.templates,
               adapter.templates
             )
           }
@@ -142,9 +137,9 @@ export default function(components) {
 
 
       Vue.component(name, component)
-      Vue.prototype.VueResourceForm.dateInterceptor = dateInterceptor
+      Vue.config.globalProperties.VueResourceForm.dateInterceptor = dateInterceptor
 
-      Vue.prototype.VueResourceForm.idFromRoute = (form) => {
+      Vue.config.globalProperties.VueResourceForm.idFromRoute = (form) => {
         const matches = location.pathname.match(RegExp((decamelize(pluralize(form.name.split("::")[0]))) + "\\/(\\d+)|(new)"))
 
         if(!matches) {
@@ -160,7 +155,7 @@ export default function(components) {
         return id
       }
 
-      Vue.prototype.VueResourceForm.translate = function (modelProperty, modelName) {
+      Vue.config.globalProperties.VueResourceForm.translate = function (modelProperty, modelName) {
         if (!this.$t || !this.$te) {
           return null
         }
@@ -182,7 +177,7 @@ export default function(components) {
 
       ['translate', 'effects', 'store', 'autocompletes', 'sources', 'dateInterceptor', 'transforms', 'locale', 'loader', 'idFromRoute'].forEach((optionName) => {
         if (options[optionName]) {
-          Vue.prototype.VueResourceForm[optionName] = options[optionName]
+          Vue.config.globalProperties.VueResourceForm[optionName] = options[optionName]
         }
       })
 

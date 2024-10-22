@@ -21,12 +21,11 @@ import {
   camelize
 } from 'humps';
 
-import VueProvideObservable from 'vue-provide-observable';
-
 import {Effect, EffectExecutor, InstantiatedEffect, EffectListenerNames, Event, Message} from '../../types/effect'
 import VrfEvent from '../../types/vrf-event'
 import PathService from '../../types/path-service'
 import Templates from '@/mixins/templates'
+import {h, computed, withDirectives, vShow} from 'vue'
 
 export const propsFactory = function() {
   return {
@@ -88,20 +87,35 @@ export const nameMapper = function(name) {
 export default {
   name: 'rf-form',
   mixins: [
-    VueProvideObservable('vrf', propsFactory, nameMapper),
+    // VueProvideObservable('vrf', propsFactory, nameMapper,() => true, reactive),
     Templates
+
   ],
   provide() {
     return {
       vueResourceFormPath: this.path,
-      vueResourceFormPathService: this.$pathService
+      vueResourceFormPathService: this.$pathService,
+      vrf: computed(() => this.vrfProvider)
     };
   },
+  emits: [
+    'reloadResource',
+    'reloadRootResource',
+    'reloadSources',
+    'requireSource',
+    'update:resource',
+    'update:sources',
+    'update:resources',
+    'update:errors',
+    'update:fetching',
+    'before-load',
+    'after-load-success'
+  ],
   props: {
     /**
       * Main resource of form
       */
-    value: Object,
+    modelValue: Object,
     /**
       * Alias to value
       */
@@ -281,6 +295,12 @@ export default {
       }
       return this.innerResource = null;
     },
+    modelValue(old, current) {
+      if (old === current) {
+        return;
+      }
+      return this.innerResource = null;
+    },
     $effects(){
       console.log('$effects changed, mount effects...')
 
@@ -292,24 +312,20 @@ export default {
   beforeDestroy(){
     this.executeEffectEventOptional('onUnmounted', false, [])
   },
-  render(h){
+  render(){
     if(this.rootElement){
-      return h(this.rootElement, {}, this.$slots.default)
+      return h(this.rootElement, {}, this.$slots.default({$resource: this.$resource}))
     }
 
     const genForm = (children?: any) => h(
       'form', {
-        on: { submit: (e) => e.preventDefault() }
+        onSubmit: (e) => e.preventDefault()
       },
       children
     )
 
     if(this.isNested){
-      if(this.$slots.default && this.$slots.default.length > 1) {
-        genForm(this.$slots.default)
-      } else {
-        return this.$slots.default
-      }
+      return this.$slots.default()
     }
 
     if(!this.$resource){
@@ -317,16 +333,8 @@ export default {
     }
 
     const show = !this.$fetching
-    const options =           {
-      directives: [
-        {
-          name: 'show',
-          value: show
-        }
-      ],
-      attrs: {
-        class: 'vrf__root-wrapper'
-      }
+    const options = {
+      class: 'vrf__root-wrapper'
     }
 
     const children = []
@@ -340,28 +348,25 @@ export default {
       )
     }
 
-    if(this.$scopedSlots.default && this.$resource){
+    if(this.$slots.default && this.$resource){
       children.push(
-        h(
+        withDirectives(h(
           'div',
           options,
-          this.$scopedSlots.default({$resource: this.$resource})
-        )
-      )
-    } else {
-      children.push(
-        h(
-          'div',
-          options,
-          this.$slots.default
-        )
+          this.$slots.default({$resource: this.$resource})
+        ), [
+          [
+            vShow,
+            show
+          ]
+        ])
       )
     }
 
     return genForm(children)
   },
   mounted() {
-    if(this.value && this.resource) {
+    if(this.modelValue && this.resource) {
       console.error('[vrf] The props value and resource are specified both, you need to use only one, value is preferrable.')
     }
 
@@ -380,6 +385,11 @@ export default {
     }
   },
   computed: {
+    vrfProvider() {
+      return Object.fromEntries(
+        Object.keys(propsFactory()).map(name => [name, this[nameMapper(name)]])
+      )
+    },
     tailPath() {
       var lastElement;
       if (!this.path) {
@@ -409,7 +419,7 @@ export default {
       return this.translationName || this.$name;
     },
     $$resource() {
-      return this.value || this.resource;
+      return this.modelValue || this.resource;
     },
     $resource() {
       if (this.vuex) {
@@ -655,7 +665,7 @@ export default {
       }
 
       if(name === 'resource') {
-        this.$emit('input', value)
+        this.$emit('update:modelValue', value)
       }
     },
     resourceId(){
@@ -665,14 +675,18 @@ export default {
 
       const {idFromRoute} = this.VueResourceForm
 
-      const id = idFromRoute(this)
+      try {
+        const id = idFromRoute(this)
 
+        if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
+          console.warn(`[vrf] You haven\'t specified rf-id prop for form ${this.$name}, in this case vrf use idFromRouter helper. However, resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly, or you forgot to pass id of the resource.`)
+        }
 
-      if(process.env.NODE_ENV !== 'production' && id === undefined && this.auto){
-        console.warn(`[vrf] You haven\'t specified rf-id prop for form ${this.$name}, in this case vrf use idFromRouter helper. However, resource id returned from idFromRouter is undefined, but it should be null for a new resource. It may mean that idFromRouter doesn\'t work properly, or you forgot to pass id of the resource.`)
-      }
-
-      return id
+        return id
+      } catch(e) {
+        console.error("[vrf] idFromRoute helper has thrown an exception:")
+        throw e
+      } 
     },
     isNew(){
       return this.single ? false : !this.resourceId()

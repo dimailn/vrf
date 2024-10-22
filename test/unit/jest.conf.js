@@ -14,7 +14,7 @@ module.exports = {
   },
   transform: {
     '^.+\\.js$': 'babel-jest',
-    '.*\\.(vue)$': 'vue-jest',
+    '.*\\.(vue)$': '@vue/vue3-jest',
     "^.+\\.coffee$": "coffee-jest",
     '^.+\\.ts$': 'ts-jest'
   },
@@ -38,4 +38,6 @@ module.exports = {
       isolatedModules: true
     },
   },
+  testRunner: 'jest-jasmine2',
+  testEnvironment: "jsdom"
 }
