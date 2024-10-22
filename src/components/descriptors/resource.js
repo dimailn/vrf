@@ -3,7 +3,7 @@ import Base from '@/components/descriptors/base';
 export default {
   name: 'rf-resource',
   extends: Base,
-  render(h) {
+  render() {
     const props = {
       $resource: this.$resource,
       $sources: this.$sources,
@@ -21,6 +21,6 @@ export default {
       errors: this.$errors,
       actionResults: this.$actionResults
     }
-    return this.$slots.default(props)
+    return this.$slots.default && this.$slots.default(props)
   }
 }
