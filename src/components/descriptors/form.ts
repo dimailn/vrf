@@ -653,7 +653,9 @@ export default {
           modifier.forEach((path) => set(this.innerResource, path, get(resource, path)))
         }
         if (this.innerResource != null) {
-          return this.$emit('update:resource', this.innerResource);
+          this.$emit('update:resource', this.innerResource)
+          this.$emit('update:modelValue', this.innerResource)
+          return
         }
       });
     },
