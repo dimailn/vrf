@@ -47,9 +47,10 @@ export default {
 
         return get(this.$resource, this.$fieldName);
       },
-      set(value) {   
+      set(value) {
         if(this.$valuePropSpecified){
           this.$emit('input', value)
+          this.$emit('update:modelValue', value)
 
           return
         }
