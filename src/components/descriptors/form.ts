@@ -309,7 +309,7 @@ export default {
       this.mountEffects()
     }
   },
-  beforeDestroy(){
+  beforeUnmount(){
     this.executeEffectEventOptional('onUnmounted', false, [])
   },
   render(){
