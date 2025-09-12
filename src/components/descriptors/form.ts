@@ -975,7 +975,7 @@ export default {
           [`${name}`]: value
         });
       }
-      return this.$set(this.innerSources, name, value);
+      this.innerSources[name] = value
     },
     mountEffects(){
       const listenerNames = [
