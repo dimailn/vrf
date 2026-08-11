@@ -62,17 +62,29 @@ export default {
 
   beforeUnmount(){
     document.removeEventListener('click', this.handleDocumentClick)
+    this.cancelPendingLoad()
   },
   created() {
     this.listeners = {}
+    this.requestId = 0
+    this.abortRequest = null
+    this.debouncedLoad = debounce(() => {
+      if ((this.query != null && this.query.length > 0) || this.allowEmptyRequests) {
+        return this.instantLoad()
+      }
+
+      this.items = []
+      this.menu = false
+    }, 400)
   },
   methods: {
     reset() {
+      this.cancelPendingLoad()
       this.query = '';
       return this.$value = null;
     },
     onSelect(item) {
-      this.abortRequest && this.abortRequest()
+      this.cancelPendingLoad()
 
       const result = this.executeEvent('onSelect', [item])
 
@@ -118,6 +130,7 @@ export default {
       }
     },
     onClear() {
+      this.cancelPendingLoad()
       this.executeEvent('onClear')
 
       this.$emit('clear')
@@ -125,14 +138,16 @@ export default {
       this.query = ''
       this.$value = null
     },
-    load: debounce(function() {
-      if ((this.query != null && this.query.length > 0) || this.allowEmptyRequests) {
-        return this.instantLoad()
-      } else {
-        this.items = []
-        this.menu  = false
-      }
-    }, 400),
+    load() {
+      return this.debouncedLoad()
+    },
+    cancelPendingLoad() {
+      this.debouncedLoad?.cancel()
+      this.requestId += 1
+      this.abortRequest?.()
+      this.abortRequest = null
+      this.loading = false
+    },
     executeEvent(eventName, args = []) {
       const handlers = this.listeners[eventName] || []
 
@@ -144,26 +159,34 @@ export default {
       }
 
       if (this.active) {
+        this.abortRequest?.()
+        const requestId = ++this.requestId
         this.loading = true
 
         Promise.race([
-          new Promise(resolve => this.abortRequest = () => {
-            resolve({status: 'aborted'})
-            this.abortRequest = null
+          new Promise(resolve => {
+            this.abortRequest = () => {
+              resolve({status: 'aborted'})
+            }
           }),
 
           this.executeEvent('onLoad', [pick(this, ['query', 'limit', 'entity'])])
             .then(items => ({status: 'ok', items}))
         ])
           .then(({status, items}) =>  {
-            if (status === 'aborted') {
+            if (status === 'aborted' || requestId !== this.requestId) {
               return
             }
 
             this.items = items
             this.menu = this.items.length > 0
           })
-          .finally(() => this.loading = false)
+          .finally(() => {
+            if (requestId === this.requestId) {
+              this.loading = false
+              this.abortRequest = null
+            }
+          })
       }
     },
     onFor(item) {
