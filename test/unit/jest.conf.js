@@ -27,7 +27,8 @@ module.exports = {
   verbose: true,
   testURL: "http://localhost/",
   testMatch: [
-    "**/specs/**/*.spec.coffee"
+    "**/specs/**/*.spec.coffee",
+    "**/specs/**/*.spec.js"
   ],
   coveragePathIgnorePatterns: [
      "<rootDir>/src/components/descriptors",
