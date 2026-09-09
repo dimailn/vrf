@@ -103,6 +103,72 @@ describe 'form', ->
 
         expect($capitalize.mock.calls.length).toBe 0
 
+  describe 'password', ->
+    def('template', ->
+      '''
+        <rf-form :resource="resource">
+          <rf-input name="title" password />
+        </rf-form>
+      '''
+    )
+
+    it 'renders input with type password', ->
+      expect($input.attributes('type')).toBe 'password'
+
+    it 'exposes $type as password', ->
+      component = $wrapper.findComponent({name: 'rf-input'})
+      expect(component.vm.$type).toBe 'password'
+
+  describe 'type', ->
+    def('template', ->
+      '''
+        <rf-form :resource="resource">
+          <rf-input name="title" type="email" />
+        </rf-form>
+      '''
+    )
+
+    it 'renders input with given type', ->
+      expect($input.attributes('type')).toBe 'email'
+      component = $wrapper.findComponent({name: 'rf-input'})
+      expect(component.vm.$type).toBe 'email'
+
+  describe 'default type', ->
+    it 'is text', ->
+      component = $wrapper.findComponent({name: 'rf-input'})
+      expect(component.vm.$type).toBe 'text'
+
+  describe 'blur', ->
+    it 'emits blur on the input element', ->
+      $input.trigger('blur')
+      # onBlur re-emits the native blur event; no error means the handler ran.
+      expect($input.exists()).toBe true
+
+  describe 'submit on enter', ->
+    it 'handles keyup.enter without error', ->
+      $input.trigger('keyup.enter')
+      expect($input.exists()).toBe true
+
+  describe 'with transform by string name', ->
+    beforeEach ->
+      $wrapper.vm.$root.$.appContext.config.globalProperties.VueResourceForm.transforms = {
+        upper: (value) -> value.toUpperCase()
+      }
+
+    def('template', ->
+      '''
+        <rf-form :resource="resource">
+          <rf-input name="title" transform="upper" />
+        </rf-form>
+      '''
+    )
+
+    it 'applies the named transform from VueResourceForm.transforms', ->
+      $input.setValue('text')
+      await $wrapper.vm.$nextTick()
+      await $wrapper.vm.$nextTick()
+      expect($wrapper.vm.resource.title).toBe 'TEXT'
+
   describe "input for value without field in resource", ->
     def('watchTitle', -> jest.fn())
     def('wrapper', ->

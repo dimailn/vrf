@@ -9,6 +9,8 @@ import {mutations} from '../../../../src'
 import { config } from '@vue/test-utils'
 import Vuex from 'vuex'
 
+flushPromises = -> new Promise((resolve) -> setTimeout(resolve, 0))
+
 
 sharedExamplesFor "successful data showing", ->
   it 'show data in ui', ->
@@ -511,6 +513,533 @@ describe 'form', ->
 
           expect($wrapper.vm.resource).not.toBeNull()
           expect($wrapper.vm.resource.title).toBe 'Test'
+
+    describe 'extended coverage', ->
+      describe 'after ticks', ->
+        beforeEach ->
+          await $wrapper.vm.$nextTick()
+          await $wrapper.vm.$nextTick()
+
+        describe 'vrfProvider / nameMapper', ->
+          it 'maps all inner names into the provided vrf object', ->
+            form = $wrapper.findComponent({ name: 'rf-form' }).vm
+            provider = form.vrfProvider
+
+            expect(provider.resource).toBe form.$resource
+            expect(provider.sources).toBe form.$sources
+            expect(provider.errors).toBe form.$errors
+            expect(provider.fetching).toBe form.$fetching
+            expect(provider.saving).toBe form.$saving
+            expect(provider.actionResults).toBe form.$actionResults
+            expect(provider.actionPendings).toBe form.$actionPendings
+            expect(provider.lastSaveFailed).toBe form.$lastSaveFailed
+            expect(provider.translationName).toBe form.$translationName
+            expect(provider.formDisabled).toBe form.disabled
+            expect(provider.formReadonly).toBe form.readonly
+            expect(provider.rootResource).toBe form.$rootResource
+            expect(provider.scope).toBe form.$scope
+
+        describe 'computed name helpers', ->
+          def('wrapper', ->
+            mount(
+              template: '''
+                <rf-form name="Todo#edit" translation-name="Task" auto class="form">
+                  <rf-input name="title" />
+                </rf-form>
+              '''
+            )
+          )
+
+          it 'strips fragment from $name and honours translationName', ->
+            form = $wrapper.findComponent({ name: 'rf-form' }).vm
+            expect(form.$name).toBe 'Todo'
+            expect(form.rfName).toBe 'Todo#edit'
+            expect(form.$translationName).toBe 'Task'
+
+    describe 'deprecated resources prop', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form :resource="resource" :resources="resources">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+          data: =>
+            resource: {title: 'x'}
+            resources: {roles: [{id: 'admin', title: 'Admin'}]}
+        )
+      )
+
+      it 'falls back to resources for $sources with a warning', ->
+        warn = jest.spyOn(console, 'warn').mockImplementation()
+        expect($wrapper.find('input').exists()).toBe true
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
+        expect(form.$sources.roles.length).toBe 1
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('deprecated'))
+        warn.mockRestore()
+
+    describe 'noFetch on boot', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto no-fetch class="form">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+        )
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+
+      it 'does not fetch resource but marks sources loaded', ->
+        expect($load.mock.calls.length).toBe 0
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
+        expect(form.sourcesLoaded).toBe true
+
+    describe 'fetchAlways for new resource', ->
+      def('idFromRoute', -> -> null)
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto fetch-always class="form">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+        )
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'fetches even without an id', ->
+        expect($load.mock.calls.length).toBe 1
+
+    describe 'new resource without fetchAlways', ->
+      def('idFromRoute', -> -> null)
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto class="form">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+        )
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'does not fetch and starts with an empty resource', ->
+        expect($load.mock.calls.length).toBe 0
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
+        expect(form.$resource).toEqual({})
+
+    describe 'onAfterLoad effect', ->
+      def('afterLoad', -> jest.fn (e) -> {...e.payload.resource, title: 'Modified'})
+      def('effects', ->
+        [
+          {
+            name: 'rest',
+            api: true,
+            effect: ({onLoad, onLoadSources, onAfterLoad}) =>
+              onLoad($load)
+              onLoadSources($loadSources)
+              onAfterLoad($afterLoad)
+          }
+        ]
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'folds the loaded resource through onAfterLoad', ->
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
+        expect($afterLoad).toHaveBeenCalled()
+        expect(form.$resource.title).toBe 'Modified'
+
+    describe 'onAfterLoad returning non-object throws', ->
+      def('afterLoad', -> jest.fn -> null)
+      def('effects', ->
+        [
+          {
+            name: 'rest',
+            api: true,
+            effect: ({onLoad, onLoadSources, onAfterLoad, onLoadFailure}) =>
+              onLoad($load)
+              onLoadSources($loadSources)
+              onAfterLoad($afterLoad)
+              onLoadFailure($loadFailure)
+          }
+        ]
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'reports failure', ->
+        expect($loadFailure).toHaveBeenCalled()
+
+    describe 'onLoad without an effect throws api error', ->
+      def('effects', ->
+        [
+          {
+            name: 'rest',
+            api: true,
+            effect: ({onLoadSources}) =>
+              onLoadSources($loadSources)
+          }
+        ]
+      )
+
+      it 'throws an api-call error when mounting', ->
+        errorSpy = jest.spyOn(console, 'error').mockImplementation()
+        expect(-> $wrapper).toThrow(/API call onLoad/)
+        errorSpy.mockRestore()
+
+    describe 'submit flows with effects', ->
+      def('beforeSave', -> jest.fn (e) -> {...e.payload.resource, prepared: true})
+      def('afterUpdate', -> jest.fn (e) -> e.payload.resource)
+      def('success', -> jest.fn())
+      def('failure', -> jest.fn())
+      def('save', -> null)
+
+      def('effects', ->
+        [
+          {
+            name: 'rest',
+            api: true,
+            effect: ({
+              onLoad, onLoadSources, onCreate, onUpdate,
+              onValidate, onBeforeSave, onAfterUpdate, onSuccess, onFailure
+            }) =>
+              onLoad($load)
+              onLoadSources($loadSources)
+              onCreate($create)
+              onUpdate($update)
+              onValidate($validate)
+              onBeforeSave($beforeSave)
+              onAfterUpdate($afterUpdate)
+              onSuccess($success)
+              onFailure($failure)
+          }
+        ]
+      )
+
+      describe 'successful update', ->
+        def('update', -> jest.fn -> Promise.resolve([true, {id: 1, title: 'Saved'}]))
+
+        beforeEach ->
+          await $wrapper.vm.$nextTick()
+          await $wrapper.vm.$nextTick()
+          $wrapper.find('.submit').trigger('click')
+          await flushPromises()
+          await $wrapper.vm.$nextTick()
+
+        it 'runs onBeforeSave, onAfterUpdate, onSuccess and updates resource', ->
+          expect($beforeSave).toHaveBeenCalled()
+          expect($update.mock.calls[0][0].prepared).toBe true
+          expect($afterUpdate).toHaveBeenCalled()
+          expect($success).toHaveBeenCalled()
+          form = $wrapper.findComponent({ name: 'rf-form' }).vm
+          expect(form.$resource.title).toBe 'Saved'
+          expect(form.$lastSaveFailed).toBe false
+
+      describe 'failed update', ->
+        def('update', -> jest.fn -> Promise.resolve([false, {title: ['is required']}]))
+
+        beforeEach ->
+          await $wrapper.vm.$nextTick()
+          await $wrapper.vm.$nextTick()
+          $wrapper.find('.submit').trigger('click')
+          await flushPromises()
+          await $wrapper.vm.$nextTick()
+
+        it 'runs onFailure with the returned errors', ->
+          expect($failure).toHaveBeenCalled()
+          expect($failure.mock.calls[0][0].payload.errors).toEqual({title: ['is required']})
+
+      describe 'onSave present short-circuits create/update', ->
+        def('save', -> jest.fn -> Promise.resolve([true, {id: 1, title: 'FromSave'}]))
+        def('update', -> jest.fn -> Promise.resolve([true, {id: 1}]))
+        # This block's parent effect never wires onSave; register it here (with
+        # onUpdate) so we can prove onSave short-circuits the update path.
+        def('effects', ->
+          [
+            {
+              name: 'rest'
+              api: true
+              effect: ({onLoad, onSave, onUpdate, onValidate}) =>
+                onLoad($load)
+                onSave($save)
+                onUpdate($update)
+                onValidate($validate)
+            }
+          ]
+        )
+
+        beforeEach ->
+          await $wrapper.vm.$nextTick()
+          await $wrapper.vm.$nextTick()
+          $wrapper.find('.submit').trigger('click')
+          await flushPromises()
+          await $wrapper.vm.$nextTick()
+
+        it 'uses onSave and skips onUpdate', ->
+          expect($save).toHaveBeenCalled()
+          expect($update.mock.calls.length).toBe 0
+
+    describe 'showMessage without handler warns', ->
+      def('effects', ->
+        [
+          {
+            name: 'rest',
+            api: true,
+            effect: ({onLoad, onLoadSources, onMounted, showMessage}) =>
+              onLoad($load)
+              onLoadSources($loadSources)
+              onMounted(-> showMessage({text: 'hello'}))
+          }
+        ]
+      )
+
+      it 'emits the message-trap warning', ->
+        warn = jest.spyOn(console, 'warn').mockImplementation()
+        $wrapper
+        await $wrapper.vm.$nextTick()
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('Message "hello"'))
+        warn.mockRestore()
+
+    describe 'custom effect events', ->
+      def('customListener', -> jest.fn())
+      def('effects', ->
+        [
+          {
+            name: 'rest',
+            api: true,
+            effect: ({onLoad, onLoadSources, onShowMessage}) =>
+              onLoad($load)
+              onLoadSources($loadSources)
+              onShowMessage($customListener)
+          }
+        ]
+      )
+
+      it 'delivers messages to onShowMessage listener', ->
+        await $wrapper.vm.$nextTick()
+        expect($customListener).not.toHaveBeenCalled()
+
+    describe 'idFromRoute returns undefined in auto mode', ->
+      def('idFromRoute', -> -> undefined)
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto class="form">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+        )
+      )
+
+      it 'warns about idFromRoute', ->
+        warn = jest.spyOn(console, 'warn').mockImplementation()
+        $wrapper
+        await $wrapper.vm.$nextTick()
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('idFromRouter'))
+        warn.mockRestore()
+
+    describe 'idFromRoute throws', ->
+      def('idFromRoute', -> -> throw new Error('boom'))
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto class="form">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+        )
+      )
+
+      it 'logs and rethrows', ->
+        errorSpy = jest.spyOn(console, 'error').mockImplementation()
+        expect(-> $wrapper).toThrow()
+        errorSpy.mockRestore()
+
+    describe 'rfId prop drives resourceId and reloads on change', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto :rf-id="rfId" class="form">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+          data: ->
+            rfId: 5
+        )
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'uses rfId for load and reloads when it changes', ->
+        expect($load.mock.calls[0][0]).toBe 5
+        $wrapper.vm.rfId = 7
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+        expect($load.mock.calls[1][0]).toBe 7
+
+    describe 'action failure enters catch branch', ->
+      def('executeAction', -> jest.fn -> Promise.reject(new Error('network')))
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'rejects and clears the pending flag', ->
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
+        await expect(form.executeAction('archive')).rejects.toBeDefined()
+        expect(form.$actionPendings.archive).toBe false
+
+    describe 'requireSource before sources loaded / duplicate', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="User" auto>
+              <rf-select name="role" options="roles" />
+            </rf-form>
+          '''
+        )
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'returns existing source and ignores duplicate requires', ->
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
+        existing = form.requireSource('roles')
+        expect(existing.length).toBe 2
+
+        callsBefore = $loadSource.mock.calls.length
+        form.requireSource('categories')
+        form.requireSource('categories')
+        await $wrapper.vm.$nextTick()
+        # second identical require should not trigger a second load
+        expect($loadSource.mock.calls.length).toBe callsBefore + 1
+
+    describe 'namespaced resource name with :: in effect strings', ->
+      def('resourceNameSeen', -> jest.fn())
+      def('urlNameSeen', -> jest.fn())
+      def('collectionNameSeen', -> jest.fn())
+      def('effects', ->
+        [
+          {
+            name: 'rest',
+            api: true,
+            effect: ({onLoad, onLoadSources, onMounted, strings}) =>
+              onLoad($load)
+              onLoadSources($loadSources)
+              onMounted(=>
+                $resourceNameSeen(strings.resourceName())
+                $urlNameSeen(strings.urlResourceName())
+                $collectionNameSeen(strings.urlResourceCollectionName())
+              )
+          }
+        ]
+      )
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="UserProfile::edit" auto class="form">
+              <rf-input name="title" />
+            </rf-form>
+          '''
+        )
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+
+      it 'derives resource strings from the segment before ::', ->
+        expect($resourceNameSeen).toHaveBeenCalledWith('userProfile')
+        expect($urlNameSeen).toHaveBeenCalledWith('user_profile')
+        expect($collectionNameSeen).toHaveBeenCalledWith('user_profiles')
+
+    describe 'rootElement rendering', ->
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form :resource="resource" root-element="section">
+              <template v-slot="{ $resource }">
+                <span class="inner">{{ $resource.title }}</span>
+              </template>
+            </rf-form>
+          '''
+          data: ->
+            resource: {title: 'Rooted'}
+        )
+      )
+
+      it 'renders into the provided root element', ->
+        expect($wrapper.find('section').exists()).toBe true
+        expect($wrapper.find('.inner').text()).toBe 'Rooted'
+
+    describe 'validation via VrfEvent stopPropagation in map', ->
+      def('validate', -> jest.fn (e) -> e.stopPropagation(); false)
+      def('save', -> jest.fn -> Promise.resolve([true, null]))
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+        $wrapper.find('.submit').trigger('click')
+        await $wrapper.vm.$nextTick()
+
+      it 'stops validation and does not save', ->
+        expect($save.mock.calls.length).toBe 0
+
+    describe 'onCreate returning ok without id throws', ->
+      def('idFromRoute', -> -> null)
+      def('save', -> null)
+      def('create', -> jest.fn -> Promise.resolve([true, null]))
+
+      # Drive submit() directly and catch the rejection — triggering it via a
+      # fire-and-forget click leaves the promise unhandled, which is fatal on Node.
+      it 'rejects because onCreate returned no id', ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
+        await expect(form.submit()).rejects.toMatch(/must return id/)
+
+    describe 'single mode is never new', ->
+      def('idFromRoute', -> -> null)
+      def('save', -> null)
+      def('update', -> jest.fn -> Promise.resolve([true, null]))
+      def('wrapper', ->
+        mount(
+          template: '''
+            <rf-form name="Todo" auto single class="form">
+              <rf-input name="title" />
+              <rf-submit class="submit" />
+            </rf-form>
+          '''
+        )
+      )
+
+      beforeEach ->
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+        $wrapper.find('.submit').trigger('click')
+        await $wrapper.vm.$nextTick()
+        await $wrapper.vm.$nextTick()
+
+      it 'updates rather than creates', ->
+        expect($update.mock.calls.length).toBe 1
+        expect($create.mock.calls.length).toBe 0
 
     describe 'side effects', ->
       def('effects', -> [
