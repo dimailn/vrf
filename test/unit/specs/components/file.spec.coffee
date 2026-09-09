@@ -32,7 +32,7 @@ describe 'file', ->
         ]
       }
     }
-    input = $wrapper.find('input[type="file"]')
+    input = $wrapper.findComponent({ name: 'rf-file' })
 
     input.vm.onChange(event)
 

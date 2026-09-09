@@ -14,7 +14,7 @@ module.exports = {
   },
   transform: {
     '^.+\\.js$': 'babel-jest',
-    '.*\\.(vue)$': 'vue-jest',
+    '.*\\.(vue)$': '@vue/vue3-jest',
     "^.+\\.coffee$": "coffee-jest",
     '^.+\\.ts$': 'ts-jest'
   },
@@ -25,9 +25,13 @@ module.exports = {
   snapshotSerializers: ['<rootDir>/node_modules/jest-serializer-vue'],
   setupFilesAfterEnv: ['<rootDir>/test/unit/jest.setup'],
   verbose: true,
-  testURL: "http://localhost/",
+  testEnvironmentOptions: {
+    customExportConditions: ["node", "node-addons"],
+    url: "http://localhost/"
+  },
   testMatch: [
-    "**/specs/**/*.spec.coffee"
+    "**/specs/**/*.spec.coffee",
+    "**/specs/**/*.spec.js"
   ],
   coveragePathIgnorePatterns: [
      "<rootDir>/src/components/descriptors",
@@ -38,4 +42,6 @@ module.exports = {
       isolatedModules: true
     },
   },
+  testRunner: 'jest-jasmine2',
+  testEnvironment: "jsdom"
 }

@@ -1,3 +1,5 @@
+import { h } from 'vue';
+
 import Resource from '@/mixins/resource';
 
 import Translate from '@/mixins/translate';
@@ -29,13 +31,13 @@ export default {
     },
     $on() {
       return {
-        click: this.onClick
+        onClick: this.onClick
       }
     }
   },
-  render: function(h) {
-    if (this.$scopedSlots.activator) {
-      const nodes = this.$scopedSlots['activator']({
+  render() {
+    if (this.$slots.activator) {
+      const nodes = this.$slots['activator']({
         humanName: this.$label,
         label: this.$label,
         on: this.$on,
@@ -48,16 +50,14 @@ export default {
         return nodes
       }
     } else {
-      return this.renderByDefault(h)
+      return this.renderByDefault()
     }
   },
   methods: {
-    renderByDefault(h){
+    renderByDefault(){
       return h(
         'button',
-        {
-          on: this.$on
-        },
+        this.$on,
         this.$label
       )
     },

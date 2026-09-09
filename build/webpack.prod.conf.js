@@ -35,6 +35,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
     libraryTarget: 'commonjs2'
   },
+  externals: {
+    'vue': 'vue'
+  },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     // new webpack.DefinePlugin({

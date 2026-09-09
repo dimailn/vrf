@@ -38,8 +38,9 @@ describe 'scope', ->
         title = $wrapper.find('.title')
         description = $wrapper.find('.description')
 
-        expect(title.attributes(fieldName)).toBe fieldName
-        expect(description.attributes(fieldName)).toBe fieldName
+        # Vue 3 serializes a truthy boolean attribute as an empty string.
+        expect(title.attributes(fieldName)).toBe ''
+        expect(description.attributes(fieldName)).toBe ''
 
 
       test 'doesn\'t disable input out of scope', ->
@@ -57,14 +58,14 @@ describe 'scope', ->
         template: """
           <rf-form
             :resource="resource"
-            :saving.sync="saving"
+            v-model:saving="saving"
             v-slot="{ $resource }"
             :auto="effect"
             no-fetch
             :rf-id="1"
             name="Test"
           >
-            <rf-scope :isolated="isolated" :saving.sync="scopeSaving">
+            <rf-scope :isolated="isolated" v-model:saving="scopeSaving">
               <rf-input name="title" class="title" />
               <rf-textarea name="description" class="description" />
               <rf-submit class="submit" />
@@ -167,7 +168,7 @@ describe 'scope', ->
     def('input', -> $wrapper.find('.title'))
 
     beforeEach ->
-      $input.setData($value: "Test")
+      $input.setValue("Test")
 
     describe 'true', ->
       def('autosave', -> true)

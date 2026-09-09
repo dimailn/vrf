@@ -1,8 +1,8 @@
 import debounce from 'lodash.debounce'
 import Resource from '@/mixins/resource'
 import {propsFactory} from '@/components/descriptors/form'
-import VueProvideObservable from 'vue-provide-observable'
 import pick from '@/utils/pick'
+import {computed} from 'vue'
 
 const nameMapper = (name) => name === 'submit' ? name : `$${name}`
 
@@ -10,12 +10,12 @@ export default {
   name: 'rf-scope',
   mixins: [
     Resource,
-    VueProvideObservable(
-      'vrf',
-      propsFactory,
-      nameMapper
-    )
   ],
+  provide(){
+    return {
+      vrf: computed(() => this.vrfProvider)
+    }
+  },
   props: {
     disabled: Boolean,
     readonly: Boolean,
@@ -44,11 +44,16 @@ export default {
   },
 
   computed: {
+    vrfProvider(){ 
+      return Object.fromEntries(
+        Object.keys(propsFactory()).map(name => [name, this[nameMapper(name)]])
+      )
+    },
     $formDisabled() {
-      return this.disabled || this.vrf.wrapper.formDisabled
+      return this.disabled || this.vrf.formDisabled
     },
     $formReadonly() {
-      return this.readonly || this.vrf.wrapper.formReadonly
+      return this.readonly || this.vrf.formReadonly
     },
     $scope() {
       return {
@@ -85,11 +90,7 @@ export default {
       this.$emit(`update:${name}`, value)
     }
   },
-  render(h) {
-    if (this.$slots.default.length > 1) {
-      return h('div', {}, this.$slots.default)
-    }
-
-    return this.$slots.default
+  render() {
+    return this.$slots.default()
   }
 }

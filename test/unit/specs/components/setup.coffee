@@ -1,6 +1,5 @@
+import { config } from '@vue/test-utils'
 import Vrf from '../../../../src'
 
-import Vue from 'vue'
-
-Vue.use(Vrf)
-
+config.global.plugins ||= []
+config.global.plugins.push(Vrf)

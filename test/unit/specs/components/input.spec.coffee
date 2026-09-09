@@ -8,9 +8,6 @@ import {
 import capitalize from '../../../../src/utils/capitalize'
 import Vuex from 'vuex'
 import {mutations} from '../../../../src'
-import Vue from 'vue'
-
-Vue.use(Vuex)
 
 describe 'form', ->
   def('data', ->
@@ -35,13 +32,13 @@ describe 'form', ->
 
   describe 'state in form', ->
     it 'simple input', ->
-      $input.setData($value: 'text')
+      $input.setValue('text')
       expect($wrapper.vm.resource.title).toBe 'text'
 
   describe 'state in vuex', ->
     def('template', ->
       '''
-        <rf-form name="Todo" :resource.sync="resource" vuex>
+        <rf-form name="Todo" v-model:resource="resource" vuex>
           <rf-input name="title" />
         </rf-form>
       '''
@@ -63,10 +60,13 @@ describe 'form', ->
           data: ->
             resource: null
         }
-        {store: $store}
+        {
+          global:
+            plugins: [$store]
+        }
       )
     )
-    beforeEach -> $input.setData($value: 'text')
+    beforeEach -> $input.setValue('text')
 
     it 'state changes', -> 
       expect($wrapper.vm.resource.title).toBe 'text'
@@ -87,14 +87,17 @@ describe 'form', ->
     )
 
     it 'input transform', ->
-      $input.setData($value: 'text')
+      $input.setValue('text')
+      # The transform runs in a $value watcher that schedules its write on a
+      # further tick, so flush twice before asserting.
+      await $wrapper.vm.$nextTick()
       await $wrapper.vm.$nextTick()
       expect($wrapper.vm.resource.title).toBe 'Text'
       expect($capitalize.mock.calls.length).toBe 1
 
     describe 'when title is undefined', ->
       it "doesn't call transform" , ->
-        $input.setData($value: undefined)
+        $input.setValue(undefined)
 
         await $wrapper.vm.$nextTick()
 

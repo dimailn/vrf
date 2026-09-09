@@ -14,15 +14,20 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # webpack 4 relies on a hashing algorithm rejected by OpenSSL 3 (Node 17+),
+    # so enable the legacy provider for the build step.
+    env:
+      NODE_OPTIONS: --openssl-legacy-provider
+
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [20.x, 22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -31,6 +36,6 @@ jobs:
     - run: npm test
     - run: npm run cov
     - name: Coveralls GitHub Action
-      uses: coverallsapp/github-action@1.1.3
+      uses: coverallsapp/github-action@v2
       with:
         github-token: ${{ secrets.github_token }}

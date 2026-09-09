@@ -11,19 +11,24 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # webpack 4 (vue-styleguidist) relies on a hashing algorithm rejected by
+    # OpenSSL 3 (Node 17+), so enable the legacy provider for the build step.
+    env:
+      NODE_OPTIONS: --openssl-legacy-provider
+
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.head_ref }}
     - name: Use Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: 15.x
+        node-version: 20.x
         cache: 'npm'
     - run: npm ci
     - run: npm run styleguide:build
     - name: Commit documentation
-      uses: EndBug/add-and-commit@v7 # You can change this to use a specific version.
+      uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
       with:
         add: 'docs'
         author_name: github-bot
