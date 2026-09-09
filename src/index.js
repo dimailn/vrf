@@ -44,6 +44,8 @@ import mutations from './vuex/mutations';
 
 import Resource from './mixins/resource';
 
+import useResource from './composables/use-resource';
+
 import installer from './installer';
 
 
@@ -95,5 +97,6 @@ export {
   mutations,
   components,
   Resource,
+  useResource,
   installer
 };
