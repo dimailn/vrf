@@ -3,7 +3,7 @@ import './setup'
 import {
   mount
 } from '@vue/test-utils'
-import Vue from 'vue'
+import { config } from '@vue/test-utils'
 
 describe 'nested', ->
   def('errors', -> {})
@@ -43,7 +43,7 @@ describe 'nested', ->
     it "renders nested array", ->
       subtaskTitle = $wrapper.find('.subtask-title')
 
-      subtaskTitle.setData($value: 'Subtask title')
+      subtaskTitle.setValue('Subtask title')
 
       expect($wrapper.vm.resource.subtasks[0].title).toBe 'Subtask title'
 
@@ -63,9 +63,15 @@ describe 'nested', ->
     describe "with translate function", ->
       def('translate', -> jest.fn((property, modelName) -> property))
       beforeEach ->
-        Vue.prototype.VueResourceForm.translate = $translate
+        config.global.config ||= {}
+        config.global.config.globalProperties ||= {}
+        config.global.config.globalProperties.VueResourceForm ||= {}
 
-        $wrapper.find('.subtask-title').vm.$label
+        subtaskTitle = $wrapper.findComponent('.subtask-title')
+
+        subtaskTitle.vm.$root.$.appContext.config.globalProperties.VueResourceForm.translate = $translate
+
+        subtaskTitle.vm.$label
       describe "without translation-name passed", ->
         it 'should pass proper modelName singular', ->
           expect($translate).toHaveBeenCalledWith('title', 'Subtask')
@@ -135,7 +141,7 @@ describe 'nested', ->
       )
 
       it "doesn't render error for non-filtered resource", ->
-        input = $wrapper.find('.subtask-title').vm
+        input = $wrapper.findComponent('.subtask-title').vm
 
         expect(input.$firstError).not.toBe "Invalid property"
 
@@ -170,7 +176,7 @@ describe 'nested', ->
       )
 
       test "doesnt show filtered item", ->
-        input = $wrapper.find('.subtask-title').vm
+        input = $wrapper.findComponent('.subtask-title').vm
 
 
         expect(input.$value).toBe 'Second'
@@ -201,10 +207,12 @@ describe 'nested', ->
 
 
     it "has correct $rootResource", ->
-      expect($subtaskTitle.vm.$rootResource).toBe $resource
+      # Vue 3 wraps data in a reactive proxy, so $rootResource is no longer the
+      # same reference as the raw def object — compare structurally.
+      expect($wrapper.findComponent('.subtask-title').vm.$rootResource).toEqual $resource
 
     it "renders nested object", ->
-      $subtaskTitle.setData($value: 'Subtask title')
+      $subtaskTitle.setValue('Subtask title')
 
       expect($wrapper.vm.resource.subtask.title).toBe 'Subtask title'
 

@@ -25,7 +25,10 @@ module.exports = {
   snapshotSerializers: ['<rootDir>/node_modules/jest-serializer-vue'],
   setupFilesAfterEnv: ['<rootDir>/test/unit/jest.setup'],
   verbose: true,
-  testURL: "http://localhost/",
+  testEnvironmentOptions: {
+    customExportConditions: ["node", "node-addons"],
+    url: "http://localhost/"
+  },
   testMatch: [
     "**/specs/**/*.spec.coffee",
     "**/specs/**/*.spec.js"

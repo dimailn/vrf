@@ -6,15 +6,13 @@ import {
 
 import {mutations} from '../../../../src'
 
-import Vue from 'vue'
+import { config } from '@vue/test-utils'
 import Vuex from 'vuex'
-
-Vue.use(Vuex)
 
 
 sharedExamplesFor "successful data showing", ->
   it 'show data in ui', ->
-    input = $wrapper.find('input')
+    input = $wrapper.findComponent({ name: 'rf-input' })
 
     expect(input.vm.$value).toBe 'Test'
 
@@ -25,8 +23,22 @@ sharedExamplesFor "non-auto mode warnings", ->
 describe 'form', ->
   describe 'auto mode, after load', ->
     beforeEach ->
-      Vue::VueResourceForm.effects = $effects
-      Vue::VueResourceForm.idFromRoute = $idFromRoute
+      config.global.config ||= {}
+      config.global.config.globalProperties ||= {}
+      config.global.config.globalProperties.VueResourceForm ||= {}
+      config.global.config.globalProperties.VueResourceForm.effects = $effects
+      # The plugin re-assigns idFromRoute on every mount, so pin it via an
+      # accessor that always returns the test's implementation and ignores writes.
+      idFromRoute = $idFromRoute
+      Object.defineProperty(
+        config.global.config.globalProperties.VueResourceForm
+        'idFromRoute'
+        {
+          configurable: true
+          get: -> idFromRoute
+          set: (value) ->
+        }
+      )
 
     def('idFromRoute', -> -> 1)
     def('save', => jest.fn -> Promise.resolve([true, null]))
@@ -181,10 +193,10 @@ describe 'form', ->
           }
         ))
 
-        def('input', -> $wrapper.find(".input"))
-        def('numberInput', -> $wrapper.find(".numberInput"))
-        def('statusInput', -> $wrapper.find(".statusInput"))
-        def('roleInput', -> $wrapper.find(".roleInput"))
+        def('input', -> $wrapper.findComponent(".input"))
+        def('numberInput', -> $wrapper.findComponent(".numberInput"))
+        def('statusInput', -> $wrapper.findComponent(".statusInput"))
+        def('roleInput', -> $wrapper.findComponent(".roleInput"))
 
         describe "resource changed on backend", ->
           beforeEach ->
@@ -261,7 +273,10 @@ describe 'form', ->
                 <rf-submit class="submit" />
               </rf-form>
             '''
-            {store: $store}
+            {
+              global:
+                plugins: [$store]
+            }
           )
         )
 
@@ -325,7 +340,7 @@ describe 'form', ->
 
 
       it 'executes action', ->
-        form = $wrapper.vm.$children[0]
+        form = $wrapper.findComponent({ name: 'rf-form' }).vm
 
         {data, status} = await form.executeAction('archive')
 
@@ -358,7 +373,8 @@ describe 'form', ->
 
         it 'disables all inputs', ->
           input = $wrapper.find('input')
-          expect(input.attributes('disabled')).toBe 'disabled'
+          # Vue 3 serializes a truthy boolean attribute as an empty string.
+          expect(input.attributes('disabled')).toBe ''
 
       describe 'sources', ->
         def('wrapper', ->
@@ -375,14 +391,14 @@ describe 'form', ->
         it 'is loaded eager', ->
           expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
 
-          formSources = $wrapper.vm.$children[0].$sources
+          formSources = $wrapper.findComponent({ name: 'rf-form' }).vm.$sources
           expect(formSources.roles.length).toBe 2
           expect(formSources.types.length).toBe 1
 
         it 'requireSource after form initial data loading loads one source through effect.loadSource', ->
           expect($loadSource.mock.calls.length).toBe 0
 
-          form = $wrapper.vm.$children[0]
+          form = $wrapper.findComponent({ name: 'rf-form' }).vm
 
           form.requireSource('categories')
 
@@ -403,7 +419,7 @@ describe 'form', ->
                 options: 'roles'
             )
           )
-          def('select', -> $wrapper.find("select"))
+          def('select', -> $wrapper.findComponent("select"))
 
           beforeEach ->
             $wrapper.vm.options = 'types'
@@ -434,7 +450,7 @@ describe 'form', ->
             it 'is loaded eager', ->
               expect($loadSources.mock.calls[0][0]).toEqual(['roles', 'types'])
 
-              formSources = $wrapper.vm.$children[0].$sources
+              formSources = $wrapper.findComponent({ name: 'rf-form' }).vm.$sources
               expect(formSources.roles.length).toBe 2
               expect(formSources.types.length).toBe 1
 
@@ -474,14 +490,17 @@ describe 'form', ->
         def('wrapper', ->
           mount(
             template: '''
-              <rf-form name="Todo" :resource.sync="resource" auto class="form" vuex>
+              <rf-form name="Todo" v-model:resource="resource" auto class="form" vuex>
                 <rf-input name="title" />
                 <rf-submit class="submit" />
               </rf-form>
             '''
             data: ->
               resource: null
-            {store: $store}
+            {
+              global:
+                plugins: [$store]
+            }
           )
         )
 
@@ -510,7 +529,7 @@ describe 'form', ->
       ])
 
       beforeEach ->
-          Vue::VueResourceForm.effects = $effects
+          config.global.config.globalProperties.VueResourceForm.effects = $effects
           await $wrapper.vm.$nextTick()
 
 

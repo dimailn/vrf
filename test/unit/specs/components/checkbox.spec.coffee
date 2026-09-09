@@ -18,11 +18,11 @@ describe 'checkbox', ->
           flag: true
     )
 
-    checkbox = wrapper.find('input')
+    checkbox = wrapper.findComponent({ name: 'rf-checkbox' })
 
     expect(checkbox.vm.$value).toBe true
 
-    checkbox.setChecked(false)
+    wrapper.find('input').setChecked(false)
 
     expect(wrapper.vm.resource.flag).toBe false
 
@@ -39,7 +39,7 @@ describe 'checkbox', ->
           flag: true
     )
 
-    checkbox = wrapper.find('input')
+    checkbox = wrapper.findComponent({ name: 'rf-checkbox' })
 
     expect(checkbox.vm.$value).toBe false
 

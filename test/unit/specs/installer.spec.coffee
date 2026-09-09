@@ -1,10 +1,11 @@
 import Vrf, {RfInput} from '../../../src'
 import capitalize from '../../../src/utils/capitalize'
-import { createLocalVue } from '@vue/test-utils'
+import { createApp } from 'vue'
 
 
 describe 'installer', ->
-  componentSpy = jest.spyOn(subject, 'component')
+  def('app', -> createApp({}))
+  def('componentSpy', -> jest.spyOn($app, 'component'))
   def('RfInput', ->
     {
       vrfParent: 'input'
@@ -21,11 +22,11 @@ describe 'installer', ->
     }
   )
   describe 'with adapter', ->
-    subject -> createLocalVue().use(Vrf, adapters: [$adapter])
+    subject -> do -> $componentSpy; $app.use(Vrf, adapters: [$adapter]); $app
 
     it 'installs', ->
       $subject
-      expect(componentSpy).toHaveBeenCalledWith('RfInput', $RfInput)
+      expect($componentSpy).toHaveBeenCalledWith('RfInput', $RfInput)
       expect($RfInput.computed.$vrfParent()).toBe RfInput
       expect($RfInput.extends.name).toBe 'rf-input'
 
@@ -47,22 +48,22 @@ describe 'installer', ->
       }
     )
 
-    subject -> createLocalVue().use(Vrf, adapters: [$adapter, $adapter2])
+    subject -> do -> $componentSpy; $app.use(Vrf, adapters: [$adapter, $adapter2]); $app
 
     it 'can access vrfParent and vrfParentCore', ->
       $subject
 
-      expect(componentSpy).toHaveBeenCalledWith('RfInput', $RfInput2)
+      expect($componentSpy).toHaveBeenCalledWith('RfInput', $RfInput2)
       expect($RfInput2.computed.$vrfParent()).toBe $RfInput
       expect($RfInput2.computed.$vrfCoreParent()).toBe RfInput
       expect($RfInput2.extends.name).toBe 'rf-input'
 
   describe 'without adapter', ->
-    subject -> createLocalVue().use(Vrf, adapters: [])
+    subject -> do -> $componentSpy; $app.use(Vrf, adapters: []); $app
 
     it 'installs core components', ->
       $subject
-      expect(componentSpy).toHaveBeenCalledWith('RfInput', RfInput)
+      expect($componentSpy).toHaveBeenCalledWith('RfInput', RfInput)
 
   describe 'with adapter but without overriding', ->
     def('adapter', ->
@@ -73,19 +74,19 @@ describe 'installer', ->
         }
       }
     )
-    subject -> createLocalVue().use(Vrf, adapters: [$adapter])
+    subject -> do -> $componentSpy; $app.use(Vrf, adapters: [$adapter]); $app
 
     it 'installs core components', ->
       $subject
-      expect(componentSpy).toHaveBeenCalledWith('RfInput', RfInput)
+      expect($componentSpy).toHaveBeenCalledWith('RfInput', RfInput)
 
   describe 'with defaultProps', ->
     describe 'without adapter', ->
-      subject -> createLocalVue().use(Vrf, defaultProps: {
+      subject -> do -> $componentSpy; $app.use(Vrf, defaultProps: {
         RfInput:
           disabled: true
           password: true
-      })
+      }); $app
 
       it "set default value for props", ->
         $subject
@@ -95,14 +96,14 @@ describe 'installer', ->
 
     describe "with adapter", ->
       describe "default props", ->
-        subject -> createLocalVue().use(Vrf, {
+        subject -> do -> $componentSpy; $app.use(Vrf, {
           defaultProps: {
             RfInput:
               disabled: true
               password: true
           },
           adapters: [$adapter]
-        })
+        }); $app
 
         it "set default value for props", ->
           $subject
@@ -111,16 +112,15 @@ describe 'installer', ->
           expect($RfInput.props.password.default).toBe true
 
       describe "default attribute", ->
-        subject -> createLocalVue().use(Vrf, {
+        subject -> do -> $componentSpy; $app.use(Vrf, {
           defaultProps: {
             RfInput:
               outlined: true
           },
           adapters: [$adapter]
-        })
+        }); $app
 
         it "set default value for attribute", ->
           $subject
 
           expect($RfInput.defaultAttrs.outlined).toBe true
-

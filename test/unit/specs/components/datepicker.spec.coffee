@@ -28,7 +28,7 @@ describe 'datepicker', ->
 
 
   it "shows date", ->
-    expect($input.vm.$el.value).toBe "2021-01-01T00:00"
+    expect($input.element.value).toBe "2021-01-01T00:00"
 
   it "setups date", ->
     $input.setValue("2021-01-02T00:00")

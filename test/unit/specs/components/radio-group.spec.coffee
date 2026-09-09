@@ -26,7 +26,9 @@ sharedExamplesFor "successful showing changes", ->
     beforeEach ->
       await $wrapper.vm.$nextTick()
 
-      $resource.typeId = 'admin'
+      # Vue 3 reactivity: mutate through the component's reactive proxy, not the
+      # raw def object (the two are no longer the same reference as in Vue 2).
+      $wrapper.vm.resource.typeId = 'admin'
 
     test 'radio should be checked', ->
       expect($wrapper.find('input[value=admin]').element).toBeChecked()

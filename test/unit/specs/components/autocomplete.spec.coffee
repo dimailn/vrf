@@ -4,11 +4,14 @@ import {
   mount
 } from '@vue/test-utils'
 
-import Vue from 'vue'
+import { config } from '@vue/test-utils'
 
 describe 'autocomplete', ->
   beforeEach ->
-    Vue::VueResourceForm.autocompletes = $autocompletes
+    config.global.config ||= {}
+    config.global.config.globalProperties ||= {}
+    config.global.config.globalProperties.VueResourceForm ||= {}
+    config.global.config.globalProperties.VueResourceForm.autocompletes = $autocompletes
 
   def('autocompletes', => [])
 
