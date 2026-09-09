@@ -1,23 +1,4 @@
-const FIELDS_FROM_CONTEXT = [
-  'resource',
-  'sources',
-  'fetching',
-  'vuex',
-  'rfName',
-  'errors',
-  'submit',
-  'saving',
-  'form',
-  'actionResults',
-  'actionPendings',
-  'lastSaveFailed',
-  'requireSource',
-  'translationName',
-  'rootResource',
-  'formDisabled',
-  'formReadonly',
-  'scope'
-]
+import FIELDS_FROM_CONTEXT from '../context-fields'
 
 export default {
   inject: {

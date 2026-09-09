@@ -204,6 +204,30 @@ export default {
 
 ```
 
+* use the useResource composable (Composition API)
+
+`useResource` is the Composition API alternative to the `Resource` mixin. Call it in `setup` of any descendant of a form to get reactive access to the form context. Every field is returned as a computed ref, so use it directly in the template or read `.value` in script.
+
+```vue
+
+<template>
+
+<div>
+  {{resource}}
+</div>
+
+</template>
+
+<script setup>
+
+import {useResource} from 'vrf'
+
+const {resource, errors, submit} = useResource()
+
+</script>
+
+```
+
 * implement your own component using accessible descriptors
 
 ```vue

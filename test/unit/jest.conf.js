@@ -35,7 +35,8 @@ module.exports = {
   ],
   coveragePathIgnorePatterns: [
      "<rootDir>/src/components/descriptors",
-     "<rootDir>/src/utils/set.js"
+     "<rootDir>/src/utils/set.js",
+     "<rootDir>/src/context-fields.js"
   ],
   globals: {
     'ts-jest': {
